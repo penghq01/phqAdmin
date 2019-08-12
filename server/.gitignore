@@ -1,0 +1,5 @@
+/.idea
+server.exe
+server.exe~
+*.log
+
