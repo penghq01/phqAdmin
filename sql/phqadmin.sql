@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 11/08/2019 12:28:06
+ Date: 18/08/2019 22:36:28
 */
 
 SET NAMES utf8mb4;
@@ -28,12 +28,12 @@ CREATE TABLE `admin`  (
   `login_time` int(11) NOT NULL DEFAULT 0 COMMENT '上次登录时间',
   `login_ip` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '上次登录IP',
   PRIMARY KEY (`admin_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', 1565493251, 'localhost:8181');
+INSERT INTO `admin` VALUES (1, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', 1566132872, 'localhost:8181');
 
 -- ----------------------------
 -- Table structure for admin_and_role
@@ -59,30 +59,33 @@ CREATE TABLE `auth`  (
   `pid` int(11) NOT NULL DEFAULT 0 COMMENT '父id',
   `title` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '标题',
   `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标',
-  `croute` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '前端路由',
-  `sroute` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '后端路由',
+  `crouter` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '前端路由',
+  `srouter` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '后端路由',
+  `auth` varchar(4096) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '权限',
+  `visit` tinyint(1) NOT NULL DEFAULT 0 COMMENT '访问权限 0公开，1登录，2权限，3,超级管理员',
   `auth_type` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '路由类型 0菜单，1操作（按钮）',
   `is_show` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否显示',
   `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 59 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 89 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of auth
 -- ----------------------------
-INSERT INTO `auth` VALUES (1, 0, '首页', 'fa fa-home', '/', '', 0, 1, 0);
-INSERT INTO `auth` VALUES (2, 0, '系统与安全', 'fa fa-address-card', '', '', 1, 1, 0);
-INSERT INTO `auth` VALUES (3, 0, '附件管理', 'fa fa-folder-open', '', '', 0, 1, 0);
-INSERT INTO `auth` VALUES (4, 0, '用户管理', 'fa fa-user', '', '', 1, 1, 0);
-INSERT INTO `auth` VALUES (5, 2, '管理员管理', 'fa fa-user', '/admin', '', 0, 1, 0);
-INSERT INTO `auth` VALUES (6, 2, '角色管理', 'fa fa-address-book', '/role', '', 0, 1, 0);
-INSERT INTO `auth` VALUES (7, 2, '权限管理', 'fa fa-gears', '/auth', '', 0, 1, 0);
-INSERT INTO `auth` VALUES (8, 3, '图标管理', 'fa fa-free-code-camp', '/icon', '', 0, 1, 0);
-INSERT INTO `auth` VALUES (9, 4, '会员列表', 'fa fa-users', '/user', '', 0, 1, 0);
-INSERT INTO `auth` VALUES (10, 4, '充值记录', 'fa fa-cc-visa', '/paylog', '', 0, 1, 0);
-INSERT INTO `auth` VALUES (56, 1, 'aa', '', '', '', 0, 1, 0);
-INSERT INTO `auth` VALUES (57, 1, 'dd', '', '', '', 0, 1, 0);
-INSERT INTO `auth` VALUES (58, 1, 'ss', '', '', '', 0, 1, 0);
+INSERT INTO `auth` VALUES (1, 0, '首页', 'fa fa-home', '/', '', NULL, 1, 0, 1, 2);
+INSERT INTO `auth` VALUES (2, 0, '系统与安全', 'fa fa-address-card', '', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":false,\"router\":\"\"}}', 2, 0, 1, 3);
+INSERT INTO `auth` VALUES (3, 0, '附件管理', 'fa fa-folder-open', '', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":false,\"router\":\"\"}}', 2, 0, 1, 4);
+INSERT INTO `auth` VALUES (4, 0, '用户管理', 'fa fa-user', '', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":false,\"router\":\"\"}}', 2, 0, 1, 5);
+INSERT INTO `auth` VALUES (5, 2, '管理员管理', 'fa fa-user', '/admin', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/admin/add\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/admin/del\"},\"edit\":{\"show\":true,\"router\":\"/admin-api/admin/edit\"},\"select\":{\"show\":true,\"router\":\"/admin-api/admin/list\"}}', 2, 0, 1, 0);
+INSERT INTO `auth` VALUES (6, 2, '角色管理', 'fa fa-address-book', '/role', '', NULL, 2, 0, 1, 1);
+INSERT INTO `auth` VALUES (7, 2, '权限管理', 'fa fa-gears', '/auth', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/auth/add\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/auth/del\"},\"edit\":{\"show\":true,\"router\":\"/admin-api/auth/edit\"},\"select\":{\"show\":true,\"router\":\"/admin-api/auth/list\"}}', 3, 0, 1, 2);
+INSERT INTO `auth` VALUES (8, 3, '图标管理', 'fa fa-free-code-camp', '/icon', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/icon/add\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/icon/del\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":true,\"router\":\"/admin-api//icon/list\"}}', 2, 0, 1, 0);
+INSERT INTO `auth` VALUES (9, 4, '会员列表', 'fa fa-users', '/user', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":true,\"router\":\"/admin-api/user/list/*@/admin-api/user/total/money-points\"}}', 2, 0, 1, 0);
+INSERT INTO `auth` VALUES (10, 4, '充值记录', 'fa fa-cc-visa', '/paylog', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":true,\"router\":\"/admin-api/user/pay/log/*\"}}', 2, 0, 1, 0);
+INSERT INTO `auth` VALUES (74, 0, '后台登录', '', '', '', NULL, 1, 0, 0, 1);
+INSERT INTO `auth` VALUES (75, 74, '管理员信息', '', '', '/admin-api/admin/info', NULL, 1, 1, 1, 0);
+INSERT INTO `auth` VALUES (76, 74, '修改密码', '', '', '/admin-api/admin/edit/pass', NULL, 1, 1, 1, 0);
+INSERT INTO `auth` VALUES (83, 0, '后台登录', '', '', '/admin-api/login', NULL, 0, 1, 1, 0);
 
 -- ----------------------------
 -- Table structure for icon
@@ -93,7 +96,7 @@ CREATE TABLE `icon`  (
   `title` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标名称',
   `icon` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标样式',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 513 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 500 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of icon
@@ -102,11 +105,8 @@ INSERT INTO `icon` VALUES (1, NULL, 'fa fa-address-book');
 INSERT INTO `icon` VALUES (2, NULL, 'fa fa-address-book-o');
 INSERT INTO `icon` VALUES (3, NULL, 'fa fa-address-card');
 INSERT INTO `icon` VALUES (4, NULL, 'fa fa-address-card-o');
-INSERT INTO `icon` VALUES (5, NULL, 'fa fa-bandcamp');
-INSERT INTO `icon` VALUES (6, NULL, 'fa fa-bath');
 INSERT INTO `icon` VALUES (7, NULL, 'fa fa-drivers-license');
 INSERT INTO `icon` VALUES (8, NULL, 'fa fa-drivers-license-o');
-INSERT INTO `icon` VALUES (9, NULL, 'fa fa-eercast');
 INSERT INTO `icon` VALUES (10, NULL, 'fa fa-envelope-open');
 INSERT INTO `icon` VALUES (11, NULL, 'fa fa-envelope-open-o');
 INSERT INTO `icon` VALUES (12, NULL, 'fa fa-etsy');
@@ -118,14 +118,9 @@ INSERT INTO `icon` VALUES (17, NULL, 'fa fa-id-card');
 INSERT INTO `icon` VALUES (18, NULL, 'fa fa-id-card-o');
 INSERT INTO `icon` VALUES (19, NULL, 'fa fa-imdb');
 INSERT INTO `icon` VALUES (20, NULL, 'fa fa-linode');
-INSERT INTO `icon` VALUES (21, NULL, 'fa fa-meetup');
-INSERT INTO `icon` VALUES (22, NULL, 'fa fa-microchip');
 INSERT INTO `icon` VALUES (23, NULL, 'fa fa-podcast');
 INSERT INTO `icon` VALUES (24, NULL, 'fa fa-quora');
 INSERT INTO `icon` VALUES (25, NULL, 'fa fa-ravelry');
-INSERT INTO `icon` VALUES (26, NULL, 'fa fa-shower');
-INSERT INTO `icon` VALUES (27, NULL, 'fa fa-snowflake-o');
-INSERT INTO `icon` VALUES (28, NULL, 'fa fa-superpowers');
 INSERT INTO `icon` VALUES (29, NULL, 'fa fa-telegram');
 INSERT INTO `icon` VALUES (30, NULL, 'fa fa-thermometer');
 INSERT INTO `icon` VALUES (31, NULL, 'fa fa-times-rectangle');
@@ -142,38 +137,15 @@ INSERT INTO `icon` VALUES (41, NULL, 'fa fa-adjust');
 INSERT INTO `icon` VALUES (42, NULL, 'fa fa-anchor');
 INSERT INTO `icon` VALUES (43, NULL, 'fa fa-archive');
 INSERT INTO `icon` VALUES (44, NULL, 'fa fa-area-chart');
-INSERT INTO `icon` VALUES (45, NULL, 'fa fa-arrows');
-INSERT INTO `icon` VALUES (46, NULL, 'fa fa-arrows-h');
-INSERT INTO `icon` VALUES (47, NULL, 'fa fa-arrows-v');
-INSERT INTO `icon` VALUES (48, NULL, 'fa fa-assistive-listening-systems');
-INSERT INTO `icon` VALUES (49, NULL, 'fa fa-asterisk');
-INSERT INTO `icon` VALUES (50, NULL, 'fa fa-at');
-INSERT INTO `icon` VALUES (51, NULL, 'fa fa-asl-interpreting');
-INSERT INTO `icon` VALUES (52, NULL, 'fa fa-audio-description');
 INSERT INTO `icon` VALUES (53, NULL, 'fa fa-automobile');
-INSERT INTO `icon` VALUES (54, NULL, 'fa fa-balance-scale');
 INSERT INTO `icon` VALUES (55, NULL, 'fa fa-ban');
-INSERT INTO `icon` VALUES (56, NULL, 'fa fa-bank');
 INSERT INTO `icon` VALUES (57, NULL, 'fa fa-bar-chart');
 INSERT INTO `icon` VALUES (58, NULL, 'fa fa-barcode');
 INSERT INTO `icon` VALUES (59, NULL, 'fa fa-bars');
-INSERT INTO `icon` VALUES (60, NULL, 'fa fa-battery');
-INSERT INTO `icon` VALUES (61, NULL, 'fa fa-battery-0');
-INSERT INTO `icon` VALUES (62, NULL, 'fa fa-battery-1');
-INSERT INTO `icon` VALUES (63, NULL, 'fa fa-battery-2');
-INSERT INTO `icon` VALUES (64, NULL, 'fa fa-battery-3');
 INSERT INTO `icon` VALUES (65, NULL, 'fa fa-battery-4');
-INSERT INTO `icon` VALUES (66, NULL, 'fa fa-bed');
 INSERT INTO `icon` VALUES (67, NULL, 'fa fa-beer');
 INSERT INTO `icon` VALUES (68, NULL, 'fa fa-bell');
 INSERT INTO `icon` VALUES (69, NULL, 'fa fa-bell-o');
-INSERT INTO `icon` VALUES (70, NULL, 'fa fa-bell-slash');
-INSERT INTO `icon` VALUES (71, NULL, 'fa fa-bell-slash-o');
-INSERT INTO `icon` VALUES (72, NULL, 'fa fa-bicycle');
-INSERT INTO `icon` VALUES (73, NULL, 'fa fa-binoculars');
-INSERT INTO `icon` VALUES (74, NULL, 'fa fa-birthday-cake');
-INSERT INTO `icon` VALUES (75, NULL, 'fa fa-blind');
-INSERT INTO `icon` VALUES (76, NULL, 'fa fa-bluetooth');
 INSERT INTO `icon` VALUES (77, NULL, 'fa fa-bluetooth-b');
 INSERT INTO `icon` VALUES (78, NULL, 'fa fa-bolt');
 INSERT INTO `icon` VALUES (79, NULL, 'fa fa-bomb');
@@ -193,7 +165,6 @@ INSERT INTO `icon` VALUES (92, NULL, 'fa fa-calculator');
 INSERT INTO `icon` VALUES (93, NULL, 'fa fa-calendar');
 INSERT INTO `icon` VALUES (94, NULL, 'fa fa-calendar-check-o');
 INSERT INTO `icon` VALUES (95, NULL, 'fa fa-camera');
-INSERT INTO `icon` VALUES (96, NULL, 'fa fa-camera-retro');
 INSERT INTO `icon` VALUES (97, NULL, 'fa fa-car');
 INSERT INTO `icon` VALUES (98, NULL, 'fa fa-caret-square-o-down');
 INSERT INTO `icon` VALUES (99, NULL, 'fa fa-cart-arrow-down');
@@ -592,12 +563,10 @@ INSERT INTO `icon` VALUES (491, NULL, 'fa fa-play');
 INSERT INTO `icon` VALUES (492, NULL, 'fa fa-play-circle');
 INSERT INTO `icon` VALUES (493, NULL, 'fa fa-play-circle-o');
 INSERT INTO `icon` VALUES (494, NULL, 'fa fa-step-backward');
-INSERT INTO `icon` VALUES (495, NULL, 'fa fa-step-forward');
 INSERT INTO `icon` VALUES (496, NULL, 'fa fa-stop');
 INSERT INTO `icon` VALUES (497, NULL, 'fa fa-stop-circle');
 INSERT INTO `icon` VALUES (498, NULL, 'fa fa-stop-circle-o');
 INSERT INTO `icon` VALUES (499, NULL, 'fa fa-youtube-play');
-INSERT INTO `icon` VALUES (512, '', 'fa fa-yelp');
 
 -- ----------------------------
 -- Table structure for role
