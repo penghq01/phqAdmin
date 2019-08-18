@@ -8,6 +8,7 @@ type Auth struct{
 	Id bool             //id
 	Title bool        //标题
 	Icon bool          //图标
+	Visit bool         //访问权限 0公开，1登录，2权限，3,超级管理员
 	AuthType bool    //路由类型 0菜单，1操作（按钮)
 	IsShow bool      //是否显示
 }
@@ -19,6 +20,11 @@ func (this *Auth) Valid(obj *models.Auth)(bool,string){
 	}
 	if this.Title{
 		if ok,msg:=this.Required(obj.Title,"标题");!ok{
+			return false,msg
+		}
+	}
+	if this.Visit{
+		if ok,msg:=this.Range(obj.Visit,0,3,"访问类型");!ok{
 			return false,msg
 		}
 	}

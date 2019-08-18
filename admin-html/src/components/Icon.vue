@@ -21,6 +21,7 @@
                  </span>
             </span>
         </div>
+        <Paging v-model="pageData" @change="pageChange"></Paging>
         <myDialog
                 title="添加图标"
                 :is-show="opened"
@@ -55,7 +56,12 @@
             return {
                 opened: false,
                 iconList: [],
-                addIcon: {}
+                addIcon: {},
+                pageData:{
+                    page:1,
+                    page_size:50,
+                    total_count:0
+                }
             }
         },
         mounted() {
@@ -64,8 +70,9 @@
         methods: {
             getIconList() {
                 this.message.loading.show();
-                http.post("icon/list").then(data => {
-                    this.iconList = data;
+                http.post(`icon/list/${this.pageData.page_size}/${this.pageData.page}`).then(data => {
+                    this.iconList = data.data;
+                    this.pageData=data.paginate;
                 }).catch(err => {
                 })
             },
@@ -94,7 +101,10 @@
             },
             iconSelect(icon) {
                 this.$emit("on-select", icon);
-            }
+            },
+            pageChange() {
+                this.getIconList();
+            },
         }
     }
 </script>
@@ -104,29 +114,36 @@
         padding: 10px;
     }
 
-    .icon-list > span {
-        font-size: 40px;
-        width: 60px;
-        height: 60px;
-        padding: 10px;
-        background-color: #F1F1F1;
-        margin: 5px;
-        text-align: center;
-        position: relative;
+    .icon-list{
+        display:flex;
+        justify-content:flex-start;
+        align-items: center;
+        flex-wrap: wrap;
+        &>span {
+            display:flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 60px;
+            width: 100px;
+            height: 100px;
+            padding: 10px;
+            background-color: #F1F1F1;
+            margin: 5px;
+            position: relative;
 
-        & > span {
-            display: none;
-            position: absolute;
-            margin-top: -50px;
-            margin-left: -8px;
-        }
-
-        &:hover {
             & > span {
-                display: block;
+                display: none;
+                position: absolute;
+               top:0;
             }
 
-            background-color: #8A8A8A;
+            &:hover {
+                & > span {
+                    display: block;
+                }
+
+                background-color: #8A8A8A;
+            }
         }
     }
 </style>

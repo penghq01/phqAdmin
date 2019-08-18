@@ -39,7 +39,7 @@ func (this *Auth)Edit()  {
 	if ok,msg:=vd.Valid(auth);!ok{
 		this.ServeError(msg,"")
 	}
-	if row,err:=this.Db.Where("id=?",auth.Id).Cols("title,icon,sroute,croute,auth_type,is_show,sort").Update(auth);row>0 && err==nil{
+	if row,err:=this.Db.Where("id=?",auth.Id).Cols("title,icon,srouter,crouter,auth,visit,auth_type,is_show,sort").Update(auth);row>0 && err==nil{
 		this.ServeSuccess("修改成功","")
 	}
  this.ServeError("修改失败","")

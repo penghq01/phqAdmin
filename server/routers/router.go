@@ -20,7 +20,7 @@ func init() {
 	beego.Router(AdminRootPath+"/admin/info", &adminApi.Admin{},"post:Info")
 	beego.Router(AdminRootPath+"/admin/edit/pass", &adminApi.Admin{},"post:EditPass")
 
-	beego.Router(AdminRootPath+"/icon/list", &adminApi.Icon{},"post:List")
+	beego.Router(AdminRootPath+"/icon/list/:pageszie/:page", &adminApi.Icon{},"post:List")
 	beego.Router(AdminRootPath+"/icon/add", &adminApi.Icon{},"post:Add")
 	beego.Router(AdminRootPath+"/icon/del", &adminApi.Icon{},"post:Del")
 

@@ -11,22 +11,30 @@
                         <span :class="scope.row.icon" style="font-size:22px;"></span>
                     </template>
                 </el-table-column>
-                <el-table-column label="前端路由" prop="croute"></el-table-column>
-                <el-table-column label="后端路由" prop="sroute"></el-table-column>
-                <el-table-column label="类型" :width="65">
+                <el-table-column label="前端路由" prop="crouter"></el-table-column>
+                <el-table-column label="后端路由" prop="srouter"></el-table-column>
+                <el-table-column label="访问" :width="95">
+                    <template slot-scope="scope">
+                        <el-tag v-if="scope.row.visit==0" type="info" size="mini" >公开</el-tag>
+                        <el-tag v-if="scope.row.visit==1" type="success" size="mini" >登录</el-tag>
+                        <el-tag v-if="scope.row.visit==2" type="warning" size="mini" >权限</el-tag>
+                        <el-tag v-if="scope.row.visit==3" type="danger" size="mini" >超级管理员</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column label="类型" :width="70">
                     <template slot-scope="scope">
 
                         <el-tag v-if="scope.row.auth_type==0" size="mini" >菜单</el-tag>
-                        <el-tag v-if="scope.row.auth_type==1" type="warning" size="mini" >操作</el-tag>
+                        <el-tag v-if="scope.row.auth_type==1" type="warning" size="mini" >数据</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="显示" :width="65">
+                <el-table-column label="显示" :width="70">
                     <template slot-scope="scope">
                         <el-tag v-if="scope.row.is_show==0" type="info" size="mini" >隐藏</el-tag>
                         <el-tag v-if="scope.row.is_show==1" type="success" size="mini" >正常</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="排序" width="70" prop="sort"></el-table-column>
+                <el-table-column label="排序" width="50" prop="sort"></el-table-column>
                 <el-table-column label="操作" width="180">
                     <template slot-scope="scope">
                         <el-button type="primary"  @click="showAdd(scope.row.id,scope.row)" icon="el-icon-plus" size="mini"></el-button>
@@ -47,6 +55,7 @@
                 :title="titleName"
                 :is-show="opened"
                 :close="close"
+                width="40%"
                 close-title="取 消"
                 :ok-click="isEdit?edit:add"
                 :ok-title="isEdit?'修改':'添加'"
@@ -58,6 +67,32 @@
             </div>
             <div class="input-div">前端路由：<el-input style="width:220px;" type="text" v-model="postAuth.croute" placeholder="请输入前端路由"/></div>
             <div class="input-div">后端路由：<el-input style="width:220px;" type="text" v-model="postAuth.sroute" placeholder="请输入后端路由"/></div>
+            <div class="input-div">数据权限：<span style="font-size:12px;color:#aaaaaa;">多个路由之间可以用 @ 符号隔开，如：/add@/del</span>
+                <div class="auth">
+                    <div>
+                        <el-checkbox v-model="postAuth.auth.select.show" @change="checkBoxSelect">查询</el-checkbox><span class="interval-span"></span>
+                        <el-input v-show="postAuth.auth.select.show" style="width:85%" type="text" v-model="postAuth.auth.select.router" placeholder="请输入路由"/>
+                    </div>
+                    <div>
+                        <el-checkbox v-model="postAuth.auth.add.show" @change="checkBoxAdd">添加</el-checkbox><span class="interval-span"></span>
+                        <el-input v-show="postAuth.auth.add.show" style="width:85%;" type="text" v-model="postAuth.auth.add.router" placeholder="请输入路由"/>
+                    </div>
+                    <div>
+                        <el-checkbox v-model="postAuth.auth.edit.show" @change="checkBoxEdit">修改</el-checkbox><span class="interval-span"></span>
+                        <el-input v-show="postAuth.auth.edit.show" style="width:85%;" type="text" v-model="postAuth.auth.edit.router" placeholder="请输入路由"/>
+                    </div>
+                    <div>
+                        <el-checkbox v-model="postAuth.auth.delete.show" @change="checkBoxDelete">删除</el-checkbox><span class="interval-span"></span>
+                        <el-input v-show="postAuth.auth.delete.show" style="width:85%;" type="text" v-model="postAuth.auth.delete.router" placeholder="请输入路由"/>
+                    </div>
+                </div>
+            </div>
+            <div class="input-div">访问类型：
+                <el-radio v-model="postAuth.visit" :label="0">公开</el-radio>
+                <el-radio v-model="postAuth.visit" :label="1">登录</el-radio>
+                <el-radio v-model="postAuth.visit" :label="2">权限</el-radio>
+                <el-radio v-model="postAuth.visit" :label="3">超级管理员</el-radio>
+            </div>
             <div class="input-div">权限类型：
                 <el-radio v-model="postAuth.auth_type" :label="0">菜单</el-radio>
                 <el-radio v-model="postAuth.auth_type" :label="1">操作</el-radio>
@@ -90,7 +125,16 @@
                 loading: true,
                 isEdit: false,
                 treeAuthList: [],
-                postAuth: {auth_type: 0, is_show: 1}
+                postAuth: {
+                    auth:{
+                        add:{show:false,router:""},
+                        delete:{show:false,router:""},
+                        edit:{show:false,router:""},
+                        select:{show:false,router:""},
+                    },
+                    visit:2,
+                    auth_type: 0,
+                    is_show: 1}
             }
         },
         mounted() {
@@ -103,6 +147,9 @@
                    if(item.pid==pid){
                        let tem=utils.NewObject(item);
                        this.$set(tem,"children",this.listTotree(data,item.id));
+                       if(!utils.empty(tem.auth)){
+                           tem.auth=JSON.parse(tem.auth);
+                       }
                        list.push(tem);
                        //data.splice(key,1);
                    }
@@ -158,7 +205,16 @@
             },
             close() {
                 this.opened = false;
-                this.postAuth = {auth_type: 0, is_show: 1};
+                this.postAuth = {
+                    auth:{
+                        add:{show:false,router:""},
+                        delete:{show:false,router:""},
+                        edit:{show:false,router:""},
+                        select:{show:false,router:""},
+                    },
+                    visit:2,
+                    auth_type: 0,
+                    is_show: 1};
                 this.titleName = "添加权限";
                 this.isEdit = false;
             },
@@ -168,8 +224,10 @@
                     return;
                 }
                 this.message.loading.show("正在添加");
-                this.postAuth.sort=parseInt(this.postAuth.sort);
-                http.post("auth/add", this.postAuth).then(data => {
+                let postAuth=utils.NewObject(this.postAuth);
+                postAuth.auth=JSON.stringify(postAuth.auth);
+                postAuth.sort=parseInt(postAuth.sort);
+                http.post("auth/add",postAuth).then(data => {
                        if(this.postAuth.pid<=0){
                             this.treeAuthList.push(data);
                        }else{
@@ -181,6 +239,14 @@
             },
             showEdit(row){
                 this.postAuth=utils.NewObject(row);
+                if(utils.empty(this.postAuth.auth)){
+                    this.$set(this.postAuth,"auth",{
+                        add:{show:false,router:""},
+                        delete:{show:false,router:""},
+                        edit:{show:false,router:""},
+                        select:{show:false,router:""},
+                    })
+                }
                 this.titleName=`正在修改【 ${row.title} 】`;
                 this.isEdit=true;
                 this.opened = true;
@@ -191,8 +257,10 @@
                     return;
                 }
                 this.message.loading.show("正在修改");
-                this.postAuth.sort=parseInt(this.postAuth.sort);
-                http.post("auth/edit", this.postAuth).then(()=> {
+                let postAuth=utils.NewObject(this.postAuth);
+                postAuth.auth=JSON.stringify(postAuth.auth);
+                postAuth.sort=parseInt(postAuth.sort);
+                http.post("auth/edit",postAuth).then(()=> {
                     this.editItem(this.postAuth.id,this.treeAuthList,utils.NewObject(this.postAuth));
                     this.close();
                 }).catch(err => {
@@ -218,7 +286,19 @@
                     this.titleName=`添加【 ${row.title} 】的子权限`;
                  }
                 this.opened = true;
-            }
+            },
+            checkBoxAdd(e){
+               this.postAuth.auth.add.router="";
+            },
+            checkBoxDelete(e){
+                this.postAuth.auth.delete.router="";
+            },
+            checkBoxEdit(e){
+                this.postAuth.auth.edit.router="";
+            },
+            checkBoxSelect(e){
+                this.postAuth.auth.select.router="";
+            },
         },
         components: {
             Pmodel, Icon
@@ -229,5 +309,11 @@
 <style scoped lang="scss">
     .add-uri {
         padding: 10px;
+    }
+    .auth{
+        padding-left:45px;
+        &>div{
+            padding:5px;
+        }
     }
 </style>

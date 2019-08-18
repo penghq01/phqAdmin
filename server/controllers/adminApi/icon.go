@@ -12,14 +12,24 @@ type Icon struct {
 func (this *Icon)Prepare()  {
 	this.AdminBase.Prepare()
 }
-
 func (this *Icon)List(){
+	this.GetPageParam()
 	icon:=make([]models.Icon,0)
-    err:=common.DbEngine.Desc("id").Find(&icon)
+	rows,err:=this.Db.Desc("id").Count(new(models.Icon))
+	if rows<=0 || err != nil{
+		this.ServeError("","")
+	}
+	this.Paginate.CalcPaginate(int(rows))
+    err=this.Db.Desc("id").Limit(this.Paginate.Limit,this.Paginate.Start).Find(&icon)
     if err!=nil{
     	this.ServeError("","")
+
 	}
-    this.ServeSuccess("",icon)
+	data:=common.PaginateData{
+		Data:icon,
+		Paginate:this.Paginate,
+	}
+	this.ServeSuccess("",data)
 }
 func (this *Icon)Add(){
      icon:=new(models.Icon)
