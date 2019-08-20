@@ -2,7 +2,6 @@ import Vue from 'vue'
 import App from './App.vue'
 import router from './router'
 import store from './store'
-import message from './lib/message'
 import global from './lib/global'
 import "./assets/lib/font-awesome/css/font-awesome.css"
 
@@ -21,8 +20,7 @@ Vue.component('Input', Input);
 Vue.component("myDialog",myDialog);
 Vue.component("Paging",Paging);
 Vue.config.productionTip = false;
-Vue.prototype.message = message;
-Vue.prototype.global = global;
+Vue.prototype.$global = global;
 new Vue({
   mounted () {
     global._this = this

@@ -43,6 +43,7 @@
 <script>
     import http from "../lib/http";
     import utils from "../lib/utils";
+    import message from "../lib/message";
 
     export default {
         name: "Icon",
@@ -69,7 +70,7 @@
         },
         methods: {
             getIconList() {
-                this.message.loading.show();
+                message.loading.show();
                 http.post(`icon/list/${this.pageData.page_size}/${this.pageData.page}`).then(data => {
                     this.iconList = data.data;
                     this.pageData=data.paginate;
@@ -77,7 +78,7 @@
                 })
             },
             del(item) {
-                this.message.loading.show("正在删除");
+                message.loading.show("正在删除");
                 http.post("icon/del", {"id": item.id}).then(() => {
                     this.iconList.splice(this.iconList.indexOf(item), 1);
                 }).catch(err => {
@@ -85,10 +86,10 @@
             },
             add() {
                 if (utils.empty(this.addIcon.icon)) {
-                    this.message.msg.error("图标样式不能为空");
+                   message.msg.error("图标样式不能为空");
                     return;
                 }
-                this.message.loading.show("添加中");
+                message.loading.show("添加中");
                 http.post("icon/add", this.addIcon).then(data => {
                     this.close();
                     this.iconList.unshift(data);

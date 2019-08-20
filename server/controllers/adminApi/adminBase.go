@@ -10,26 +10,30 @@ type AdminBase struct {
 	controllers.Base
 	LoginUser *models.Admin //当前登录用户
 }
-var(
-	NOLogin map[string]bool= make(map[string]bool)
+
+var (
+	//不需要登录的即可访问的路由
+	noLogin map[string]bool = map[string]bool{
+		"/admin-api/login":true,
+	}
 )
-func (this *AdminBase)Prepare()  {
-   this.Base.Prepare()
-	NOLogin["/admin-api/login"]=true
-	if !NOLogin[this.Uri]{
-		if this.AuthToken==""{
-           this.ServeLOGIN("请登录后访问","")
+
+func (this *AdminBase) Prepare() {
+	this.Base.Prepare()
+	if !noLogin[this.Uri] {
+		if this.AuthToken == "" {
+			this.ServeLOGIN("请登录后访问", "")
 		}
-		ok,_:=common.CheckToken(this.AuthToken, func(id int, username string) {
-			 var user *models.Admin=new(models.Admin)
-             ok:= user.IdUserNameGet(id,username)
-			if !ok{
-				this.ServeRELOGIN("管理员信息错误，请重登录登录","")
+		ok, _ := common.CheckToken(this.AuthToken, func(id int, username string) {
+			var user *models.Admin = new(models.Admin)
+			ok := user.IdUserNameGet(id,username)
+			if !ok {
+				this.ServeRELOGIN("管理员信息错误，请重登录登录", "")
 			}
-             this.LoginUser=user
+			this.LoginUser = user
 		})
-		if(!ok){
-			this.ServeRELOGIN("登录过期，重登录登录","")
+		if !ok {
+			this.ServeRELOGIN("登录过期，重登录登录", "")
 		}
 	}
 }

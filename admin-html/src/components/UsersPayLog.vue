@@ -71,7 +71,7 @@
                 this.getPayLog();
             },
             imagePreview(url){
-                this.$ImagePreview([url],0);
+
             }
         },
         components:{

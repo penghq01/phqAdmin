@@ -26,6 +26,11 @@ export default [
         component: () => import('../views/auth/Auth.vue')
       },
       {
+        path: '/images',
+        name: 'images',
+        component: () => import('../views/annexes/Images.vue')
+      },
+      {
         path: '/icon',
         name: 'icon',
         component: () => import('../views/annexes/Icon.vue')

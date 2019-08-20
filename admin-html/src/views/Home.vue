@@ -42,6 +42,7 @@
     import utils from "../lib/utils";
     import md5 from "js-md5"
     import Menu from "../components/Menu/Menu"
+    import message from "../lib/message";
     export default {
         name: 'home',
         data() {
@@ -84,6 +85,11 @@
                         key: 'admin-folder',
                         children: [
                             {
+                                title: '图片管理',
+                                icon: 'fa fa-file-image-o',
+                                key: '/images'
+                            },
+                            {
                                 title: '图标管理',
                                 icon: 'fa fa-free-code-camp',
                                 key: '/icon'
@@ -125,7 +131,7 @@
                 });
             },
             outLogin() {
-                this.message.confirm("确定要推出登录吗?", {
+                message.confirm("确定要推出登录吗?", {
                     okName: "确定退出", okFunction: () => {
                         storage.clearToken();
                         window.location.href = '/login';
@@ -134,15 +140,15 @@
             },
             editPassword() {
                 if (utils.empty(this.editUser.oldpass)) {
-                    this.message.msg.error("旧密码不能为空");
+                    message.msg.error("旧密码不能为空");
                     return;
                 }
                 if (utils.empty(this.editUser.newpass)) {
-                    this.message.msg.error("新密码不能为空");
+                    message.msg.error("新密码不能为空");
                     return;
                 }
                 if (this.editUser.newpass != this.editUser.okpass) {
-                    this.message.msg.error("两输入的新密码不一致");
+                    message.msg.error("两输入的新密码不一致");
                     return;
                 }
                 http.post("admin/edit/pass", {

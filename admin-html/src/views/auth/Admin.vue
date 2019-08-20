@@ -43,6 +43,7 @@
   import http from "../../lib/http";
   import utils from "../../lib/utils";
   import md5 from "js-md5"
+  import message from "../../lib/message";
   export default {
     name: 'admin',
     data () {
@@ -76,10 +77,10 @@
       },
       confirm(){
         if(utils.empty(this.addAdmin.username) || utils.empty(this.addAdmin.password)){
-          this.message.msg.error("管理员账号或密码不能为空");
+          message.msg.error("管理员账号或密码不能为空");
           return
         }
-        this.message.loading.show("添加中");
+        message.loading.show("添加中");
         let password=this.addAdmin.password;
         this.addAdmin.password=md5(password);
          http.post("admin/add",this.addAdmin).then((data)=>{
@@ -91,7 +92,7 @@
          })
       },
       del(rows){
-        this.message.loading.show("删除中");
+        message.loading.show("删除中");
         http.post("admin/del",{"admin_id":rows.admin_id}).then(()=>{
           this.adminList.splice( this.adminList.indexOf(rows), 1);
         }).catch(()=>{})
@@ -105,14 +106,14 @@
       },
       edit(){
         if(utils.empty(this.addAdmin.username)){
-          this.message.msg.error("管理员账号不能为空");
+          message.msg.error("管理员账号不能为空");
           return
         }
         let postData={"username":this.addAdmin.username,"admin_id":this.addAdmin.admin_id};
         if(!utils.empty(this.addAdmin.password)){
           postData.password=md5(this.addAdmin.password);
         }
-        this.message.loading.show("修改中");
+       message.loading.show("修改中");
         http.post("admin/edit",postData).then(()=>{
           this.close();
           this.loading=true;

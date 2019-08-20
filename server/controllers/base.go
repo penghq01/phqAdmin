@@ -1,11 +1,11 @@
 package controllers
 
 import (
-	"phqAdmin/server/common"
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
 	"github.com/go-xorm/xorm"
+	"phqAdmin/server/common"
 	"strconv"
 )
 
@@ -19,6 +19,13 @@ type Base struct {
 	Paginate  common.Paginate        //分页数据
 }
 
+var (
+	//不需要签名的路由
+	noSignRouter map[string]bool = map[string]bool{
+		"/admin-api/upload/img":true,
+	}
+)
+
 func (this *Base) Prepare() {
 	this.Db = common.DbEngine
 	this.Uri = this.Ctx.Request.RequestURI
@@ -26,9 +33,11 @@ func (this *Base) Prepare() {
 	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &this.Params); err != nil {
 		common.Log.Error(fmt.Sprintf("参数解析错误=>%v", err))
 	}
-	ok := common.CheckParams(this.Ctx.Input.Header("sign"), this.Ctx.Input.RequestBody)
-	if !ok {
-		this.ServeError("非法数据", "")
+	if !noSignRouter[this.Uri] {
+		ok := common.CheckParams(this.Ctx.Input.Header("sign"), this.Ctx.Input.RequestBody)
+		if !ok {
+			this.ServeError("非法数据", "")
+		}
 	}
 }
 
@@ -40,6 +49,7 @@ func (this *Base) AnalyseJson(obj interface{}) {
 		this.ServeError("参数解析失败", "")
 	}
 }
+
 //获取分页前端传来的数据
 func (this *Base) GetPageParam() {
 	var err error

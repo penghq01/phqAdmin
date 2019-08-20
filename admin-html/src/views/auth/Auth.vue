@@ -114,6 +114,7 @@
     import Icon from "../../components/Icon"
     import utils from "../../lib/utils";
     import http from "../../lib/http";
+    import message from "../../lib/message";
 
     export default {
         name: 'Auth',
@@ -220,10 +221,10 @@
             },
             add() {
                 if (utils.empty(this.postAuth.title)) {
-                    this.message.msg.error("权限标题不能为空");
+                    message.msg.error("权限标题不能为空");
                     return;
                 }
-                this.message.loading.show("正在添加");
+               message.loading.show("正在添加");
                 let postAuth=utils.NewObject(this.postAuth);
                 postAuth.auth=JSON.stringify(postAuth.auth);
                 postAuth.sort=parseInt(postAuth.sort);
@@ -253,10 +254,10 @@
             },
             edit() {
                 if (utils.empty(this.postAuth.title)) {
-                    this.message.msg.error("权限标题不能为空");
+                   message.msg.error("权限标题不能为空");
                     return;
                 }
-                this.message.loading.show("正在修改");
+               message.loading.show("正在修改");
                 let postAuth=utils.NewObject(this.postAuth);
                 postAuth.auth=JSON.stringify(postAuth.auth);
                 postAuth.sort=parseInt(postAuth.sort);
@@ -267,7 +268,7 @@
                 });
             },
             del(row){
-                this.message.loading.show("正在删除");
+                message.loading.show("正在删除");
                 http.post("auth/del",{id:row.id}).then(data=>{
                     this.delItem(row.id,this.treeAuthList);
                 }).catch(err=>{});

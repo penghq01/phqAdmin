@@ -13,16 +13,24 @@ const HTTP_CODE = {
     NOAUTH:4003  //您没有权限访问
 };
 
-const post = (url = '', params = {}, isToast = true) => {
+const post = (url = '', params = {}, isToast = true,upload=false,progress=()=>{}) => {
     let httpURL = config.host + config.apiPath + url;
     let time=new Date().getTime();
     time=time.toString();
     let sign=md5(base64.encode(md5(time)+"."+base64.encode(JSON.stringify(params))+"."+time));
     sign+="."+time.toString();
-    var instance = axios.create();
+    var instance = axios.create({
+        onUploadProgress: function (progressEvent) {
+            // 对原生进度事件的处理
+            progress(progressEvent);
+        },
+    });
     instance.defaults.timeout = 1000 * 30 ;//超时时间
     instance.defaults.headers.common['auth-token'] = storage.token.get();//添加token
     instance.defaults.headers.common['sign'] = sign;//添加签名
+    if(upload){
+        instance.defaults.headers.post['Content-Type'] = 'multipart/form-data';
+    }
     // 添加响应拦截器
     instance.interceptors.response.use(
         response => {
