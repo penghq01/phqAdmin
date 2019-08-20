@@ -1,10 +1,13 @@
 # 后台管理系统
 
 #### 介绍
-使用go语言开发，beego MVC框架，xorm数据层
+使用go语言开发的web后台，beego MVC框架，xorm数据层,前后端分离，前端采用vue-cli3.X,Element开源框架
 
 #### 软件架构
-软件架构说明
+1.beego
+2.xorm
+3.vue-cli3.x
+4.Element
 
 
 #### 安装教程
