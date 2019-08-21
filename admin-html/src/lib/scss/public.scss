@@ -20,8 +20,8 @@ html,body{
   padding:6px 0;
 }
 .el-tree--highlight-current .el-tree-node.is-current > .el-tree-node__content{
-  background-color:$primary-color;
-  color:#FFFFFF;
+  background-color:$primary-gray;
+  color:$primary-color;
 }
 .el-tree-node__expand-icon{
   font-size:20px;
@@ -170,4 +170,28 @@ html,body{
 
 .pagination{
   padding-top:15px;
+}
+
+.list-animate-enter-active {
+  transition: all 1S ease-out;
+}
+
+.list-animate-leave-active {
+  transition: all 1S ease-out;
+  position: absolute;
+}
+
+
+.list-animate-enter {
+  opacity: 0;
+  transform: translateY(-50px);
+}
+
+.list-animate-leave-to {
+  opacity: 0;
+  transform: translateY(50px);
+}
+
+.list-animate-move {
+  transition: transform 1s ease-out;
 }

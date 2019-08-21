@@ -34,9 +34,13 @@ func init() {
 	beego.Router(AdminRootPath+"/auth/edit", &adminApi.Auth{}, "post:Edit")
 	beego.Router(AdminRootPath+"/auth/del", &adminApi.Auth{}, "post:Del")
 
-    beego.Router(AdminRootPath+"/files/upload/img",&adminApi.Files{},"post:UploadImage")
-	beego.Router(AdminRootPath+"/files/add/class",&adminApi.Files{},"post:AddFileClass")
-	beego.Router(AdminRootPath+"/files/edit/class",&adminApi.Files{},"post:EditFileClass")
-	beego.Router(AdminRootPath+"/files/list/class",&adminApi.Files{},"post:ListClass")
-	beego.Router(AdminRootPath+"/files/del/class",&adminApi.Files{},"post:DelClass")
+	beego.Router(AdminRootPath+"/files/upload/img", &adminApi.Files{}, "post:UploadImage")
+	beego.Router(AdminRootPath+"/files/add/class", &adminApi.Files{}, "post:AddFileClass")
+	beego.Router(AdminRootPath+"/files/edit/class", &adminApi.Files{}, "post:EditFileClass")
+	beego.Router(AdminRootPath+"/files/list/class", &adminApi.Files{}, "post:ListClass")
+	beego.Router(AdminRootPath+"/files/del/class", &adminApi.Files{}, "post:DelClass")
+
+	beego.Router(AdminRootPath+"/files/list/:pageszie/:page", &adminApi.Files{}, "post:List")
+
+
 }

@@ -14,7 +14,7 @@ type AdminBase struct {
 var (
 	//不需要登录的即可访问的路由
 	noLogin map[string]bool = map[string]bool{
-		"/admin-api/login":true,
+		"/admin-api/login": true,
 	}
 )
 
@@ -26,7 +26,7 @@ func (this *AdminBase) Prepare() {
 		}
 		ok, _ := common.CheckToken(this.AuthToken, func(id int, username string) {
 			var user *models.Admin = new(models.Admin)
-			ok := user.IdUserNameGet(id,username)
+			ok := user.IdUserNameGet(id, username)
 			if !ok {
 				this.ServeRELOGIN("管理员信息错误，请重登录登录", "")
 			}

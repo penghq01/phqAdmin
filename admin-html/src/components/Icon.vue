@@ -121,6 +121,7 @@
         align-items: center;
         flex-wrap: wrap;
         &>span {
+            transition:all 1s ease-out;
             display:flex;
             justify-content: center;
             align-items: center;

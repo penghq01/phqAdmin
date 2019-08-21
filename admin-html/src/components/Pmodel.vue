@@ -1,7 +1,6 @@
 <template>
     <transition name="fade">
     <div class="p-modal" v-if="value">
-        <transition name="fade2">
         <div class="p-modal-body" v-show="value">
             <div class="p-modal-body-title">
                 {{title}}
@@ -11,7 +10,6 @@
                 <slot></slot>
             </div>
         </div>
-        </transition>
     </div>
     </transition>
 </template>

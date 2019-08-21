@@ -10,6 +10,7 @@ import (
 	"os"
 	"path"
 	"phqAdmin/server/common"
+	"phqAdmin/server/models"
 	"strconv"
 	"time"
 )
@@ -27,7 +28,7 @@ type Base struct {
 var (
 	//不需要签名的路由
 	noSignRouter map[string]bool = map[string]bool{
-		"/admin-api/files/upload/img":true,
+		"/admin-api/files/upload/img": true,
 	}
 )
 
@@ -75,47 +76,62 @@ func (this *Base) Input(key string) interface{} {
 	}
 	return this.Params[key]
 }
-func (this *Base)UploadImg(key string){
+func (this *Base) UploadImg(key string) {
 	var AllowExtMap map[string]bool = map[string]bool{
-		".jpg":true,
-		".jpeg":true,
-		".png":true,
-		".gif":true,
-		".bmp":true,
+		".jpg":  true,
+		".jpeg": true,
+		".png":  true,
+		".gif":  true,
+		".bmp":  true,
 	}
-	this.uploadFile("图片",key,AllowExtMap)
+	this.uploadFile("图片", key, AllowExtMap)
 }
+
 //上传图片
-func (this *Base)uploadFile(fileType string,key string,allowExtMap  map[string]bool){
-	file,fileHeader,_:=this.GetFile(key)
-	defer file.Close()
-	if fileHeader.Size >(30*1024*1024){
-		this.ServeError(fileType + "太大了","")
+func (this *Base) uploadFile(fileType string, key string, allowExtMap map[string]bool) {
+	classId,err:=this.GetInt("class_id",0)
+	if err!=nil{
+		classId=0
 	}
-	ext:=path.Ext(fileHeader.Filename)
+	file, fileHeader, _ := this.GetFile(key)
+	defer file.Close()
+	if fileHeader.Size > (30 * 1024 * 1024) {
+		this.ServeError(fileType+"太大了", "")
+	}
+	ext := path.Ext(fileHeader.Filename)
 	//验证后缀名是否符合要求
-	if _,ok:=allowExtMap[ext];!ok{
-		this.ServeError(fileType+"格式不正确","")
+	if _, ok := allowExtMap[ext]; !ok {
+		this.ServeError(fileType+"格式不正确", "")
 	}
 	//创建目录
 	uploadDir := "static/upload/" + time.Now().Format("2006/01/02/")
-	err := os.MkdirAll( uploadDir , 777)
+	err = os.MkdirAll(uploadDir, 777)
 	if err != nil {
-		this.ServeError("上传失败（100）","")
+		this.ServeError("上传失败（100）", "")
 	}
 	//构造文件名称
 	rand.Seed(time.Now().UnixNano())
-	randNum := fmt.Sprintf("%d", rand.Intn(9999)+1000 )
-	hashName := md5.Sum( []byte( time.Now().Format("2006_01_02_15_04_05_") + randNum ))
-	fileName := fmt.Sprintf("%x",hashName) + ext
+	randNum := fmt.Sprintf("%d", rand.Intn(9999)+1000)
+	hashName := md5.Sum([]byte(time.Now().Format("2006_01_02_15_04_05_") + randNum))
+	fileName := fmt.Sprintf("%x", hashName) + ext
 	fpath := uploadDir + fileName
 	err = this.SaveToFile(key, fpath)
 	if err != nil {
-		this.ServeError("上传失败（101）","")
+		this.ServeError("上传失败（101）", "")
 	}
-	this.ServeSuccess("上传成功",fpath)
+	ft:=new(models.Files)
+	ft.ClassId=classId;
+	ft.AddTime=time.Now().Unix()
+	ft.Src=fpath
+	ft.Label=fileHeader.Filename
+	if ok,_:=ft.Add();ok{
+		this.ServeSuccess("上传成功", ft)
+	}
+	if err:=os.Remove(fpath);err!=nil{
+		common.Log.Error(fmt.Sprintf("删除文件失败：%v",fpath));
+	}
+	this.ServeError("上传失败","")
 }
-
 
 func (this *Base) jsonReturn(code int, msg interface{}, data interface{}) {
 	this.Data["json"] = map[string]interface{}{"code": code, "msg": msg, "data": data}

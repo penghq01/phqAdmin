@@ -35,7 +35,7 @@ func (this *Paginate) CalcPaginate(totalCount int) {
 
 //密码加密函数
 func PassWordEncryption(pass string) string {
-	pass =EncryptionString + pass + EncryptionString
+	pass = EncryptionString + pass + EncryptionString
 	return Md5String(pass)
 }
 

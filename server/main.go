@@ -8,8 +8,6 @@ import (
 	_ "phqAdmin/server/routers"
 )
 
-
-
 func main() {
 	defer func() {
 		if err := common.DbEngine.Close(); err != nil {
