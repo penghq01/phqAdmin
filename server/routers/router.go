@@ -8,6 +8,7 @@ import (
 func init() {
 
 	//后台api接口路由 ------start--------
+
 	var AdminRootPath string = "/admin-api"
 
 	beego.Router(AdminRootPath+"/login", &adminApi.Login{}, "post:Login")
@@ -32,6 +33,10 @@ func init() {
 	beego.Router(AdminRootPath+"/auth/add", &adminApi.Auth{}, "post:Add")
 	beego.Router(AdminRootPath+"/auth/edit", &adminApi.Auth{}, "post:Edit")
 	beego.Router(AdminRootPath+"/auth/del", &adminApi.Auth{}, "post:Del")
-	//----------end------------
-    beego.Router(AdminRootPath+"/upload/img",&adminApi.Upload{},"post:UploadImage")
+
+    beego.Router(AdminRootPath+"/files/upload/img",&adminApi.Files{},"post:UploadImage")
+	beego.Router(AdminRootPath+"/files/add/class",&adminApi.Files{},"post:AddFileClass")
+	beego.Router(AdminRootPath+"/files/edit/class",&adminApi.Files{},"post:EditFileClass")
+	beego.Router(AdminRootPath+"/files/list/class",&adminApi.Files{},"post:ListClass")
+	beego.Router(AdminRootPath+"/files/del/class",&adminApi.Files{},"post:DelClass")
 }

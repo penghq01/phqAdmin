@@ -1,17 +1,17 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地数据
+ Source Server         : 本地
  Source Server Type    : MySQL
- Source Server Version : 50717
+ Source Server Version : 50718
  Source Host           : localhost:3306
  Source Schema         : phqadmin
 
  Target Server Type    : MySQL
- Target Server Version : 50717
+ Target Server Version : 50718
  File Encoding         : 65001
 
- Date: 18/08/2019 22:36:28
+ Date: 21/08/2019 11:10:43
 */
 
 SET NAMES utf8mb4;
@@ -33,7 +33,7 @@ CREATE TABLE `admin`  (
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', 1566132872, 'localhost:8181');
+INSERT INTO `admin` VALUES (1, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', 1566354111, 'localhost:8181');
 
 -- ----------------------------
 -- Table structure for admin_and_role
@@ -67,7 +67,7 @@ CREATE TABLE `auth`  (
   `is_show` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否显示',
   `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 89 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 84 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of auth
@@ -85,7 +85,32 @@ INSERT INTO `auth` VALUES (10, 4, '充值记录', 'fa fa-cc-visa', '/paylog', ''
 INSERT INTO `auth` VALUES (74, 0, '后台登录', '', '', '', NULL, 1, 0, 0, 1);
 INSERT INTO `auth` VALUES (75, 74, '管理员信息', '', '', '/admin-api/admin/info', NULL, 1, 1, 1, 0);
 INSERT INTO `auth` VALUES (76, 74, '修改密码', '', '', '/admin-api/admin/edit/pass', NULL, 1, 1, 1, 0);
-INSERT INTO `auth` VALUES (83, 0, '后台登录', '', '', '/admin-api/login', NULL, 0, 1, 1, 0);
+INSERT INTO `auth` VALUES (83, 0, '后台登录', '', '', '/admin-api/login', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":false,\"router\":\"\"}}', 0, 1, 1, 0);
+
+-- ----------------------------
+-- Table structure for files
+-- ----------------------------
+DROP TABLE IF EXISTS `files`;
+CREATE TABLE `files`  (
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `class_id` int(11) NOT NULL DEFAULT 0 COMMENT '所属分类文件id',
+  `label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件名称',
+  `send_num` int(11) NULL DEFAULT 0 COMMENT '使用数量',
+  `src` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件地址',
+  `add_time` int(11) NOT NULL DEFAULT 0 COMMENT '上传时间',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Table structure for files_class
+-- ----------------------------
+DROP TABLE IF EXISTS `files_class`;
+CREATE TABLE `files_class`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `pid` int(11) NOT NULL DEFAULT 0 COMMENT '父ID',
+  `label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件分类名称',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for icon

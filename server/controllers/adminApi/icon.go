@@ -3,7 +3,6 @@ package adminApi
 import (
 	"phqAdmin/server/common"
 	"phqAdmin/server/models"
-	"phqAdmin/server/models/valid"
 )
 
 type Icon struct {
@@ -35,7 +34,7 @@ func (this *Icon) List() {
 func (this *Icon) Add() {
 	icon := new(models.Icon)
 	this.AnalyseJson(icon)
-	vd := valid.Icon{
+	vd := models.IconValid{
 		Icon: true,
 	}
 	if ok, err := vd.Valid(icon); !ok {
@@ -49,7 +48,7 @@ func (this *Icon) Add() {
 func (this *Icon) Del() {
 	icon := new(models.Icon)
 	this.AnalyseJson(icon)
-	vd := valid.Icon{
+	vd := models.IconValid{
 		Id: true,
 	}
 	if ok, err := vd.Valid(icon); !ok {

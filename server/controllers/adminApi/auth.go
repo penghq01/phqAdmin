@@ -2,7 +2,6 @@ package adminApi
 
 import (
 	"phqAdmin/server/models"
-	"phqAdmin/server/models/valid"
 )
 
 type Auth struct {
@@ -16,7 +15,7 @@ func (this *Auth) Prepare() {
 func (this *Auth) Add() {
 	auth := new(models.Auth)
 	this.AnalyseJson(auth)
-	vd := valid.Auth{
+	vd := models.AuthValid{
 		Title:    true,
 		AuthType: true,
 		IsShow:   true,
@@ -33,7 +32,7 @@ func (this *Auth) Add() {
 func (this *Auth) Edit() {
 	auth := new(models.Auth)
 	this.AnalyseJson(auth)
-	vd := valid.Auth{
+	vd := models.AuthValid{
 		Id:    true,
 		Title: true,
 	}
@@ -49,7 +48,7 @@ func (this *Auth) Edit() {
 func (this *Auth) Del() {
 	auth := new(models.Auth)
 	this.AnalyseJson(auth)
-	vd := valid.Auth{
+	vd := models.AuthValid{
 		Id: true,
 	}
 	if ok, msg := vd.Valid(auth); !ok {

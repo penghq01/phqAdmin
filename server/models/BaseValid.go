@@ -1,4 +1,4 @@
-package valid
+package models
 
 import (
 	"fmt"

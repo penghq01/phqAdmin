@@ -3,7 +3,6 @@ package adminApi
 import (
 	"phqAdmin/server/common"
 	"phqAdmin/server/models"
-	"phqAdmin/server/models/valid"
 )
 
 type Admin struct {
@@ -25,7 +24,7 @@ func (this *Admin) List() {
 func (this *Admin) Add() {
 	user := new(models.Admin)
 	this.AnalyseJson(user)
-	va := valid.Admin{
+	va := models.AdminValid{
 		Username: true,
 		Password: true,
 	}
@@ -47,7 +46,7 @@ func (this *Admin) Add() {
 func (this *Admin) Del() {
 	user := new(models.Admin)
 	this.AnalyseJson(user)
-	va := valid.Admin{
+	va := models.AdminValid{
 		AdminId: true,
 	}
 	ok, msg := va.Valid(user)
@@ -61,7 +60,7 @@ func (this *Admin) Del() {
 	this.ServeError("删除失败", "")
 }
 func (this *Admin) Edit() {
-	va := valid.Admin{
+	va := models.AdminValid{
 		AdminId:  true,
 		Username: true,
 	}

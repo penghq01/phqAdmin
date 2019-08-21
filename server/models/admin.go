@@ -14,6 +14,33 @@ type Admin struct {
 	LoginIp   string `json:"login_ip"`                 //上次登录IP
 }
 
+//管理员数据校验
+type AdminValid struct {
+	BaseVaild
+	AdminId  bool
+	Username bool
+	Password bool
+}
+
+func (this *AdminValid) Valid(obj *Admin) (bool, string) {
+	if this.AdminId {
+		if ok, msg := this.Required(obj.AdminId, "ID"); !ok {
+			return false, msg
+		}
+	}
+	if this.Username {
+		if ok, msg := this.RangeSize(obj.Username, 6, 20, "账号"); !ok {
+			return false, msg
+		}
+	}
+	if this.Password {
+		if ok, msg := this.Required(obj.Password, "密码"); !ok {
+			return false, msg
+		}
+	}
+	return true, ""
+}
+
 //通过用户名查找管理员
 func (this *Admin) UserNameGet(username string) bool {
 	ok, err := common.DbEngine.Where("username=?", username).Get(this)
