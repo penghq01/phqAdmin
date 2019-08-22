@@ -41,6 +41,6 @@ func init() {
 	beego.Router(AdminRootPath+"/files/del/class", &adminApi.Files{}, "post:DelClass")
 
 	beego.Router(AdminRootPath+"/files/list/:pageszie/:page", &adminApi.Files{}, "post:List")
-
+	beego.Router(AdminRootPath+"/files/del", &adminApi.Files{}, "post:Delete")
 
 }

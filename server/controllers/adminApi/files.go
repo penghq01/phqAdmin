@@ -63,3 +63,13 @@ func (this *Files) List(){
 	}
 	this.ServeError(msg,"")
 }
+
+func (this *Files) Delete(){
+      f:=new(models.Files)
+	  this.AnalyseJson(f)
+	ok,msg:=f.Delete()
+	if ok{
+		this.ServeSuccess(msg,"")
+	}
+	this.ServeError(msg,"")
+}

@@ -1,6 +1,7 @@
 package models
 
 import (
+	"os"
 	"phqAdmin/server/common"
 )
 
@@ -152,4 +153,23 @@ func (this *Files)List(paginate common.Paginate,pageData *common.PaginateData)(b
 		return true,""
 	}
 	return false,""
+}
+func (this *Files)Delete()(bool,string){
+	session:=common.DbEngine.NewSession()
+	defer session.Close()
+	err:=session.Begin()
+	if err!=nil{
+		return false,"删除失败"
+	}
+	 if ok,err:=session.Where("id=?",this.Id).Get(this);!ok || err!=nil{
+		 return false,"图片不存在"
+	 }
+	if row,err:=session.Where("id=?",this.Id).Delete(this);row>0 && err==nil{
+        if err:=os.Remove(this.Src);err==nil{
+        	_=session.Commit()
+        	return true,"删除成功"
+		}
+	}
+	_=session.Rollback()
+	return false,"删除失败"
 }

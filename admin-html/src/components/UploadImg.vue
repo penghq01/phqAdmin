@@ -48,13 +48,21 @@
                 </el-tree>
             </div>
             <div class="file-list">
-                <transition-group class="imgs" name="list-animate" tag="div">
-                    <div class="img-div" v-for="(img,index) in imgList" :key="img.id">
-                        <img :src="imgHost+img.src"/>
+                <transition-group name="list-animate" tag="div">
+                    <div class="img-list" v-for="(img,index) in imgList" :key="img.id">
+                        <div v-if="isSelect" class="img-action img-action-see" @click="selectImg(img)">选择图片</div>
+                        <img @click="previewImg=imgHost+img.src" :src="imgHost+img.src"/>
+                        <div class="img-action img-action-del" @click="delImg(img)">删除</div>
                     </div>
                 </transition-group>
+
+                <div v-show="imgList.length==0">暂无图片</div>
                 <Paging v-model="pageData" @change="pageChange"></Paging>
+
             </div>
+        </div>
+        <div class="previewImg" v-show="previewImg!=''" @click="previewImg=''">
+            <img   :src="previewImg" />
         </div>
     </div>
 </template>
@@ -63,14 +71,21 @@
     import message from "../lib/message";
     import http from "../lib/http";
     import utils from "../lib/utils";
-
+    import config from "../config/index"
     export default {
         name: "UploadImg",
+        props:{
+            isSelect:{
+                type:Boolean,
+                default:false
+            }
+        },
         data() {
             return {
-                imgHost: "http://localhost:8181/",
+                imgHost:"",
                 selectUploadImageProgress: 0,
-                imgList: [],
+                imgList:[],
+                previewImg:"",
                 classList: [{
                     id: 0,
                     pid: 0,
@@ -91,6 +106,7 @@
         },
         mounted() {
             message.loading.show();
+            this.imgHost=config.imgHost;
             this.getImageList();
             this.getFileClassList();
         },
@@ -122,9 +138,10 @@
             //获取图片列表
             getImageList() {
                 http.post(`files/list/${this.pageData.page_size}/${this.pageData.page}`, {"class_id": this.selectFileClassId}).then(list => {
-                    this.imgList = list.data;
+                    this.imgList=list.data;
                     this.pageData = list.paginate;
                 }).catch(err => {
+                    this.imgList=[];
                 });
             },
             //选择上传前回调
@@ -211,7 +228,6 @@
                 if (data.id <= 0) {
                     this.removeTree(node, data);
                 }
-                ;
             },
             //删除节点
             deleteTree(node, data) {
@@ -276,6 +292,20 @@
                 message.loading.show();
                 this.getImageList();
             },
+            //删除图片
+            delImg(img){
+                message.confirm("确定要删除吗？",{okName:"删除",okFunction:()=>{
+                        message.loading.show("删除中");
+                        http.post("/files/del",{"id":img.id}).then(data=>{
+                            let index=this.imgList.findIndex(i=>i.id==img.id);
+                            this.imgList.splice(index,1);
+                        }).catch(err=>{});
+                    }});
+            },
+            //选择图片
+            selectImg(img){
+                this.$emit("select",img);
+            }
         },
     }
 </script>
@@ -284,7 +314,6 @@
     .upload-demo {
         width: 100%;
     }
-
     .upload-btn {
         width: 100%;
         color: #FFFFFF;
@@ -374,26 +403,80 @@
         padding: 10px;
         box-shadow: 0 0 5px $gray2-color;
 
-        & > .imgs {
+        & > div {
             display: flex;
             flex-wrap: wrap;
-
+            position:relative;
             & > div {
-                width: 122px;
-                height: 122px;
-                display: flex;
-                justify-content: center;
-                align-items: center;
-                margin-right: 15px;
-                margin-bottom: 15px;
-                border: 1px $gray2-color solid;
-                background-color: $gray2-color;
-
+                    width: 122px;
+                    height: 122px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    margin-right: 15px;
+                    margin-bottom: 15px;
+                    border: 1px $gray2-color solid;
+                    background-color: $gray2-color;
+                    overflow: hidden;
+                    position:relative;
                 & > img {
                     max-width: 120px;
                     max-height: 120px;
+                    transition: all 1S ease-out;
+                }
+                & .img-action{
+                    position:absolute;
+                    width:100%;
+                    text-align:center;
+                    padding:3px 0;
+                    color:#ffffff;
+                    transition:all 0.5s ease-out;
+                    cursor:pointer;
+                }
+                .img-action-see{
+                    transform:translateY(-30px);
+                    top:0;
+                    background-color:rgba(51,153,225,0.5);
+                }
+                .img-action-del{
+                    transform:translateY(30px);
+                    bottom:0;
+                    background-color:rgba(213,8,8,0.5);
+                }
+            }
+            & > .list-animate-leave-active{
+                position: absolute;
+            }
+            &> .list-animate-enter-active{
+                transition: all 1s ease-out;
+            }
+            &>div:hover{
+                & > img{
+                    max-width: 200px;
+                    max-height: 200px;
+                }
+                & .img-action{
+                    transform:translateY(0);
                 }
             }
         }
     }
+    .previewImg{
+        transition:all 0.5s ease-out;
+        display:flex;
+        justify-content:center;
+        align-items: center;
+        width:100%;
+        height:100%;
+        position:absolute;
+        z-index:999;
+        top:0;
+        left:0;
+        background-color:rgba(0,0,0,0.2);
+        &>img{
+            max-width:80%;
+            max-height:80%;
+        }
+    }
+
 </style>

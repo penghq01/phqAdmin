@@ -172,26 +172,18 @@ html,body{
   padding-top:15px;
 }
 
-.list-animate-enter-active {
-  transition: all 1S ease-out;
-}
-
-.list-animate-leave-active {
+.list-animate-enter-active ,.list-animate-leave-active {
   transition: all 1S ease-out;
   position: absolute;
 }
-
-
 .list-animate-enter {
   opacity: 0;
   transform: translateY(-50px);
 }
-
 .list-animate-leave-to {
   opacity: 0;
-  transform: translateY(50px);
+  transform: translateY(-50px);
 }
-
 .list-animate-move {
-  transition: transform 1s ease-out;
+  transition:all 1s ease-out;
 }

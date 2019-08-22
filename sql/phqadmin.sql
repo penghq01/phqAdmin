@@ -11,7 +11,7 @@
  Target Server Version : 50718
  File Encoding         : 65001
 
- Date: 21/08/2019 11:10:43
+ Date: 21/08/2019 17:07:21
 */
 
 SET NAMES utf8mb4;
@@ -33,7 +33,7 @@ CREATE TABLE `admin`  (
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', 1566354111, 'localhost:8181');
+INSERT INTO `admin` VALUES (1, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', 1566371093, 'localhost:8181');
 
 -- ----------------------------
 -- Table structure for admin_and_role
@@ -110,7 +110,12 @@ CREATE TABLE `files_class`  (
   `pid` int(11) NOT NULL DEFAULT 0 COMMENT '父ID',
   `label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件分类名称',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of files_class
+-- ----------------------------
+INSERT INTO `files_class` VALUES (1, 0, '图片');
 
 -- ----------------------------
 -- Table structure for icon
