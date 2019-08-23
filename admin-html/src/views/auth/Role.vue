@@ -7,7 +7,6 @@
       <el-table  v-loading="loading" :data="roleList" border size="mini">
         <el-table-column label="ID" prop="id"></el-table-column>
         <el-table-column label="名称" prop="role_name"></el-table-column>
-        <el-table-column label="权限" prop="auth_list"></el-table-column>
         <el-table-column label="描述" prop="role_desc"></el-table-column>
         <el-table-column label="操作" align="center" width="120">
           <template slot-scope="scope">
@@ -38,7 +37,7 @@
       <div class="input-div"><el-input type="textarea" :rows="2" v-model="postData.role_desc" placeholder="角色描述"/></div>
       <div class="select-auth">
         <div>选择角色权限：</div>
-        <el-tree ref="treeAuth" :data="authTree" show-checkbox node-key="id" default-expand-all :expand-on-click-node="true"  @check-change="checkChange">
+        <el-tree ref="treeAuth" :data="authTree" show-checkbox node-key="id" default-expand-all :expand-on-click-node="true"  @check-change="checkChange" :default-checked-keys="checkedAuth">
            <span class="custom-tree-node" style="padding:3px 5px;" slot-scope="{ node, data }">
                <span v-if="data.icon" :class="data.icon" style="font-size:14px;"></span>
                 {{ node.data.title }}
@@ -60,6 +59,7 @@
 <script>
   import http from "../../lib/http";
   import utils from "../../lib/utils";
+  import message from "../../lib/message";
 
   export default {
     name: 'Role',
@@ -71,11 +71,14 @@
         isEdit:false,
         roleList:[],
         postData:{},
-        authTree:[]
+        authList:[],
+        authTree:[],
+        checkedAuth:[]
       }
     },
     mounted () {
       this.getAuthList();
+      this.getRoleList();
     },
     methods: {
       listTotree(data,pid=0){
@@ -94,15 +97,24 @@
       },
       getAuthList() {
         http.post("auth/list").then(data => {
-          this.authTree=this.listTotree(data);
+           this.authList=data;
+           this.authTree=this.listTotree(data);
         }).catch(err => {
         });
       },
+        getRoleList(){
+          this.loading=true;
+          http.post("role/list").then(data=>{
+              this.roleList=data;
+          }).catch(err=>{}).finally(()=>{
+              this.loading=false;
+          });
+        },
       getCheckAuth(){
         let arr=this.$refs.treeAuth.getCheckedNodes();
         let res=[];
         arr.forEach(item=>{
-           let a={"title":item.title,"auth_id":item.id,"select":false,"add":false,"edit":false,"delete":false};
+           let a={"auth_id":item.id,"select":false,"add":false,"edit":false,"delete":false};
            if(item.auth!=""){
              for(let key in item.auth){
                a[key]=item.auth[key].action;
@@ -113,27 +125,87 @@
         return res;
       },
       addRole(){
-        console.log(this.getCheckAuth());
+          if(utils.empty(this.postData.role_name)){
+              message.msg.error("角色名称不能为空");
+              return;
+          }
+          message.loading.show("添加中");
+          this.postData.auth_list=JSON.stringify(this.getCheckAuth());
+          http.post("/role/add",this.postData).then(data=>{
+              this.roleList.unshift(data);
+              this.close();
+          }).catch(err=>{})
+
       },
       showEdit(row){
+          let list=utils.NewObject(this.authList);
+          let rl=JSON.parse(row.auth_list);
+          rl.forEach(item=>{
+              let index=list.findIndex(i=>i.id==item.auth_id);
+              if(index>=0){
+                  this.checkedAuth.push(item.auth_id);
+                  let auth=JSON.parse(list[index].auth);
+                  if(item.select){
+                      auth.select.action=item.select;
+                  }
+                  if(item.add){
+                      auth.add.action=item.add;
+                  }
+                  if(item.edit){
+                      auth.edit.action=item.edit;
+                  }
+                  if(item.delete){
+                      auth.delete.action=item.delete;
+                  }
+                  list[index].auth=JSON.stringify(auth);
+              }
+          });
+          this.authTree=this.listTotree(list,0);
+          this.postData=utils.NewObject(row);
+          this.opened=true;
+          this.isEdit=true;
+          this.titleName=`修改角色【 ${row.role_name} 】`;
       },
       close(){
+        this.authTree=this.listTotree(this.authList,0);
         this.isEdit=false;
         this.opened=false;
         this.postData={};
+        this.checkedAuth=[];
         this.titleName="添加角色";
       },
       edit(){
-        console.log(this.getCheckAuth());
+          if(utils.empty(this.postData.role_name)){
+              message.msg.error("角色名称不能为空");
+              return;
+          }
+          message.loading.show("修改中");
+          this.postData.auth_list=JSON.stringify(this.getCheckAuth());
+          http.post("/role/edit",this.postData).then(data=>{
+              let index=this.roleList.findIndex(i=>i.id==this.postData.id);
+              if(index>=0){
+                  this.$set(this.roleList,index,this.postData);
+              }
+              this.close();
+          }).catch(err=>{})
+
       },
-      del(){},
+      del(row){
+          message.loading.show("删除中");
+          http.post("/role/del",{"id":row.id}).then(data=>{
+              this.roleList.splice(this.roleList.findIndex(i=>i.id==row.id),1);
+          }).catch(err=>{});
+      },
       checkChange(data,check,children){
          if(data.auth!=""){
            for (let key in data.auth){
              this.$set(data.auth[key],"action",check);
            }
          }
-      }
+      },
+        cs(node){
+          console.log(node);
+        }
     }
   }
 </script>

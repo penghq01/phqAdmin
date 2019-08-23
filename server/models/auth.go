@@ -1,5 +1,7 @@
 package models
 
+import "phqAdmin/server/common"
+
 //权限表
 type Auth struct {
 	Id       int    `json:"id" xorm:"autoincr"` //id
@@ -52,4 +54,66 @@ func (this *AuthValid) Valid(obj *Auth) (bool, string) {
 		}
 	}
 	return true, ""
+}
+
+func (this *Auth) Add()(bool,string) {
+	vd := AuthValid{
+		Title:    true,
+		AuthType: true,
+		IsShow:   true,
+	}
+	if ok, msg := vd.Valid(this); !ok {
+		return false,msg
+	}
+	if row, err := common.DbEngine.Insert(this); row > 0 && err == nil {
+		return true,"添加成功"
+	}
+	return false,"添加失败"
+}
+
+func (this *Auth) Edit()(bool,string) {
+	vd := AuthValid{
+		Id:    true,
+		Title: true,
+	}
+	if ok, msg := vd.Valid(this); !ok {
+		return false,msg
+	}
+	if row, err := common.DbEngine.Where("id=?", this.Id).Cols("title,icon,srouter,crouter,auth,visit,auth_type,is_show,sort").Update(this); row > 0 && err == nil {
+		return true,"修改成功"
+	}
+	return false,"修改失败"
+}
+
+func (this *Auth) Delete()(bool,string) {
+	vd := AuthValid{
+		Id: true,
+	}
+	if ok, msg := vd.Valid(this); !ok {
+		return false,msg
+	}
+	row, err := common.DbEngine.Where("pid=?", this.Id).Count(new(Auth))
+	if err != nil {
+		return false,"删除失败"
+	}
+	if row > 0 {
+		return false,"存在子路由不能删除"
+	}
+	if row, err := common.DbEngine.Where("id=?", this.Id).Delete(this); row > 0 && err == nil {
+		return true,"删除成功"
+	}
+	return false,"删除失败"
+}
+
+func (this *Auth) List() (interface{},bool,string){
+	auth := make([]Auth, 0)
+	err := common.DbEngine.Asc("sort").Find(&auth)
+	if err != nil {
+		return "",false,""
+	}
+	return auth,true,""
+}
+
+func (this *Auth)PageList(paginate common.Paginate,pageData *common.PaginateData)(bool,string){
+	return false,""
 }

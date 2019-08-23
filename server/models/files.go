@@ -5,17 +5,6 @@ import (
 	"phqAdmin/server/common"
 )
 
-//文件分类
-type FilesClass struct {
-	Id    int    `json:"id" xorm:"autoincr"`
-	Pid   int    `json:"pid"`
-	Label string `json:"label"`
-}
-type FilesClassVaild struct {
-	BaseVaild
-	Id    bool
-	Label bool
-}
 
 //文件
 type Files struct {
@@ -33,22 +22,7 @@ type FilesVaild struct {
 	Src   bool //文件地址
 }
 
-func (this *FilesClassVaild) Valid(obj *FilesClass) (bool, string) {
-	if this.Id {
-		if ok, msg := this.Required(obj.Id, "ID"); !ok {
-			return false, msg
-		}
-	}
-	if this.Label {
-		if ok, msg := this.Required(obj.Label, "标题"); !ok {
-			return false, msg
-		}
-		if ok, msg := this.MaxSize(obj.Label, 15, "标题"); !ok {
-			return false, msg
-		}
-	}
-	return true, ""
-}
+
 func (this *FilesVaild) Valid(obj *Files) (bool, string) {
 	if this.Id {
 		if ok, msg := this.Required(obj.Id, "ID"); !ok {
@@ -71,61 +45,7 @@ func (this *FilesVaild) Valid(obj *Files) (bool, string) {
 	return true, ""
 }
 
-func (this *FilesClass) ClassList(list *[]FilesClass) error {
-	return common.DbEngine.Find(list)
-}
 
-func (this *FilesClass) AddClass() (bool, string) {
-	vd := FilesClassVaild{
-		Label: true,
-	}
-	if ok, msg := vd.Valid(this); !ok {
-		return false, msg
-	}
-	if row, err := common.DbEngine.Insert(this); row > 0 && err == nil {
-		return true, "添加成功"
-	}
-	return false, "添加失败"
-}
-func (this *FilesClass) EditClass() (bool, string) {
-	vd := FilesClassVaild{
-		Id:    true,
-		Label: true,
-	}
-	if ok, msg := vd.Valid(this); !ok {
-		return false, msg
-	}
-	if row, err := common.DbEngine.Where("id=?", this.Id).Cols("pid,label").Update(this); row > 0 && err == nil {
-		return true, "修改成功"
-	}
-	return false, "修改失败"
-}
-func (this *FilesClass) DeleteClass() (bool, string) {
-	vd := FilesClassVaild{
-		Id: true,
-	}
-	if ok, msg := vd.Valid(this); !ok {
-		return false, msg
-	}
-	row, err := common.DbEngine.Where("class_id=?", this.Id).Count(new(Files))
-	if err != nil {
-		return false, "删除失败"
-	}
-	if row > 0 {
-		return false, "该分类下存在图片不能删除"
-	}
-	row, err = common.DbEngine.Where("pid=?", this.Id).Count(new(FilesClass))
-	if err != nil {
-		return false, "删除失败"
-	}
-	if row > 0 {
-		return false, "该分类下存在子分类不能删除"
-	}
-	if row, err = common.DbEngine.Where("id=?", this.Id).Delete(this); row > 0 && err == nil {
-		return true, "删除成功"
-	}
-	return false, "删除失败"
-}
 
 func (this *Files)Add()(bool, string){
 	if row, err := common.DbEngine.Insert(this); row > 0 && err == nil {
@@ -133,7 +53,7 @@ func (this *Files)Add()(bool, string){
 	}
 	return false, "添加失败"
 }
-func (this *Files)List(paginate common.Paginate,pageData *common.PaginateData)(bool,string){
+func (this *Files)PageList(paginate common.Paginate,pageData *common.PaginateData)(bool,string){
 	session := common.DbEngine.Desc("add_time")
 	session1 := common.DbEngine.Desc("add_time")
 	if this.ClassId>0 {
@@ -172,4 +92,10 @@ func (this *Files)Delete()(bool,string){
 	}
 	_=session.Rollback()
 	return false,"删除失败"
+}
+func (this *Files)Edit()(bool,string){
+	return false,""
+}
+func (this *Files)List()(interface{},bool,string) {
+	return "",false,""
 }

@@ -18,8 +18,8 @@ func (this *User) List() {
 	userList := make([]models.Users, 0)
 	serach := new(models.Users)
 	this.AnalyseJson(serach)
-	session := this.Db.Desc("user_id")
-	session1 := this.Db.Desc("user_id")
+	session := common.DbEngine.Desc("user_id")
+	session1 := common.DbEngine.Desc("user_id")
 	if serach.Nickname != "" {
 		session.Where("nickname like ?", "%"+serach.Nickname+"%")
 		session1.Where("nickname like ?", "%"+serach.Nickname+"%")
@@ -47,7 +47,7 @@ func (this *User) PayLog() {
 	this.GetPageParam()
 	upl := make([]models.UsersPayLogTable, 0)
 	userId := this.Params["user_id"].(float64)
-	sin := this.Db.Desc("id")
+	sin := common.DbEngine.Desc("id")
 	if userId > 0 {
 		sin.Where("user_id=?", userId)
 	}
@@ -56,7 +56,7 @@ func (this *User) PayLog() {
 		this.ServeError("", "")
 	}
 	this.Paginate.CalcPaginate(int(rows))
-	sin1 := this.Db.Desc("users_pay_log.add_time")
+	sin1 := common.DbEngine.Desc("users_pay_log.add_time")
 	if userId > 0 {
 		sin1.Where("users_pay_log.user_id=?", userId)
 	}
@@ -72,7 +72,7 @@ func (this *User) PayLog() {
 }
 
 func (this *User) TotalMoneyPoints() {
-	total, err := this.Db.Sums(new(models.Users), "money", "points")
+	total, err := common.DbEngine.Sums(new(models.Users), "money", "points")
 	if err != nil {
 		this.ServeError("查询总金额和总积分失败", "")
 	}

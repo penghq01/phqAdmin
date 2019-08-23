@@ -21,7 +21,6 @@ type Base struct {
 	AuthToken string                 //token
 	Params    map[string]interface{} //前端传来的参数
 	Uri       string                 //访问uri
-	Db        *xorm.Engine           //Orm引擎
 	Paginate  common.Paginate        //分页数据
 }
 
@@ -52,7 +51,7 @@ func (this *Base) AnalyseJson(obj interface{}) {
 	//fmt.Println(string(this.Ctx.Input.RequestBody))
 	err := json.Unmarshal(this.Ctx.Input.RequestBody, obj)
 	if err != nil {
-		this.ServeError("参数解析失败", "")
+		this.ServeError("参数解析失败," + err.Error(), "")
 	}
 }
 

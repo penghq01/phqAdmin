@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地
+ Source Server         : 本地数据
  Source Server Type    : MySQL
  Source Server Version : 50717
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 23/08/2019 12:09:23
+ Date: 24/08/2019 00:26:38
 */
 
 SET NAMES utf8mb4;
@@ -77,7 +77,7 @@ INSERT INTO `auth` VALUES (2, 0, '系统与安全', 'fa fa-address-card', '', ''
 INSERT INTO `auth` VALUES (3, 0, '附件管理', 'fa fa-folder-open', '', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":false,\"router\":\"\"}}', 2, 0, 1, 4);
 INSERT INTO `auth` VALUES (4, 0, '用户管理', 'fa fa-user', '', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":false,\"router\":\"\"}}', 2, 0, 1, 5);
 INSERT INTO `auth` VALUES (5, 2, '管理员管理', 'fa fa-user', '/admin', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/admin/add\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/admin/del\"},\"edit\":{\"show\":true,\"router\":\"/admin-api/admin/edit\"},\"select\":{\"show\":true,\"router\":\"/admin-api/admin/list\"}}', 2, 0, 1, 0);
-INSERT INTO `auth` VALUES (6, 2, '角色管理', 'fa fa-address-book', '/role', '', NULL, 2, 0, 1, 1);
+INSERT INTO `auth` VALUES (6, 2, '角色管理', 'fa fa-address-book', '/role', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/role/add\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/role/del\"},\"edit\":{\"show\":true,\"router\":\"/admin-api/role/edit\"},\"select\":{\"show\":true,\"router\":\"/admin-api/auth/list@/admin-api/role/list\"}}', 2, 0, 1, 1);
 INSERT INTO `auth` VALUES (7, 2, '权限管理', 'fa fa-gears', '/auth', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/auth/add\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/auth/del\"},\"edit\":{\"show\":true,\"router\":\"/admin-api/auth/edit\"},\"select\":{\"show\":true,\"router\":\"/admin-api/auth/list\"}}', 3, 0, 1, 2);
 INSERT INTO `auth` VALUES (8, 3, '图标管理', 'fa fa-free-code-camp', '/icon', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/icon/add\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/icon/del\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":true,\"router\":\"/admin-api//icon/list\"}}', 2, 0, 1, 1);
 INSERT INTO `auth` VALUES (9, 4, '会员列表', 'fa fa-users', '/user', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":true,\"router\":\"/admin-api/user/list/*@/admin-api/user/total/money-points\"}}', 2, 0, 1, 0);
@@ -100,23 +100,12 @@ CREATE TABLE `files`  (
   `src` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件地址',
   `add_time` int(11) NOT NULL DEFAULT 0 COMMENT '上传时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 23 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of files
 -- ----------------------------
-INSERT INTO `files` VALUES (1, 1, '0d97b98b79d4f50836d2e1bdff691549.jpeg', 0, 'static/upload/2019/08/22/f31f1cb97e52cf17d689b887f279f3dd.jpeg', 1566434300);
-INSERT INTO `files` VALUES (7, 11, 'a0cad5ab59385b921110453ff8f7e7fc.jpg', 0, 'static/upload/2019/08/22/d635575cb2384fbf5afe97097961b4b7.jpg', 1566440356);
-INSERT INTO `files` VALUES (6, 11, 'd387497997c56f5b50d23b26a4bbc4ed.jpeg', 0, 'static/upload/2019/08/22/a9a378c05b49642fdd7eff12cffa8f42.jpeg', 1566440351);
-INSERT INTO `files` VALUES (5, 1, '1ebf046298c63e0179141c829e6853ac.jpg', 0, 'static/upload/2019/08/22/26b2a10aad4a5f4ebc8032f703e583c4.jpg', 1566434326);
-INSERT INTO `files` VALUES (11, 11, '1ebf046298c63e0179141c829e6853ac.jpg', 0, 'static/upload/2019/08/22/6978fdf9d155fe87ac83f0529a07ec05.jpg', 1566441853);
-INSERT INTO `files` VALUES (12, 11, '489777a9a7127281819d59b5d2fd6590a47747085ad2-2Up2xb_fw658.jpg', 0, 'static/upload/2019/08/22/cd031a6fb74ba67b6726a827e65389df.jpg', 1566441855);
-INSERT INTO `files` VALUES (13, 11, 'a0cad5ab59385b921110453ff8f7e7fc.jpg', 0, 'static/upload/2019/08/22/51f6f1c8cd2095286bd93cd16d41d2a8.jpg', 1566441858);
-INSERT INTO `files` VALUES (14, 11, '0d126e70df3b899eea00559e74be4f8b.jpeg', 0, 'static/upload/2019/08/22/99222b43ddd5899a3cb044e46a664183.jpeg', 1566441862);
-INSERT INTO `files` VALUES (15, 1, '4637a9d92b1b3ec1f4c8988fa6ddccd4.jpeg', 0, 'static/upload/2019/08/22/5d9c62f279a54ec2193fd79a039bf13a.jpeg', 1566443233);
-INSERT INTO `files` VALUES (16, 1, 'a0cad5ab59385b921110453ff8f7e7fc.jpg', 0, 'static/upload/2019/08/22/bd83e787eec5f64cb54b8856e723267c.jpg', 1566443236);
-INSERT INTO `files` VALUES (20, 1, '489777a9a7127281819d59b5d2fd6590a47747085ad2-2Up2xb_fw658.jpg', 0, 'static/upload/2019/08/22/8292deb72d267c1fdd1da41affd3cc42.jpg', 1566443246);
-INSERT INTO `files` VALUES (22, 1, 'd387497997c56f5b50d23b26a4bbc4ed.jpeg', 0, 'static/upload/2019/08/22/7f5a802faa17949f1fda3d126df96457.jpeg', 1566443251);
+INSERT INTO `files` VALUES (23, 1, '111.jpg', 0, 'static/upload/2019/08/23/02e89881809100d88df23034ea54e181.jpg', 1566567316);
 
 -- ----------------------------
 -- Table structure for files_class
@@ -145,7 +134,7 @@ CREATE TABLE `icon`  (
   `title` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标名称',
   `icon` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标样式',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 500 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 501 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of icon
@@ -623,11 +612,52 @@ INSERT INTO `icon` VALUES (499, NULL, 'fa fa-youtube-play');
 DROP TABLE IF EXISTS `role`;
 CREATE TABLE `role`  (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `pid` int(10) UNSIGNED NOT NULL DEFAULT 0 COMMENT '父id',
-  `role_name` varchar(0) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '角色名称',
+  `role_name` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '角色名称',
   `auth_list` text CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL COMMENT '权限列表',
   `role_desc` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '角色描述',
   PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 7 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of role
+-- ----------------------------
+INSERT INTO `role` VALUES (5, '管理员', '[{\"auth_id\":2,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":5,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":6,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":3,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":84,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":8,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":4,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":9,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":10,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true}]', '拥有所有权限');
+INSERT INTO `role` VALUES (6, '测试管理', '[{\"auth_id\":2,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":5,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":6,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true}]', '如你所见');
+
+-- ----------------------------
+-- Table structure for store
+-- ----------------------------
+DROP TABLE IF EXISTS `store`;
+CREATE TABLE `store`  (
+  `store_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `store_name` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家名称',
+  `sore_account` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家账号',
+  `password` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家登录密码',
+  `pay_password` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家提现密码',
+  `money` decimal(11, 2) NOT NULL DEFAULT 0.00 COMMENT '商家余额（分）',
+  `discount` float(3, 2) NOT NULL DEFAULT 0.00 COMMENT '商家让利折扣',
+  `class_type_id` int(11) NOT NULL DEFAULT 0 COMMENT '商家所属分类id',
+  `longitude` double(11, 8) NOT NULL DEFAULT 0.00000000 COMMENT '经度',
+  `latitude` double(11, 8) NOT NULL DEFAULT 0.00000000 COMMENT '纬度',
+  `address` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家地址',
+  `phone` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家电话',
+  `state` tinyint(1) NOT NULL DEFAULT 0 COMMENT '商家状态 0申请中，1开启，2拒绝申请，3关闭',
+  `img_url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家头像',
+  `rate` tinyint(1) NOT NULL DEFAULT 0 COMMENT '评分',
+  `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
+  `login_rand` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家登录随机字串',
+  `start_time` int(11) NOT NULL DEFAULT 0 COMMENT '开店时间',
+  `end_time` int(11) NOT NULL DEFAULT 0 COMMENT '关店时间',
+  `close_info` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关店原因',
+  `qr_img` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '收款二维码地址',
+  `bus_time` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '营业时间',
+  `desc` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家介绍',
+  `id_bus_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '营业执照图片',
+  `id_just_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '身份证正面',
+  `id_back_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '身份证背面',
+  `person_mobile` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '负责人手机',
+  `avg_price` decimal(11, 2) NOT NULL DEFAULT 0.00 COMMENT '平均消费',
+  PRIMARY KEY (`store_id`) USING BTREE
 ) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------

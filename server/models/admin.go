@@ -84,3 +84,74 @@ func (this *Admin) IdUpdate(id int) bool {
 		return false
 	}
 }
+
+func (this *Admin)Add()(bool,string){
+	va := AdminValid{
+		Username: true,
+		Password: true,
+	}
+	isOk, msg := va.Valid(this)
+	if !isOk {
+		return false,msg
+	}
+	ok, _ := common.DbEngine.Where("username=?", this.Username).Exist(new(Admin))
+	if ok {
+		return false,"管理员账号已经存在"
+	}
+	rows, err := common.DbEngine.Insert(this)
+	if rows > 0 && err == nil {
+		this.Password = ""
+		return true,"添加管理员成功"
+	}
+	return false,"添加管理员失败"
+}
+func (this *Admin)Delete()(bool,string){
+	va := AdminValid{
+		AdminId: true,
+	}
+	ok, msg := va.Valid(this)
+	if !ok {
+		return false,msg
+	}
+	if this.AdminId==1{
+		return false,"您没有权限删除该账号"
+	}
+	rows, err := common.DbEngine.Where("admin_id=?", this.AdminId).Delete(this)
+	if rows > 0 && err == nil {
+		return true,"删除管理员成功"
+	}
+	return false,"删除失败"
+}
+func (this *Admin)Edit()(bool,string){
+	if this.AdminId==1{
+		return false,"您没有权限编辑该账号"
+	}
+	va := AdminValid{
+		AdminId:  true,
+		Username: true,
+	}
+	ok, msg := va.Valid(this)
+	if !ok {
+		return false,msg
+	}
+	if this.Password != "" {
+		this.Password = common.PassWordEncryption(this.Password)
+	}
+	rows, err := common.DbEngine.Where("admin_id=?", this.AdminId).Update(this)
+	if rows > 0 && err == nil {
+		return true,"修改成功"
+	}
+	return false,"修改失败"
+}
+func (this *Admin)List()(interface{},bool,string){
+	list := make([]Admin, 0)
+	err := common.DbEngine.Where("admin_id>?",0).Omit("password").Find(&list)
+	if err != nil {
+		return "",false,""
+	} else {
+		return list,true,""
+	}
+}
+func (this *Admin)PageList(paginate common.Paginate,pageData *common.PaginateData)(bool,string){
+	return false,""
+}
