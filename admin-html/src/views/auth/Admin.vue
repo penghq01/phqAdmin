@@ -7,6 +7,7 @@
       <el-table  v-loading="loading" :data="adminList" border size="mini">
         <el-table-column label="ID" prop="admin_id"></el-table-column>
         <el-table-column label="账号" prop="username"></el-table-column>
+        <el-table-column label="权限角色" prop="role"></el-table-column>
         <el-table-column label="上次登录时间" prop="login_time"></el-table-column>
         <el-table-column label="上次登录IP" prop="login_ip"></el-table-column>
         <el-table-column label="操作" align="center" width="120">
@@ -67,7 +68,7 @@
              item.login_time=utils.UnixToDateTime(item.login_time);
            });
            this.loading=false;
-         }).catch(err=>{})
+         }).catch(err=>{this.loading=false;})
       },
       close(){
         this.opened=false;

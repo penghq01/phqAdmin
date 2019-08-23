@@ -14,7 +14,7 @@ func (this *Admin) Prepare() {
 }
 func (this *Admin) List() {
 	list := make([]models.Admin, 0)
-	err := common.DbEngine.Omit("password").Find(&list)
+	err := common.DbEngine.Where("admin_id>?",1).Omit("password").Find(&list)
 	if err != nil {
 		this.ServeError("", "")
 	} else {
@@ -53,6 +53,9 @@ func (this *Admin) Del() {
 	if !ok {
 		this.ServeError(msg, "")
 	}
+	if user.AdminId==1{
+		this.ServeError("您没有权限删除该账号", "")
+	}
 	rows, err := common.DbEngine.Where("admin_id=?", user.AdminId).Delete(user)
 	if rows > 0 && err == nil {
 		this.ServeSuccess("删除管理员成功", "")
@@ -66,6 +69,9 @@ func (this *Admin) Edit() {
 	}
 	a := new(models.Admin)
 	this.AnalyseJson(a)
+	if a.AdminId==1{
+		this.ServeError("您没有权限编辑该账号", "")
+	}
 	ok, msg := va.Valid(a)
 	if !ok {
 		this.ServeError(msg, "")

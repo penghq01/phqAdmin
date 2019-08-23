@@ -452,8 +452,8 @@
             }
             &>div:hover{
                 & > img{
-                    max-width: 200px;
-                    max-height: 200px;
+                    max-width: 260px;
+                    max-height: 260px;
                 }
                 & .img-action{
                     transform:translateY(0);
