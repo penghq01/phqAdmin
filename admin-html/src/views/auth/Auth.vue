@@ -65,8 +65,8 @@
                             style="font-size:30px;margin-right: 10px;"></span>
                 <el-button type="primary" size="mini" @click="showIcon">选择图标</el-button>
             </div>
-            <div class="input-div">前端路由：<el-input style="width:220px;" type="text" v-model="postAuth.croute" placeholder="请输入前端路由"/></div>
-            <div class="input-div">后端路由：<el-input style="width:220px;" type="text" v-model="postAuth.sroute" placeholder="请输入后端路由"/></div>
+            <div class="input-div">前端路由：<el-input style="width:220px;" type="text" v-model="postAuth.crouter" placeholder="请输入前端路由"/></div>
+            <div class="input-div">后端路由：<el-input style="width:220px;" type="text" v-model="postAuth.srouter" placeholder="请输入后端路由"/></div>
             <div class="input-div">数据权限：<span style="font-size:12px;color:#aaaaaa;">多个路由之间可以用 @ 符号隔开，如：/add@/del</span>
                 <div class="auth">
                     <div>
@@ -95,7 +95,7 @@
             </div>
             <div class="input-div">权限类型：
                 <el-radio v-model="postAuth.auth_type" :label="0">菜单</el-radio>
-                <el-radio v-model="postAuth.auth_type" :label="1">操作</el-radio>
+                <el-radio v-model="postAuth.auth_type" :label="1">数据</el-radio>
             </div>
             <div class="input-div">是否显示：
                 <el-radio v-model="postAuth.is_show" :label="1">显示</el-radio>

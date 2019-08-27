@@ -145,7 +145,7 @@ func (this *Admin)Edit()(bool,string){
 }
 func (this *Admin)List()(interface{},bool,string){
 	list := make([]Admin, 0)
-	err := common.DbEngine.Where("admin_id>?",0).Omit("password").Find(&list)
+	err := common.DbEngine.Where("admin_id>?",1).Omit("password").Find(&list)
 	if err != nil {
 		return "",false,""
 	} else {

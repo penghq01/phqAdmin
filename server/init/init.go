@@ -49,6 +49,8 @@ func ServerInit() {
 	if err != nil {
 		common.Log.Error(fmt.Sprintf("连接数据库失败，%v", err))
 	}
+	common.Log.Error("数据库连接成功")
+
 	common.DbEngine.ShowSQL(true)                     //则会在控制台打印出生成的SQL语句；
 	common.DbEngine.Logger().SetLevel(core.LOG_DEBUG) //则会在控制台打印调试及以上的信息
 	fmt.Println("----------------初始化完成----------------")

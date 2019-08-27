@@ -13,6 +13,7 @@ func main() {
 		if err := common.DbEngine.Close(); err != nil {
 			common.Log.Error(fmt.Sprintf("关闭数据库连接失败，%v", err))
 		}
+		common.Log.Error("关闭数据库连接成功")
 	}()
 	beego.Run()
 }

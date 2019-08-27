@@ -65,6 +65,16 @@ func (this *Auth) Add()(bool,string) {
 	if ok, msg := vd.Valid(this); !ok {
 		return false,msg
 	}
+	if this.Crouter!=""{
+		if row,err:=common.DbEngine.Where("crouter=?",this.Crouter).Count(new(Auth));row>0 && err==nil{
+			return false,"前端路由已经存在"
+		}
+	}
+	if this.Srouter!=""{
+		if row,err:=common.DbEngine.Where("srouter=?",this.Srouter).Count(new(Auth));row>0 && err==nil{
+			return false,"后端路由已经存在"
+		}
+	}
 	if row, err := common.DbEngine.Insert(this); row > 0 && err == nil {
 		return true,"添加成功"
 	}
@@ -78,6 +88,16 @@ func (this *Auth) Edit()(bool,string) {
 	}
 	if ok, msg := vd.Valid(this); !ok {
 		return false,msg
+	}
+	if this.Crouter!=""{
+		if row,err:=common.DbEngine.Where("crouter=?",this.Crouter).Count(new(Auth));row>0 && err==nil{
+			return false,"前端路由已经存在"
+		}
+	}
+	if this.Srouter!=""{
+		if row,err:=common.DbEngine.Where("srouter=?",this.Srouter).Count(new(Auth));row>0 && err==nil{
+			return false,"后端路由已经存在"
+		}
 	}
 	if row, err := common.DbEngine.Where("id=?", this.Id).Cols("title,icon,srouter,crouter,auth,visit,auth_type,is_show,sort").Update(this); row > 0 && err == nil {
 		return true,"修改成功"
@@ -107,7 +127,8 @@ func (this *Auth) Delete()(bool,string) {
 
 func (this *Auth) List() (interface{},bool,string){
 	auth := make([]Auth, 0)
-	err := common.DbEngine.Asc("sort").Find(&auth)
+	s:=common.DbEngine.Asc("sort")
+	err := s.Find(&auth)
 	if err != nil {
 		return "",false,""
 	}

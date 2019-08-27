@@ -36,7 +36,7 @@
         },
         methods: {
             selectMenu(index, indexPath){
-               //console.log(index, indexPath);
+                //console.log(index, indexPath);
                 this.$emit("select",index);
             }
         },

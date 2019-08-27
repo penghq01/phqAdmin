@@ -5,7 +5,14 @@
         </div>
         <div class="index-right">
             <div class="index-header">
-
+                <div class="router">
+                    <transition-group name="list-complete" tag="div">
+                       <div v-for="(item,index) in routerHistory" :key="item.id" :class="item.active?'active':''" @click="triggerSelect(item.key)">
+                           {{item.title}}
+                           <i class="el-icon-error" @click.stop="delRouterHistory(index)"></i>
+                       </div>
+                   </transition-group>
+                </div>
                 <div class="user">
                     <i class="fa fa-user" aria-hidden="true"></i> 欢迎：{{userInfo.username}}
                     <div class="user-info">
@@ -51,78 +58,83 @@
                 opened: false,
                 userInfo: {},
                 activeMenu:"/index",
-                menuTreeList: [
-                    {
-                        title: '首页',
-                        key: '/index',
-                        icon: 'fa fa-home'
-                    },
-                    {
-                        title: '系统与安全',
-                        icon: 'fa fa-vcard',
-                        key: 'admin-admin',
-                        children: [
-                            {
-                                title: '管理员管理',
-                                icon: 'fa fa-user',
-                                key: '/admin'
-                            },
-                            {
-                                title: '角色管理',
-                                icon: 'fa fa-address-book',
-                                key: '/role'
-                            },
-                            {
-                                title: '权限管理',
-                                icon: 'fa fa-sitemap',
-                                key: '/auth'
-                            }
-                        ]
-                    },
-                    {
-                        title: '附件管理',
-                        icon: 'fa fa-folder-open',
-                        key: 'admin-folder',
-                        children: [
-                            {
-                                title: '图片管理',
-                                icon: 'fa fa-file-image-o',
-                                key: '/images'
-                            },
-                            {
-                                title: '图标管理',
-                                icon: 'fa fa-free-code-camp',
-                                key: '/icon'
-                            }
-                        ]
-                    },
-                    {
-                        title: '用户管理',
-                        icon: 'fa fa-user',
-                        key: 'admin-user',
-                        children: [
-                            {
-                                title: '会员列表',
-                                icon: 'fa fa-users',
-                                key: '/user'
-                            },
-                            {
-                                title: '充值记录',
-                                icon: 'fa fa-money',
-                                key: '/paylog'
-                            }
-                        ]
-                    }
-                ]
+                routerHistory:[],
+                menuList:[],
+                menuTreeList:[],
+                isPush:false,
             }
         },
         mounted() {
             this.activeMenu=this.$router.history.current.path;
+            //this.routerHistory=storage.routerHistory.get();
             this.getUserInfo();
+            this.getAuthList();
         },
         methods: {
             triggerSelect(key) {
-                this.$router.push({'path': key})
+                let index=this.routerHistory.findIndex(r=>r.key==key);
+                this.routerHistory.forEach(r=>r.active=false);
+                if(index<0){
+                    let i=this.menuList.findIndex(i=>i.crouter==key);
+                    let title="";
+                    let id=this.routerHistory.length+1;
+                    if(i>=0){
+                        title=this.menuList[i].title;
+                        id=this.menuList[i].id;
+                    }
+                    this.routerHistory.push({"key":key,"active":true,"title":title,"id":id});
+                }else{
+                    this.routerHistory[index].active=true;
+                }
+                if(this.$router.history.current.path!=key){
+                    this.$router.push({'path': key})
+                }
+                storage.routerHistory.set(this.routerHistory);
+            },
+            delRouterHistory(index){
+                if(this.routerHistory.length>1){
+                    let active=this.routerHistory[index].active;
+                    this.routerHistory.splice(index,1);
+                    if(active){
+                       index-=1;
+                       if(index<0){
+                           index=0;
+                       }
+                       this.routerHistory[index].active=true;
+                       this.triggerSelect(this.routerHistory[index].key);
+                    }
+                }
+            },
+            listTotree(data,pid=0){
+                let list=[];
+                data.forEach((item,key)=>{
+                    if(item.pid==pid){
+                        let tem={"title":item.title,"key":item.crouter,"icon":item.icon};
+                        let cd=this.listTotree(data,item.id);
+                        if(cd.length>0){
+                            tem.key=item.pid+"-"+item.id;
+                            this.$set(tem,"children",cd);
+                        }
+                        if(!utils.empty(tem.auth)){
+                            tem.auth=JSON.parse(tem.auth);
+                        }
+                        list.push(tem);
+                        //data.splice(key,1);
+                    }
+                });
+                return list;
+            },
+            getAuthList() {
+                http.post("/admin/auth",{is_show:1,auth_type:0}).then(data => {
+                    this.menuList=data;
+                    this.menuTreeList=this.listTotree(data);
+                    if(!this.isPush){
+                        this.triggerSelect(this.$router.history.current.path);
+                        this.isPush=true;
+                    }
+                    //console.log(this.menuTreeList);
+                }).catch(err => {
+                });
             },
             getUserInfo() {
                 http.post("admin/info").then(data => {
@@ -175,13 +187,17 @@
     }
 
     .user {
+        width:150px;
         color: #327AA3;
         position: relative;
         height: 100%;
         display:flex;
         align-items:center;
-        padding:0 20px;
+        justify-content: center;
         text-align: center;
+        &>i{
+            margin-right:5px;
+        }
         & > div {
             display: none;
             width:100%;
@@ -213,4 +229,60 @@
             }
         }
     }
+    .router{
+        height:100%;
+        width:calc(100% - 150px);
+        &>div{
+            height:100%;
+            display:flex;
+            align-items:center;
+            background-color:$gray4-color;
+            position:relative;
+            &>div{
+                display:flex;
+                justify-content:center;
+                align-items: center;
+                transition:all 0.8s ease-out;
+                &>i{
+                    margin-left:8px;
+                    font-size:18px;
+                    transition:all 0.8s ease-out;
+                    &:hover{
+                      //color:$red-color;
+                      transform:scale(1.3) rotateZ(360deg);
+                    }
+                }
+                background-color:#ffffff;
+                height:30px;
+                padding:0 6px;
+                border-radius:5px;
+                cursor:pointer;
+                margin:0 5px;
+                border:1px $gray1-color solid;
+                &:hover{
+                    border:1px $primary-gray solid;
+                    background-color:$primary-gray;
+                }
+            }
+            & > .active{
+                color:#ffffff;
+                background-color:$primary-color;
+                &:hover{
+                    background-color:$primary-color;
+                }
+            }
+        }
+    }
+   .list-complete-enter{
+        opacity: 0;
+        transform: translateX(80px);
+    }
+    .list-complete-leave-active{
+        opacity: 0;
+        position:absolute;
+    }
+    .list-complete-move{
+        transition:all 1s ease-out;
+    }
+
 </style>

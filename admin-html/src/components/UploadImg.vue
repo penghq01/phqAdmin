@@ -447,9 +447,6 @@
             & > .list-animate-leave-active{
                 position: absolute;
             }
-            &> .list-animate-enter-active{
-                transition: all 1s ease-out;
-            }
             &>div:hover{
                 & > img{
                     max-width: 260px;

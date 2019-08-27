@@ -5,7 +5,6 @@ import (
 	"encoding/json"
 	"fmt"
 	"github.com/astaxie/beego"
-	"github.com/go-xorm/xorm"
 	"math/rand"
 	"os"
 	"path"
@@ -32,7 +31,6 @@ var (
 )
 
 func (this *Base) Prepare() {
-	this.Db = common.DbEngine
 	this.Uri = this.Ctx.Request.RequestURI
 	this.AuthToken = this.Ctx.Input.Header("auth-token")
 	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &this.Params); err != nil {

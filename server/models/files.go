@@ -85,9 +85,15 @@ func (this *Files)Delete()(bool,string){
 		 return false,"图片不存在"
 	 }
 	if row,err:=session.Where("id=?",this.Id).Delete(this);row>0 && err==nil{
-        if err:=os.Remove(this.Src);err==nil{
-        	_=session.Commit()
-        	return true,"删除成功"
+		var delOK bool=true
+		if _,err:=os.Stat(this.Src);err==nil{
+			if err:=os.Remove(this.Src);err!=nil{
+				delOK=false
+			}
+		}
+		if delOK{
+			_=session.Commit()
+			return true,"删除成功"
 		}
 	}
 	_=session.Rollback()

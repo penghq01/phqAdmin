@@ -2,6 +2,7 @@ import util from './utils'
 
 const TOKEN_STR = 'PHQ_ADMIN_TOKEN';
 const USER_STR = 'PHQ_ADMIN_USER';
+const ROUTER_HISTORY='ROUTER_HISTORY';
 const token = {
   get () {
     let token = localStorage.getItem(TOKEN_STR);
@@ -30,10 +31,24 @@ const user = {
     localStorage.removeItem(USER_STR)
   }
 };
+const routerHistory = {
+  get () {
+    let router = localStorage.getItem(ROUTER_HISTORY);
+    return util.empty(router) ?[]: JSON.parse(router)
+  },
+  set (router = '') {
+    if (!util.empty(user)) {
+      localStorage.setItem(ROUTER_HISTORY, JSON.stringify(router))
+    }
+  },
+  remove () {
+    localStorage.removeItem(ROUTER_HISTORY)
+  }
+};
 function clearToken () {
   localStorage.clear()
 }
 
 export default {
-  token, user,clearToken
+  token, user,clearToken,routerHistory
 }

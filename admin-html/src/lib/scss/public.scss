@@ -173,12 +173,11 @@ html,body{
 }
 
 .list-animate-enter-active ,.list-animate-leave-active {
-  transition: all 1S ease-out;
-  position: absolute;
+  transition: all 1s ease-out;
 }
 .list-animate-enter {
   opacity: 0;
-  transform: translateY(-50px);
+  transform: translateY(50px);
 }
 .list-animate-leave-to {
   opacity: 0;
