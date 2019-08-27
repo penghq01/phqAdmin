@@ -87,6 +87,7 @@
                     this.routerHistory[index].active=true;
                 }
                 if(this.$router.history.current.path!=key){
+                    this.activeMenu=key;
                     this.$router.push({'path': key})
                 }
                 storage.routerHistory.set(this.routerHistory);
@@ -234,14 +235,15 @@
         width:calc(100% - 150px);
         &>div{
             height:100%;
-            display:flex;
-            align-items:center;
+            width:100%;
             background-color:$gray4-color;
             position:relative;
+            display:flex;
+            align-items:center;
             &>div{
                 display:flex;
                 justify-content:center;
-                align-items: center;
+                align-items:center;
                 transition:all 0.8s ease-out;
                 &>i{
                     margin-left:8px;
@@ -278,10 +280,11 @@
         transform: translateX(80px);
     }
     .list-complete-leave-active{
-        opacity: 0;
-        position:absolute;
+        opacity:0;
+        position: absolute;
     }
     .list-complete-move{
+
         transition:all 1s ease-out;
     }
 
