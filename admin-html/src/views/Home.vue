@@ -5,14 +5,16 @@
         </div>
         <div class="index-right">
             <div class="index-header">
-                <div class="router">
-                    <transition-group name="list-complete" tag="div">
-                       <div v-for="(item,index) in routerHistory" :key="item.id" :class="item.active?'active':''" @click="triggerSelect(item.key)">
+                <div class="routerLeft" @click="leftMove"><i class="el-icon-caret-left"></i></div>
+                <div class="router" ref="routerHistory">
+                    <transition-group ref="routerHistoryBox" name="list-complete" tag="div" :style="{width:routerHistoryWidth+'px',left:routerHistoryLeft+'px'}">
+                       <div ref="routerHistoryList" v-for="(item,index) in routerHistory" :key="item.id" :class="item.active?'active':''" @click="triggerSelect(item.key)">
                            {{item.title}}
                            <i class="el-icon-error" @click.stop="delRouterHistory(index)"></i>
                        </div>
                    </transition-group>
                 </div>
+                <div class="routerRight" @click="rightMove"><i class="el-icon-caret-right"></i></div>
                 <div class="user">
                     <i class="fa fa-user" aria-hidden="true"></i> 欢迎：{{userInfo.username}}
                     <div class="user-info">
@@ -24,7 +26,9 @@
             </div>
             <div class="index-content">
                 <div class="admin-index">
-                    <router-view/>
+                    <keep-alive :include="getCacheList">
+                        <router-view></router-view>
+                    </keep-alive>
                 </div>
             </div>
         </div>
@@ -62,6 +66,15 @@
                 menuList:[],
                 menuTreeList:[],
                 isPush:false,
+                routerHistoryWidth:0,
+                routerHistoryLeft:0,
+                cacheRouterList:["/admin","/auth","/role"],//需要缓存的路由列表
+            }
+        },
+        computed:{
+            getCacheList(){
+               //console.log(this.cacheRouterList.join(","));
+                return this.cacheRouterList.join(",");
             }
         },
         mounted() {
@@ -71,7 +84,9 @@
             this.getAuthList();
         },
         methods: {
+            //点击菜单时触发
             triggerSelect(key) {
+                let router=this.$router.history.current;
                 let index=this.routerHistory.findIndex(r=>r.key==key);
                 this.routerHistory.forEach(r=>r.active=false);
                 if(index<0){
@@ -82,16 +97,57 @@
                         title=this.menuList[i].title;
                         id=this.menuList[i].id;
                     }
-                    this.routerHistory.push({"key":key,"active":true,"title":title,"id":id});
+                    this.routerHistory.push({"key":key,"active":true,cache:true,"title":title,"id":id});
                 }else{
                     this.routerHistory[index].active=true;
                 }
-                if(this.$router.history.current.path!=key){
+                if(router.path!=key){
                     this.activeMenu=key;
-                    this.$router.push({'path': key})
+                    this.$router.push({'path': key});
                 }
-                storage.routerHistory.set(this.routerHistory);
+                this.calcRouterHistoryWidth();
+                //storage.routerHistory.set(this.routerHistory);
             },
+            //点击菜单时触发计算打开菜单历史移动方式
+            calcRouterHistoryWidth(){
+               this.$nextTick(()=>{
+                   let Routerwidth=this.$refs.routerHistory.offsetWidth;
+                   let list=this.$refs.routerHistoryList;
+                   let width=list.length*10;
+                   let active=null;
+                   list.forEach(e=>{
+                       e.classList.forEach(i=>{
+                           if(i=="active"){
+                               active=e;
+                           }
+                       });
+                       width+=e.offsetWidth;
+                   });
+                   width=parseFloat(width.toFixed(2));
+                   if(Routerwidth<width){
+                       this.routerHistoryWidth=width;
+                       let activeLeft=active.offsetLeft;
+                       console.log(active.offsetLeft);
+                       let activeWidth=active.offsetWidth;
+                       let eLeft=this.routerHistoryLeft;
+                       activeLeft=activeLeft - Math.abs(eLeft);
+                       if(activeLeft < 5){
+                           eLeft=eLeft+(5-activeLeft);
+                           this.routerHistoryLeft=eLeft;
+                       }else{
+                           let maxSeeOff=Routerwidth-activeWidth-10;
+                           if(activeLeft > maxSeeOff){
+                               eLeft=eLeft+(activeLeft-maxSeeOff)*-1;
+                               this.routerHistoryLeft=eLeft;
+                           }
+                       }
+                   }else{
+                       this.routerHistoryWidth=Routerwidth;
+                       this.routerHistoryLeft=0;
+                   }
+               });
+            },
+            //删除菜单历史
             delRouterHistory(index){
                 if(this.routerHistory.length>1){
                     let active=this.routerHistory[index].active;
@@ -103,6 +159,39 @@
                        }
                        this.routerHistory[index].active=true;
                        this.triggerSelect(this.routerHistory[index].key);
+                    }
+                }
+            },
+            //菜单历史左移动
+            leftMove(){
+                let Routerwidth=this.$refs.routerHistory.offsetWidth;
+                let list=this.$refs.routerHistoryList;
+                let width=list.length*10;
+                list.forEach(e=>{
+                    width+=e.offsetWidth;
+                });
+                width=parseFloat(width.toFixed(2));
+                if(Routerwidth<width){
+                    this.routerHistoryLeft+=100;
+                    if(this.routerHistoryLeft>0){
+                        this.routerHistoryLeft=0;
+                    }
+                }
+            },
+            //菜单历史右移动
+            rightMove(){
+                let Routerwidth=this.$refs.routerHistory.offsetWidth;
+                let list=this.$refs.routerHistoryList;
+                let width=list.length*10;
+                list.forEach(e=>{
+                    width+=e.offsetWidth;
+                });
+                width=parseFloat(width.toFixed(2));
+                if(Routerwidth<width){
+                    let maxMove=Routerwidth-width;
+                    this.routerHistoryLeft-=100;
+                    if(this.routerHistoryLeft<maxMove){
+                        this.routerHistoryLeft=maxMove;
                     }
                 }
             },
@@ -186,9 +275,8 @@
         height: 100%;
         display: flex;
     }
-
     .user {
-        width:150px;
+        width:120px;
         color: #327AA3;
         position: relative;
         height: 100%;
@@ -231,12 +319,17 @@
         }
     }
     .router{
-        height:100%;
-        width:calc(100% - 150px);
+        height:90%;
+        width:calc(100% - 160px);
+        background-color:$gray4-color;
+        box-shadow:inset 0 0 5px $gray0-color;
+        border:1px $gray0-color solid;
+        border-radius:5px;
+        overflow: hidden;
+        min-width:300px;
         &>div{
             height:100%;
             width:100%;
-            background-color:$gray4-color;
             position:relative;
             display:flex;
             align-items:center;
@@ -244,6 +337,7 @@
                 display:flex;
                 justify-content:center;
                 align-items:center;
+                white-space: nowrap;
                 transition:all 0.8s ease-out;
                 &>i{
                     margin-left:8px;
@@ -279,13 +373,27 @@
         opacity: 0;
         transform: translateX(80px);
     }
-    .list-complete-leave-active{
+   .list-complete-leave-active{
         opacity:0;
         position: absolute;
     }
-    .list-complete-move{
-
+   .list-complete-move{
         transition:all 1s ease-out;
+   }
+   .routerLeft,.routerRight{
+        font-size:20px;
+        height:100%;
+        width:20px;
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        &:hover{
+            color:$primary-color;
+            cursor: pointer;
+        }
+    }
+    .routerRight{
+       border-right:1px $gray2-color solid;
     }
 
 </style>
