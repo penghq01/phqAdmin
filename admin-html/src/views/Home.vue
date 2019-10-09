@@ -236,7 +236,7 @@
                 message.confirm("确定要推出登录吗?", {
                     okName: "确定退出", okFunction: () => {
                         storage.clearToken();
-                        window.location.href = '/login';
+                        this.$router.push({'path': "/login"});
                     }
                 });
             },
