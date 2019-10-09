@@ -135,7 +135,8 @@
                     },
                     visit:2,
                     auth_type: 0,
-                    is_show: 1}
+                    is_show: 1,
+                    sort:0}
             }
         },
         mounted() {
@@ -215,7 +216,8 @@
                     },
                     visit:2,
                     auth_type: 0,
-                    is_show: 1};
+                    is_show: 1,
+                    sort:0};
                 this.titleName = "添加权限";
                 this.isEdit = false;
             },
@@ -229,6 +231,7 @@
                 postAuth.auth=JSON.stringify(postAuth.auth);
                 postAuth.sort=parseInt(postAuth.sort);
                 http.post("auth/add",postAuth).then(data => {
+                       data.auth=JSON.parse(data.auth);
                        if(this.postAuth.pid<=0){
                             this.treeAuthList.push(data);
                        }else{
