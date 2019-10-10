@@ -46,7 +46,7 @@
     import message from "../lib/message";
 
     export default {
-        name: "Icon",
+        name: "MyIcon",
         props: {
             isSelect: {
                 type: Boolean,

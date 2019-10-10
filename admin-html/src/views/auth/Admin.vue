@@ -7,7 +7,11 @@
       <el-table  v-loading="loading" :data="adminList" border size="mini">
         <el-table-column label="ID" prop="admin_id"></el-table-column>
         <el-table-column label="账号" prop="username"></el-table-column>
-        <el-table-column label="权限角色" prop="role"></el-table-column>
+        <el-table-column label="权限角色" >
+          <template slot-scope="scope">
+            <el-tag v-for="(item,key) in scope.row.role" :key="key" type="warning" size="mini" style="margin-left:5px;">{{getRoleName(item)}}</el-tag>
+          </template>
+        </el-table-column>
         <el-table-column label="上次登录时间" prop="login_time"></el-table-column>
         <el-table-column label="上次登录IP" prop="login_ip"></el-table-column>
         <el-table-column label="操作" align="center" width="120">
@@ -36,6 +40,9 @@
     >
       <div class="input-div"><el-input type="text" v-model="addAdmin.username" placeholder="管理员账号"/></div>
       <div class="input-div"><el-input type="password" v-model="addAdmin.password" placeholder="管理员密码"/></div>
+      <Select v-model="addAdmin.role" multiple placeholder="角色权限">
+        <Option v-for="item in roleList" :value="item.id" :key="item.id">{{ item.role_name }}</Option>
+      </Select>
     </myDialog>
   </div>
 </template>
@@ -54,10 +61,12 @@
         loading:true,
         isEdit:false,
         adminList:[],
-        addAdmin:{}
+        roleList:[],
+        addAdmin:{"role":[]}
       }
     },
     mounted () {
+      this.getRoleList();
       this.GetAdminList();
     },
     methods: {
@@ -66,13 +75,22 @@
            this.adminList=data;
            this.adminList.forEach(item=>{
              item.login_time=utils.UnixToDateTime(item.login_time);
+             item.role=JSON.parse(item.role);
            });
            this.loading=false;
          }).catch(err=>{this.loading=false;})
       },
+      getRoleList(){
+        this.loading=true;
+        http.post("role/list").then(data=>{
+          this.roleList=data;
+        }).catch(err=>{}).finally(()=>{
+          this.loading=false;
+        });
+      },
       close(){
         this.opened=false;
-        this.addAdmin={};
+        this.addAdmin={"role":[]};
         this.titleName="添加管理员";
         this.isEdit=false;
       },
@@ -82,15 +100,15 @@
           return
         }
         message.loading.show("添加中");
-        let password=this.addAdmin.password;
-        this.addAdmin.password=md5(password);
+        let data=utils.NewObject(this.addAdmin);
+        data.password=md5(data.password);
+        data.role=JSON.stringify(data.role);
          http.post("admin/add",this.addAdmin).then((data)=>{
             this.close();
            data.login_time=utils.UnixToDateTime(data.login_time);
+           data.role=JSON.parse(data.role);
            this.adminList.unshift(data);
-         }).catch((err)=>{
-           this.addAdmin.password=password;
-         })
+         }).catch((err)=>{})
       },
       del(rows){
         message.loading.show("删除中");
@@ -102,6 +120,7 @@
         this.titleName="修改管理员";
         this.$set(this.addAdmin,"username",rows.username);
         this.$set(this.addAdmin,"admin_id",rows.admin_id);
+        this.$set(this.addAdmin,"role",rows.role);
         this.opened=true;
         this.isEdit=true;
       },
@@ -110,7 +129,7 @@
           message.msg.error("管理员账号不能为空");
           return
         }
-        let postData={"username":this.addAdmin.username,"admin_id":this.addAdmin.admin_id};
+        let postData={"username":this.addAdmin.username,"admin_id":this.addAdmin.admin_id,"role":JSON.stringify(this.addAdmin.role)};
         if(!utils.empty(this.addAdmin.password)){
           postData.password=md5(this.addAdmin.password);
         }
@@ -120,6 +139,15 @@
           this.loading=true;
           this.GetAdminList();
         }).catch((err)=>{})
+      },
+      getRoleName(id){
+        let name="";
+        this.roleList.forEach(item=>{
+          if(id==item.id){
+            name=item.role_name;
+          }
+        });
+        return name;
       }
     }
   }

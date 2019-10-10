@@ -14,7 +14,6 @@ var (
 	ConfigIni        config.Configer //config文件读取
 	DbIni            config.Configer //db文件读取
 	DbEngine         *xorm.Engine    //Orm引擎
-
 )
 
 //分页结构体

@@ -23,7 +23,6 @@
                 </el-table-column>
                 <el-table-column label="类型" :width="70">
                     <template slot-scope="scope">
-
                         <el-tag v-if="scope.row.auth_type==0" size="mini" >菜单</el-tag>
                         <el-tag v-if="scope.row.auth_type==1" type="warning" size="mini" >数据</el-tag>
                     </template>
@@ -104,14 +103,14 @@
             <div class="input-div">排序数值：<el-input type="text" style="width:80px;" v-model="postAuth.sort" placeholder="排序"/></div>
         </myDialog>
         <Pmodel v-model="showSelectIcon" :title="'选择图标'">
-            <icon :is-select="true" @on-select="selectIcon"></icon>
+            <MyIcon :is-select="true" @on-select="selectIcon"></MyIcon>
         </Pmodel>
     </div>
 </template>
 
 <script>
     import Pmodel from "../../components/Pmodel"
-    import Icon from "../../components/Icon"
+    import MyIcon from "../../components/Icon"
     import utils from "../../lib/utils";
     import http from "../../lib/http";
     import message from "../../lib/message";
@@ -303,9 +302,12 @@
             checkBoxSelect(e){
                 this.postAuth.auth.select.router="";
             },
+            aothSelect(e){
+                console.log(e);
+            }
         },
         components: {
-            Pmodel, Icon
+            Pmodel, MyIcon
         }
     }
 </script>

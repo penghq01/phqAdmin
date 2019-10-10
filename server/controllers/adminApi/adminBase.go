@@ -14,14 +14,14 @@ type AdminBase struct {
 
 var (
 	//不需要登录的即可访问的路由
-	noLogin map[string]bool = map[string]bool{
+	noLoginController map[string]bool = map[string]bool{
 		"/admin-api/login": true,
 	}
 )
 //初始化
 func (this *AdminBase) Prepare() {
 	this.Base.Prepare()
-	if !noLogin[this.Uri] {
+	if !noLoginController[this.Uri] {
 		if this.AuthToken == "" {
 			this.ServeLOGIN("请登录后访问", "")
 		}

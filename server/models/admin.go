@@ -10,6 +10,7 @@ type Admin struct {
 	AdminId   int    `json:"admin_id" xorm:"autoincr"` //后台管理员表ID
 	Username  string `json:"username"`                 //账号
 	Password  string `json:"password"`                 //密码
+	Role      string `json:"role"`                     //角色权限
 	LoginTime int64  `json:"login_time"`               //上次登录时间
 	LoginIp   string `json:"login_ip"`                 //上次登录IP
 }

@@ -90,12 +90,12 @@ func (this *Auth) Edit()(bool,string) {
 		return false,msg
 	}
 	if this.Crouter!=""{
-		if row,err:=common.DbEngine.Where("crouter=?",this.Crouter).Count(new(Auth));row>0 && err==nil{
+		if row,err:=common.DbEngine.Where("crouter=?",this.Crouter).Where("id <> ?",this.Id).Count(new(Auth));row>0 && err==nil{
 			return false,"前端路由已经存在"
 		}
 	}
 	if this.Srouter!=""{
-		if row,err:=common.DbEngine.Where("srouter=?",this.Srouter).Count(new(Auth));row>0 && err==nil{
+		if row,err:=common.DbEngine.Where("srouter=?",this.Srouter).Where("id <> ?",this.Id).Count(new(Auth));row>0 && err==nil{
 			return false,"后端路由已经存在"
 		}
 	}

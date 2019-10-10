@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地数据
+ Source Server         : 本地
  Source Server Type    : MySQL
  Source Server Version : 50717
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 24/08/2019 00:26:38
+ Date: 10/10/2019 15:34:39
 */
 
 SET NAMES utf8mb4;
@@ -25,30 +25,17 @@ CREATE TABLE `admin`  (
   `admin_id` int(11) NOT NULL AUTO_INCREMENT,
   `username` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '账号',
   `password` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL COMMENT '密码',
+  `role` varchar(2048) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '角色权限',
   `login_time` int(11) NOT NULL DEFAULT 0 COMMENT '上次登录时间',
   `login_ip` varchar(30) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '上次登录IP',
   PRIMARY KEY (`admin_id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 2 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', 1566371093, 'localhost:8181');
-
--- ----------------------------
--- Table structure for admin_and_role
--- ----------------------------
-DROP TABLE IF EXISTS `admin_and_role`;
-CREATE TABLE `admin_and_role`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `admin_id` int(11) NOT NULL COMMENT '管理员表ID',
-  `admin_role_id` int(11) NOT NULL COMMENT '角色表ID',
-  PRIMARY KEY (`id`) USING BTREE,
-  INDEX `admin_id`(`admin_id`) USING BTREE,
-  INDEX `admin_role_id`(`admin_role_id`) USING BTREE,
-  CONSTRAINT `admin_and_role_ibfk_1` FOREIGN KEY (`admin_id`) REFERENCES `admin` (`admin_id`) ON DELETE RESTRICT ON UPDATE RESTRICT,
-  CONSTRAINT `admin_and_role_ibfk_2` FOREIGN KEY (`admin_role_id`) REFERENCES `role` (`id`) ON DELETE RESTRICT ON UPDATE RESTRICT
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+INSERT INTO `admin` VALUES (1, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', NULL, 1569723888, 'localhost:8181');
+INSERT INTO `admin` VALUES (2, 'test123', '123456', '[5,6]', 0, '');
 
 -- ----------------------------
 -- Table structure for auth
@@ -67,26 +54,26 @@ CREATE TABLE `auth`  (
   `is_show` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否显示',
   `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 85 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 87 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of auth
 -- ----------------------------
-INSERT INTO `auth` VALUES (1, 0, '首页', 'fa fa-home', '/', '', NULL, 1, 0, 1, 2);
+INSERT INTO `auth` VALUES (1, 0, '首页', 'fa fa-home', '/index', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":false,\"router\":\"\"}}', 1, 0, 1, 2);
 INSERT INTO `auth` VALUES (2, 0, '系统与安全', 'fa fa-address-card', '', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":false,\"router\":\"\"}}', 2, 0, 1, 3);
 INSERT INTO `auth` VALUES (3, 0, '附件管理', 'fa fa-folder-open', '', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":false,\"router\":\"\"}}', 2, 0, 1, 4);
 INSERT INTO `auth` VALUES (4, 0, '用户管理', 'fa fa-user', '', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":false,\"router\":\"\"}}', 2, 0, 1, 5);
 INSERT INTO `auth` VALUES (5, 2, '管理员管理', 'fa fa-user', '/admin', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/admin/add\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/admin/del\"},\"edit\":{\"show\":true,\"router\":\"/admin-api/admin/edit\"},\"select\":{\"show\":true,\"router\":\"/admin-api/admin/list\"}}', 2, 0, 1, 0);
 INSERT INTO `auth` VALUES (6, 2, '角色管理', 'fa fa-address-book', '/role', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/role/add\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/role/del\"},\"edit\":{\"show\":true,\"router\":\"/admin-api/role/edit\"},\"select\":{\"show\":true,\"router\":\"/admin-api/auth/list@/admin-api/role/list\"}}', 2, 0, 1, 1);
 INSERT INTO `auth` VALUES (7, 2, '权限管理', 'fa fa-gears', '/auth', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/auth/add\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/auth/del\"},\"edit\":{\"show\":true,\"router\":\"/admin-api/auth/edit\"},\"select\":{\"show\":true,\"router\":\"/admin-api/auth/list\"}}', 3, 0, 1, 2);
-INSERT INTO `auth` VALUES (8, 3, '图标管理', 'fa fa-free-code-camp', '/icon', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/icon/add\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/icon/del\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":true,\"router\":\"/admin-api//icon/list\"}}', 2, 0, 1, 1);
+INSERT INTO `auth` VALUES (8, 3, '图标管理', 'fa fa-info-circle', '/icon', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/icon/add\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/icon/del\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":true,\"router\":\"/admin-api//icon/list\"}}', 2, 0, 1, 1);
 INSERT INTO `auth` VALUES (9, 4, '会员列表', 'fa fa-users', '/user', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":true,\"router\":\"/admin-api/user/list/*@/admin-api/user/total/money-points\"}}', 2, 0, 1, 0);
 INSERT INTO `auth` VALUES (10, 4, '充值记录', 'fa fa-cc-visa', '/paylog', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":true,\"router\":\"/admin-api/user/pay/log/*\"}}', 2, 0, 1, 0);
-INSERT INTO `auth` VALUES (74, 0, '后台登录', '', '', '', NULL, 1, 0, 0, 1);
+INSERT INTO `auth` VALUES (74, 0, '后台登录', '', '', '', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":false,\"router\":\"\"}}', 1, 1, 0, 1);
 INSERT INTO `auth` VALUES (75, 74, '管理员信息', '', '', '/admin-api/admin/info', NULL, 1, 1, 1, 0);
 INSERT INTO `auth` VALUES (76, 74, '修改密码', '', '', '/admin-api/admin/edit/pass', NULL, 1, 1, 1, 0);
 INSERT INTO `auth` VALUES (83, 0, '后台登录', '', '', '/admin-api/login', '{\"add\":{\"show\":false,\"router\":\"\"},\"delete\":{\"show\":false,\"router\":\"\"},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":false,\"router\":\"\"}}', 0, 1, 1, 0);
-INSERT INTO `auth` VALUES (84, 3, '图片管理', 'fa fa-file-image-o', '', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/files/upload/img@/admin-api/files/add/class\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/files/del@/admin-api/files/del/class\"},\"edit\":{\"show\":true,\"router\":\"/admin-api/files/edit/class\"},\"select\":{\"show\":true,\"router\":\"/admin-api/files/list/class@/admin-api/files/list/*\"}}', 2, 0, 1, 0);
+INSERT INTO `auth` VALUES (84, 3, '图片管理', 'fa fa-file-image-o', '/images', '', '{\"add\":{\"show\":true,\"router\":\"/admin-api/files/upload/img@/admin-api/files/add/class\"},\"delete\":{\"show\":true,\"router\":\"/admin-api/files/del@/admin-api/files/del/class\"},\"edit\":{\"show\":true,\"router\":\"/admin-api/files/edit/class\"},\"select\":{\"show\":true,\"router\":\"/admin-api/files/list/class@/admin-api/files/list/*\"}}', 2, 0, 1, 0);
 
 -- ----------------------------
 -- Table structure for files
@@ -100,12 +87,19 @@ CREATE TABLE `files`  (
   `src` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '文件地址',
   `add_time` int(11) NOT NULL DEFAULT 0 COMMENT '上传时间',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = MyISAM AUTO_INCREMENT = 24 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = MyISAM AUTO_INCREMENT = 43 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of files
 -- ----------------------------
-INSERT INTO `files` VALUES (23, 1, '111.jpg', 0, 'static/upload/2019/08/23/02e89881809100d88df23034ea54e181.jpg', 1566567316);
+INSERT INTO `files` VALUES (41, 11, 'd387497997c56f5b50d23b26a4bbc4ed.jpeg', 0, 'static/upload/2019/08/29/c078aba9067fdf3b278b39e1e0d8a325.jpeg', 1567047041);
+INSERT INTO `files` VALUES (42, 12, '4637a9d92b1b3ec1f4c8988fa6ddccd4.jpeg', 0, 'static/upload/2019/08/29/a4a26b5c9130e1dda5ebcab7788b8c6c.jpeg', 1567047045);
+INSERT INTO `files` VALUES (35, 1, '489777a9a7127281819d59b5d2fd6590a47747085ad2-2Up2xb_fw658.jpg', 0, 'static/upload/2019/08/29/88144e05dc9a66e1ca95817486decc67.jpg', 1567047019);
+INSERT INTO `files` VALUES (36, 1, '1ebf046298c63e0179141c829e6853ac.jpg', 0, 'static/upload/2019/08/29/dfc7c020dc4f9af37ac877cce698544d.jpg', 1567047024);
+INSERT INTO `files` VALUES (37, 1, 'd387497997c56f5b50d23b26a4bbc4ed.jpeg', 0, 'static/upload/2019/08/29/e302e55299045c6b1d3271cce8655bfd.jpeg', 1567047027);
+INSERT INTO `files` VALUES (38, 11, 'a0cad5ab59385b921110453ff8f7e7fc.jpg', 0, 'static/upload/2019/08/29/05371a1160a70d1c6fcfb5399238184f.jpg', 1567047031);
+INSERT INTO `files` VALUES (39, 11, '791079a226012362db1bd0470aaa9ced.jpeg', 0, 'static/upload/2019/08/29/60141d65dc6cd6622cbec766fecbb067.jpeg', 1567047034);
+INSERT INTO `files` VALUES (40, 11, 'ee983ced5452141828d23fa968dfbcf5.jpeg', 0, 'static/upload/2019/08/29/ce3497c93adb3d75682f6800692bf549.jpeg', 1567047038);
 
 -- ----------------------------
 -- Table structure for files_class
@@ -134,7 +128,7 @@ CREATE TABLE `icon`  (
   `title` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标名称',
   `icon` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标样式',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 501 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 500 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of icon

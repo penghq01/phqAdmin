@@ -7,16 +7,15 @@ import "./assets/lib/font-awesome/css/font-awesome.css"
 
 import ElementUI from 'element-ui'
 import "./lib/scss/element-variables.scss"
-import {Poptip,Icon,Input} from 'iview';
+
+import iview from 'iview';
 import 'iview/dist/styles/iview.css';
 
 import "./lib/scss/public.scss"
 import myDialog from "./components/myDialog"
 import Paging from "./components/Paging"
+Vue.use(iview);
 Vue.use(ElementUI);
-Vue.component('Poptip', Poptip);
-Vue.component('Icon', Icon);
-Vue.component('Input', Input);
 Vue.component("myDialog",myDialog);
 Vue.component("Paging",Paging);
 Vue.config.productionTip = false;

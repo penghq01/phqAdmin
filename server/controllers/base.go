@@ -22,14 +22,12 @@ type Base struct {
 	Uri       string                 //访问uri
 	Paginate  common.Paginate        //分页数据
 }
-
 var (
 	//不需要签名的路由
 	noSignRouter map[string]bool = map[string]bool{
 		"/admin-api/files/upload/img": true,
 	}
 )
-
 func (this *Base) Prepare() {
 	this.Uri = this.Ctx.Request.RequestURI
 	this.AuthToken = this.Ctx.Input.Header("auth-token")
@@ -43,7 +41,6 @@ func (this *Base) Prepare() {
 		}
 	}
 }
-
 //解析数据
 func (this *Base) AnalyseJson(obj interface{}) {
 	//fmt.Println(string(this.Ctx.Input.RequestBody))
@@ -52,7 +49,6 @@ func (this *Base) AnalyseJson(obj interface{}) {
 		this.ServeError("参数解析失败," + err.Error(), "")
 	}
 }
-
 //获取分页前端传来的数据
 func (this *Base) GetPageParam() {
 	var err error
@@ -65,7 +61,6 @@ func (this *Base) GetPageParam() {
 		common.Log.Error(fmt.Sprintf("获取分页[pageszie]错误=>%v", err))
 	}
 }
-
 //获取参数，key为参数名称
 func (this *Base) Input(key string) interface{} {
 	if key == "" {
@@ -83,7 +78,6 @@ func (this *Base) UploadImg(key string) {
 	}
 	this.uploadFile("图片", key, AllowExtMap)
 }
-
 //上传图片
 func (this *Base) uploadFile(fileType string, key string, allowExtMap map[string]bool) {
 	classId,err:=this.GetInt("class_id",0)
@@ -129,7 +123,6 @@ func (this *Base) uploadFile(fileType string, key string, allowExtMap map[string
 	}
 	this.ServeError("上传失败","")
 }
-
 func (this *Base) jsonReturn(code int, msg interface{}, data interface{}) {
 	this.Data["json"] = map[string]interface{}{"code": code, "msg": msg, "data": data}
 	this.ServeJSON(true)
