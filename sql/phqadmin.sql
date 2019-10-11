@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 11/10/2019 15:20:38
+ Date: 11/10/2019 16:09:03
 */
 
 SET NAMES utf8mb4;
@@ -65,7 +65,7 @@ INSERT INTO `auth` VALUES (6, 0, '用户管理', 'fa fa-user', '', '{\"add\":{\"
 INSERT INTO `auth` VALUES (7, 4, '管理员管理', 'fa fa-user', '/admin', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/admin/add\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/admin/del\"]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/admin/edit\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/admin/list\"]}}', 2, 0, 1, 0);
 INSERT INTO `auth` VALUES (8, 4, '角色管理', 'fa fa-address-book', '/role', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/role/add\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/role/del\"]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/role/edit\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/role/list\"]}}', 2, 0, 1, 1);
 INSERT INTO `auth` VALUES (9, 4, '权限管理', 'fa fa-gears', '/auth', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/auth/add\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/auth/del\"]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/auth/edit\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/auth/list\"]}}', 3, 0, 1, 2);
-INSERT INTO `auth` VALUES (10, 5, '图标管理', 'fa fa-info-circle', '/icon', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/icon/add\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/icon/del\"]},\"edit\":{\"show\":false,\"router\":\"\"},\"select\":{\"show\":true,\"router\":[\"/admin-api/icon/list/:pageszie/:page\"]}}', 2, 0, 1, 1);
+INSERT INTO `auth` VALUES (10, 5, '图标管理', 'fa fa-info-circle', '/icon', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/icon/add\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/icon/del\"]},\"edit\":{\"show\":false,\"router\":[]},\"select\":{\"show\":true,\"router\":[\"/admin-api/icon/list/:pageszie/:page\"]}}', 2, 0, 1, 1);
 INSERT INTO `auth` VALUES (11, 6, '会员列表', 'fa fa-users', '/user', '{\"add\":{\"show\":false,\"router\":[]},\"delete\":{\"show\":false,\"router\":[]},\"edit\":{\"show\":false,\"router\":[]},\"select\":{\"show\":true,\"router\":[\"/admin-api/user/total/money-points\",\"/admin-api/user/list/:pageszie/:page\",\"/admin-api/user/pay/log/:pageszie/:page\"]}}', 2, 0, 1, 0);
 INSERT INTO `auth` VALUES (12, 6, '充值记录', 'fa fa-cc-visa', '/paylog', '{\"add\":{\"show\":false,\"router\":[]},\"delete\":{\"show\":false,\"router\":[]},\"edit\":{\"show\":false,\"router\":[]},\"select\":{\"show\":true,\"router\":[\"/admin-api/user/pay/log/:pageszie/:page\"]}}', 2, 0, 1, 0);
 INSERT INTO `auth` VALUES (13, 0, '基本权限', 'fa fa-hand-paper-o', '/', '{\"add\":{\"show\":false,\"router\":[]},\"delete\":{\"show\":false,\"router\":[]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/admin/edit/pass\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/admin/info\"]}}', 1, 1, 0, 1);

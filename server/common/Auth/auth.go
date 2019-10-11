@@ -2,6 +2,7 @@ package Auth
 
 import (
 	"encoding/json"
+	"fmt"
 	"phqAdmin/server/common"
 	"phqAdmin/server/models"
 )
@@ -41,10 +42,11 @@ func InitData() {
 	}
 	for _,r:=range rt{
 		Router[r.Id]=r
-		if r.AuthType==0{
-			auth:=new(AuthInfo)
-            err=json.Unmarshal(common.Str2Bytes(r.Auth),auth)
+		if r.Visit==0{
+			auth:=AuthInfo{}
+            err=json.Unmarshal(common.Str2Bytes(r.Auth),&auth)
             if err!=nil{
+				fmt.Println(r.Auth)
 				panic("解析不用登录的路由数据错误："+err.Error())
 			}
             if len(auth.Add.Router)>0{
@@ -68,30 +70,30 @@ func InitData() {
 				}
 			}
 		}
-		if r.AuthType==1{
-			auth:=new(AuthInfo)
-			err=json.Unmarshal(common.Str2Bytes(r.Auth),auth)
+		if r.Visit==1{
+			auth:=AuthInfo{}
+			err=json.Unmarshal(common.Str2Bytes(r.Auth),&auth)
 			if err!=nil{
 				panic("解析只需登录的路由数据错误："+err.Error())
 			}
 			if len(auth.Add.Router)>0{
 				for _,q:=range auth.Add.Router {
-					AdminNoLoginController[q]=true
+					AdminLoginController[q]=true
 				}
 			}
 			if len(auth.Delete.Router)>0{
 				for _,q:=range auth.Delete.Router {
-					AdminNoLoginController[q]=true
+					AdminLoginController[q]=true
 				}
 			}
 			if len(auth.Edit.Router)>0{
 				for _,q:=range auth.Edit.Router {
-					AdminNoLoginController[q]=true
+					AdminLoginController[q]=true
 				}
 			}
 			if len(auth.Select.Router)>0{
 				for _,q:=range auth.Select.Router {
-					AdminNoLoginController[q]=true
+					AdminLoginController[q]=true
 				}
 			}
 		}
