@@ -10,6 +10,7 @@ import (
 	"strconv"
 	"strings"
 	"time"
+	"unsafe"
 )
 
 //MD5加密
@@ -121,4 +122,15 @@ func ToString(data interface{}) string {
 		break
 	}
 	return res
+}
+
+//字符串转Byte
+func Str2Bytes(s string) []byte {
+	     x := (*[2]uintptr)(unsafe.Pointer(&s))
+	     h := [3]uintptr{x[0], x[1], x[1]}
+	     return *(*[]byte)(unsafe.Pointer(&h))
+ }
+//Byte转字符串
+func Bytes2Str(b []byte) string {
+     return *(*string)(unsafe.Pointer(&b))
 }

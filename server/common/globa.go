@@ -14,7 +14,13 @@ var (
 	ConfigIni        config.Configer //config文件读取
 	DbIni            config.Configer //db文件读取
 	DbEngine         *xorm.Engine    //Orm引擎
+	RouterList        []RouterInfo       //路由列表
 )
+
+type RouterInfo struct {
+	Path string `json:"path"`
+	Name string `json:"name"`
+}
 
 //分页结构体
 type Paginate struct {

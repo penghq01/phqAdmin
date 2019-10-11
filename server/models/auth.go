@@ -9,7 +9,6 @@ type Auth struct {
 	Title    string `json:"title"`              //标题
 	Icon     string `json:"icon"`               //图标
 	Crouter  string `json:"crouter"`            //前端路由
-	Srouter  string `json:"srouter"`            //后端路由
 	Auth     string `json:"auth"`               //权限
 	Visit    int8   `json:"visit"`              //访问权限 0公开，1登录，2权限，3,超级管理员
 	AuthType int8   `json:"auth_type"`          //路由类型 0菜单 1数据（按钮）
@@ -23,7 +22,7 @@ type AuthValid struct {
 	Title    bool //标题
 	Icon     bool //图标
 	Visit    bool //访问权限 0公开，1登录，2权限，3,超级管理员
-	AuthType bool //路由类型 0菜单，1操作（按钮)
+	AuthType bool //路由类型 0菜单，1分类
 	IsShow   bool //是否显示
 }
 
@@ -44,7 +43,7 @@ func (this *AuthValid) Valid(obj *Auth) (bool, string) {
 		}
 	}
 	if this.AuthType {
-		if ok, msg := this.Range(obj.AuthType, 0, 3, "路由类型"); !ok {
+		if ok, msg := this.Range(obj.AuthType, 0, 3, "接口类型"); !ok {
 			return false, msg
 		}
 	}
@@ -67,12 +66,7 @@ func (this *Auth) Add()(bool,string) {
 	}
 	if this.Crouter!=""{
 		if row,err:=common.DbEngine.Where("crouter=?",this.Crouter).Count(new(Auth));row>0 && err==nil{
-			return false,"前端路由已经存在"
-		}
-	}
-	if this.Srouter!=""{
-		if row,err:=common.DbEngine.Where("srouter=?",this.Srouter).Count(new(Auth));row>0 && err==nil{
-			return false,"后端路由已经存在"
+			return false,"前端界面已经存在"
 		}
 	}
 	if row, err := common.DbEngine.Insert(this); row > 0 && err == nil {
@@ -91,12 +85,7 @@ func (this *Auth) Edit()(bool,string) {
 	}
 	if this.Crouter!=""{
 		if row,err:=common.DbEngine.Where("crouter=?",this.Crouter).Where("id <> ?",this.Id).Count(new(Auth));row>0 && err==nil{
-			return false,"前端路由已经存在"
-		}
-	}
-	if this.Srouter!=""{
-		if row,err:=common.DbEngine.Where("srouter=?",this.Srouter).Where("id <> ?",this.Id).Count(new(Auth));row>0 && err==nil{
-			return false,"后端路由已经存在"
+			return false,"前端界面已经存在"
 		}
 	}
 	if row, err := common.DbEngine.Where("id=?", this.Id).Cols("title,icon,srouter,crouter,auth,visit,auth_type,is_show,sort").Update(this); row > 0 && err == nil {
@@ -111,6 +100,9 @@ func (this *Auth) Delete()(bool,string) {
 	}
 	if ok, msg := vd.Valid(this); !ok {
 		return false,msg
+	}
+	if this.Id==1 || this.Id==0{
+		return false,"该分类不能删除"
 	}
 	row, err := common.DbEngine.Where("pid=?", this.Id).Count(new(Auth))
 	if err != nil {

@@ -1,7 +1,9 @@
 package adminApi
 
 import (
+	"fmt"
 	"phqAdmin/server/common"
+	Auth2 "phqAdmin/server/common/Auth"
 	"phqAdmin/server/controllers"
 	"phqAdmin/server/models"
 )
@@ -12,16 +14,15 @@ type AdminBase struct {
 	ActionModel models.IModels //当前访问的控制所操作模型
 }
 
-var (
-	//不需要登录的即可访问的路由
-	noLoginController map[string]bool = map[string]bool{
-		"/admin-api/login": true,
-	}
-)
 //初始化
 func (this *AdminBase) Prepare() {
 	this.Base.Prepare()
-	if !noLoginController[this.Uri] {
+	this.CheckAuth()//判断是否有权限访问
+}
+
+func (this *AdminBase)CheckAuth(){
+
+	if !Auth2.AdminNoLoginController[this.Uri] {
 		if this.AuthToken == "" {
 			this.ServeLOGIN("请登录后访问", "")
 		}
@@ -35,6 +36,9 @@ func (this *AdminBase) Prepare() {
 		})
 		if !ok {
 			this.ServeRELOGIN("登录过期，重登录登录", "")
+		}
+		if !Auth2.AdminLoginController[this.Uri]{
+			fmt.Println(this.LoginUser)
 		}
 	}
 }

@@ -11,8 +11,11 @@
                         <span :class="scope.row.icon" style="font-size:22px;"></span>
                     </template>
                 </el-table-column>
-                <el-table-column label="前端路由" prop="crouter"></el-table-column>
-                <el-table-column label="后端路由" prop="srouter"></el-table-column>
+                <el-table-column label="前端界面" prop="crouter">
+                    <template slot-scope="scope">
+                        <el-tag v-show="getUiRouterName(scope.row.crouter)" effect="dark" size="mini">{{getUiRouterName(scope.row.crouter)}}</el-tag>
+                    </template>
+                </el-table-column>
                 <el-table-column label="访问" :width="95">
                     <template slot-scope="scope">
                         <el-tag v-if="scope.row.visit==0" type="info" size="mini" >公开</el-tag>
@@ -24,7 +27,7 @@
                 <el-table-column label="类型" :width="70">
                     <template slot-scope="scope">
                         <el-tag v-if="scope.row.auth_type==0" size="mini" >菜单</el-tag>
-                        <el-tag v-if="scope.row.auth_type==1" type="warning" size="mini" >数据</el-tag>
+                        <el-tag v-if="scope.row.auth_type==1" type="info" size="mini" >分类</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="显示" :width="70">
@@ -64,25 +67,46 @@
                             style="font-size:30px;margin-right: 10px;"></span>
                 <el-button type="primary" size="mini" @click="showIcon">选择图标</el-button>
             </div>
-            <div class="input-div">前端路由：<el-input style="width:220px;" type="text" v-model="postAuth.crouter" placeholder="请输入前端路由"/></div>
-            <div class="input-div">后端路由：<el-input style="width:220px;" type="text" v-model="postAuth.srouter" placeholder="请输入后端路由"/></div>
-            <div class="input-div">数据权限：<span style="font-size:12px;color:#aaaaaa;">多个路由之间可以用 @ 符号隔开，如：/add@/del</span>
+            <div class="input-div">前端界面：
+                <Select style="width:80%;" v-model="postAuth.crouter" @on-change="selectUiRouter" clearable placeholder="请选择前端界面">
+                    <Option v-for="(item,index) in uiRouterList" :value="item.path" :label="item.name" :key="index">
+                        {{item.name}}<span class="select-tip">{{item.path}}</span>
+                    </Option>
+                </Select>
+            </div>
+            <div class="input-div">数据接口：<span style="font-size:12px;color:#aaaaaa;">可选择多个</span>
                 <div class="auth">
                     <div>
                         <el-checkbox v-model="postAuth.auth.select.show" @change="checkBoxSelect">查询</el-checkbox><span class="interval-span"></span>
-                        <el-input v-show="postAuth.auth.select.show" style="width:85%" type="text" v-model="postAuth.auth.select.router" placeholder="请输入路由"/>
+                        <Select v-show="postAuth.auth.select.show" style="width:85%;" v-model="postAuth.auth.select.router" multiple placeholder="请选择路由">
+                            <Option v-for="(item,index) in routerList" :value="item.path" :label="item.name" :key="index">
+                                {{item.name}}<span class="select-tip">{{item.path}}</span>
+                            </Option>
+                        </Select>
                     </div>
                     <div>
                         <el-checkbox v-model="postAuth.auth.add.show" @change="checkBoxAdd">添加</el-checkbox><span class="interval-span"></span>
-                        <el-input v-show="postAuth.auth.add.show" style="width:85%;" type="text" v-model="postAuth.auth.add.router" placeholder="请输入路由"/>
+                        <Select v-show="postAuth.auth.add.show" style="width:85%;" v-model="postAuth.auth.add.router" multiple placeholder="请选择路由">
+                            <Option v-for="(item,index) in routerList" :value="item.path" :label="item.name" :key="index">
+                                {{item.name}}<span class="select-tip">{{item.path}}</span>
+                            </Option>
+                        </Select>
                     </div>
                     <div>
                         <el-checkbox v-model="postAuth.auth.edit.show" @change="checkBoxEdit">修改</el-checkbox><span class="interval-span"></span>
-                        <el-input v-show="postAuth.auth.edit.show" style="width:85%;" type="text" v-model="postAuth.auth.edit.router" placeholder="请输入路由"/>
+                        <Select v-show="postAuth.auth.edit.show" style="width:85%;" v-model="postAuth.auth.edit.router" multiple placeholder="请选择路由">
+                            <Option v-for="(item,index) in routerList" :value="item.path" :label="item.name" :key="index">
+                                {{item.name}}<span class="select-tip">{{item.path}}</span>
+                            </Option>
+                        </Select>
                     </div>
                     <div>
                         <el-checkbox v-model="postAuth.auth.delete.show" @change="checkBoxDelete">删除</el-checkbox><span class="interval-span"></span>
-                        <el-input v-show="postAuth.auth.delete.show" style="width:85%;" type="text" v-model="postAuth.auth.delete.router" placeholder="请输入路由"/>
+                        <Select v-show="postAuth.auth.delete.show" style="width:85%;" v-model="postAuth.auth.delete.router" multiple placeholder="请选择路由">
+                            <Option v-for="(item,index) in routerList" :value="item.path" :label="item.name" :key="index">
+                                {{item.name}}<span class="select-tip">{{item.path}}</span>
+                            </Option>
+                        </Select>
                     </div>
                 </div>
             </div>
@@ -94,7 +118,7 @@
             </div>
             <div class="input-div">权限类型：
                 <el-radio v-model="postAuth.auth_type" :label="0">菜单</el-radio>
-                <el-radio v-model="postAuth.auth_type" :label="1">数据</el-radio>
+                <el-radio v-model="postAuth.auth_type" :label="1">分类</el-radio>
             </div>
             <div class="input-div">是否显示：
                 <el-radio v-model="postAuth.is_show" :label="1">显示</el-radio>
@@ -114,7 +138,6 @@
     import utils from "../../lib/utils";
     import http from "../../lib/http";
     import message from "../../lib/message";
-
     export default {
         name: 'Auth',
         data() {
@@ -125,6 +148,8 @@
                 loading: true,
                 isEdit: false,
                 treeAuthList: [],
+                routerList:[],
+                uiRouterList:[],
                 postAuth: {
                     auth:{
                         add:{show:false,router:""},
@@ -140,8 +165,17 @@
         },
         mounted() {
             this.getAuthList();
+            this.getRouterList();
+            let routes=this.$router.options.routes;
+            this.routersToArror(routes);
         },
         methods: {
+            getRouterList() {
+                http.post("auth/get/router-list").then(data => {
+                    this.routerList=data;
+                }).catch(err => {
+                });
+            },
             listTotree(data,pid=0){
                let list=[];
                data.forEach((item,key)=>{
@@ -304,6 +338,30 @@
             },
             aothSelect(e){
                 console.log(e);
+            },
+            getUiRouterName(route){
+                let name="";
+                this.uiRouterList.forEach(item=>{
+                    if(route==item.path){
+                        name=item.name;
+                    }
+                });
+                return name;
+            },
+            selectUiRouter(path){
+                this.$set(this.postAuth,"title",this.getUiRouterName(path));
+            },
+            routersToArror(routes=[]){
+                let list=[];
+                routes.forEach(item=>{
+                    if(!utils.empty(item.nickname)){
+                        this.uiRouterList.push({"path":item.path,"name":item.nickname});
+                    }
+                    if(!utils.empty(item.children)){
+                        this.routersToArror(item.children)
+                    }
+                });
+
             }
         },
         components: {
@@ -321,5 +379,10 @@
         &>div{
             padding:5px;
         }
+    }
+    .select-tip{
+        font-size:12px;
+        color:$gray0-color;
+        padding-left:10px;
     }
 </style>

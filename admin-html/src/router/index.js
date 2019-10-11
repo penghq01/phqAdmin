@@ -4,11 +4,11 @@ import routes from './router'
 import logic from '../lib/logic'
 Vue.use(Router);
 
-const router = new Router({
+const RouterInfo = new Router({
   mode: 'hash',
   routes:routes
 });
-router.beforeEach((to, from, next) => {
+RouterInfo.beforeEach((to, from, next) => {
   if(to.path != "/login" && !logic.isLogin()){
     next({ path: '/login' });
     return false;
@@ -16,4 +16,4 @@ router.beforeEach((to, from, next) => {
     next();
   }
 });
-export default router
+export default RouterInfo
