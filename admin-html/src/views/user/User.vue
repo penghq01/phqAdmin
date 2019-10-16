@@ -1,6 +1,6 @@
 <template>
   <div class="users">
-     <div style="padding-bottom:10px;">
+     <div style="padding-bottom:10px;" v-if="menuAuth.select">
         <el-input style="width:150px;" type="text" size="mini" v-model="search.nickname" placeholder="请输入昵称"/>
          <span class="interval-span"></span>
          <el-input style="width:150px;" type="text" size="mini" v-model="search.mobile" placeholder="请输入手机号"/>
@@ -14,7 +14,7 @@
          <span class="interval-span"></span>
          会员总积分：{{totalData.points}}
      </div>
-      <div>
+      <div v-if="menuAuth.select">
           <el-table v-loading="loading" :data="userList" border size="mini">
               <el-table-column
                       label="头像"
@@ -55,7 +55,7 @@
 
               <el-table-column label="操作">
                   <template slot-scope="scope">
-                      <el-button type="primary" size="mini" @click="seePayLog(scope.row)"><i class="fa fa-money" aria-hidden="true"></i></el-button>
+                      <el-button type="primary" v-if="menuAuth.select" size="mini" @click="seePayLog(scope.row)"><i class="fa fa-money" aria-hidden="true"></i></el-button>
                   </template>
               </el-table-column>
           </el-table>
@@ -74,10 +74,12 @@
   import UsersPayLog from "../../components/UsersPayLog"
   import Pmodel from "../../components/Pmodel"
   import utils from "../../lib/utils";
+  import logic from "../../lib/logic";
   export default {
     name: 'user',
     data () {
       return {
+          menuAuth:{},
           showPayLog:false,
           payLogUserId:0,
           UserName:"充值记录",
@@ -93,6 +95,7 @@
       }
     },
     mounted () {
+        this.menuAuth=logic.getMenuAuth(this);
         this.getUserList();
         this.getTotalMoneyPoints();
     },

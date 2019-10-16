@@ -1,54 +1,53 @@
 import util from './utils'
+import router from "../router/router";
 
 const TOKEN_STR = 'PHQ_ADMIN_TOKEN';
 const USER_STR = 'PHQ_ADMIN_USER';
-const ROUTER_HISTORY='ROUTER_HISTORY';
-const token = {
-  get () {
-    let token = localStorage.getItem(TOKEN_STR);
-    return util.empty(token) ? '' : token
-  },
-  set (token = '') {
-    if (!util.empty(token)) {
-      localStorage.setItem(TOKEN_STR, token)
+const MENU_AUTH_MAP="MENU_AUTH_MAP";
+export default {
+ token:{
+    get () {
+      let val = localStorage.getItem(TOKEN_STR);
+      return util.empty(val) ? '' : val
+    },
+    set (val = '') {
+      if (!util.empty(val)) {
+        localStorage.setItem(TOKEN_STR, val)
+      }
+    },
+    remove () {
+      localStorage.removeItem(TOKEN_STR)
     }
   },
-  remove () {
-    localStorage.removeItem(TOKEN_STR)
-  }
-};
-const user = {
+ user:{
   get () {
-    let user = localStorage.getItem(USER_STR);
-    return util.empty(user) ? '' : JSON.parse(user)
+    let val = localStorage.getItem(USER_STR);
+    return util.empty(user) ? '' : JSON.parse(val)
   },
-  set (user = '') {
-    if (!util.empty(user)) {
-      localStorage.setItem(USER_STR, JSON.stringify(user))
+  set (val = '') {
+    if (!util.empty(val)) {
+      localStorage.setItem(USER_STR, JSON.stringify(val))
     }
   },
   remove () {
     localStorage.removeItem(USER_STR)
   }
-};
-const routerHistory = {
+},
+ menuAuthMap:{
   get () {
-    let router = localStorage.getItem(ROUTER_HISTORY);
-    return util.empty(router) ?[]: JSON.parse(router)
+    let val = localStorage.getItem(MENU_AUTH_MAP);
+    return util.empty(val) ?new Map(): JSON.parse(val)
   },
-  set (router = '') {
-    if (!util.empty(user)) {
-      localStorage.setItem(ROUTER_HISTORY, JSON.stringify(router))
+  set (val = '') {
+    if (!util.empty(val)) {
+      localStorage.setItem(MENU_AUTH_MAP, JSON.stringify(val))
     }
   },
   remove () {
-    localStorage.removeItem(ROUTER_HISTORY)
+    localStorage.removeItem(MENU_AUTH_MAP)
   }
-};
-function clearToken () {
+},
+ clear(){
   localStorage.clear()
 }
-
-export default {
-  token, user,clearToken,routerHistory
 }

@@ -17,6 +17,7 @@
 </template>
 <script>
     import api from '../lib/api/api'
+    import logic from "../lib/logic";
 
     export default {
         name: 'login',
@@ -27,7 +28,10 @@
         },
         methods: {
             login() {
-                api.Login(this.postData).then(() => this.$router.push({path: '/'}));
+                api.Login(this.postData).then(() =>{
+                    logic.addRoutes(this.$router);
+                    this.$router.push({path: '/'})
+                });
             }
         }
     }

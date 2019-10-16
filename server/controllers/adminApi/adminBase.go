@@ -1,15 +1,16 @@
 package adminApi
 
 import (
-	"fmt"
 	"phqAdmin/server/common"
 	Auth2 "phqAdmin/server/common/Auth"
 	"phqAdmin/server/controllers"
 	"phqAdmin/server/models"
+	"strings"
 )
 
 type AdminBase struct {
 	controllers.Base
+	isUserLogin bool //用户是否登录
 	LoginUser *models.Admin //当前登录用户
 	ActionModel models.IModels //当前访问的控制所操作模型
 }
@@ -21,25 +22,89 @@ func (this *AdminBase) Prepare() {
 }
 
 func (this *AdminBase)CheckAuth(){
-
-	if !Auth2.AdminNoLoginController[this.Uri] {
-		if this.AuthToken == "" {
-			this.ServeLOGIN("请登录后访问", "")
-		}
+	if this.AuthToken == "" {
+		this.isUserLogin=false
+	}else{
 		ok, _ := common.CheckToken(this.AuthToken, func(id int, username string) {
-			var user *models.Admin = new(models.Admin)
+			user := new(models.Admin)
 			ok := user.IdUserNameGet(id, username)
 			if !ok {
-				this.ServeRELOGIN("管理员信息错误，请重登录登录", "")
+				this.isUserLogin=false
 			}
+			this.isUserLogin=true
 			this.LoginUser = user
 		})
 		if !ok {
-			this.ServeRELOGIN("登录过期，重登录登录", "")
+			this.isUserLogin=false
 		}
-		if !Auth2.AdminLoginController[this.Uri]{
-			fmt.Println(this.LoginUser)
+	}
+	AdminNoLoginController,ok:=Auth2.GetAdminNoLoginController()
+	if !ok{
+		this.ServeLOGIN("获取菜单列表失败，请重新登录","")
+	}
+	if !AdminNoLoginController[this.Uri] {
+		if !this.isUserLogin{
+			this.ServeLOGIN("您没有登录或登录已经过期，请登录后访问","")
 		}
+		AdminLoginController,ok:=Auth2.GetAdminLoginController()
+		if !ok{
+			this.ServeLOGIN("登录验证失败，请重新登录","")
+		}
+		if !AdminLoginController[this.Uri]{
+			if this.LoginUser.AdminId!=1{
+				pathList,ok,err:=Auth2.GetRouterPathList(this.LoginUser.Role);
+				if !ok || err!=nil{
+					this.ServeNOAUTH(err.Error(),"")
+				}
+				if !pathList[this.Uri]{
+					arr:=strings.Split(this.Uri,"/")
+					arrLen:=len(arr)
+					arr[arrLen-2]=":pageszie"
+					arr[arrLen-1]=":page"
+					uri:=strings.Join(arr,"/")
+					if !pathList[uri]{
+						this.ServeNOAUTH("您没有权限，请与联系管理员，错误："+this.Uri,"")
+					}
+				}
+			}
+		}
+	}
+}
+
+//获取用户权限，和菜单
+func (this *AdminBase)GetUserAuthMenu()(bool,[]map[string]interface{}){
+	if this.LoginUser.AdminId==1{
+		resData:=make([]map[string]interface{},0)
+		auth := make([]models.Auth, 0)
+		err :=common.DbEngine.Asc("sort").Find(&auth)
+		if err != nil {
+			return false,resData
+		}
+		for _,r:=range auth{
+			tem:=make(map[string]interface{})
+			tem["id"]=r.Id
+			tem["title"]=r.Title
+			tem["pid"]=r.Pid
+			tem["icon"]=r.Icon
+			tem["crouter"]=r.Crouter
+			tem["visit"]=r.Visit
+			tem["auth_type"]=r.AuthType
+			tem["is_show"]=r.IsShow
+			tem["auth"]=map[string]bool{
+				"add":true,
+				"edit":true,
+				"delete":true,
+				"select":true,
+			}
+			resData=append(resData, tem)
+		}
+		return true,resData
+	}else{
+		RouterList,ok,err:=Auth2.GetRouterList(this.LoginUser.Role)
+		if !ok || err!=nil{
+			return false,RouterList
+		}
+		return true,RouterList
 	}
 }
 

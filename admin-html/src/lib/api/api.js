@@ -3,6 +3,7 @@ import http from '../http'
 import storage from '../storage'
 import message from '../message'
 import md5 from "js-md5"
+import routerList from "../../router/routerList";
 export default {
     Login(data = {}) {
         return new Promise((resolve, reject) => {
@@ -18,7 +19,14 @@ export default {
             message.loading.show("登录中");
             data.password=md5(data.password);
             http.post('login', data).then(data => {
-                storage.token.set(data);
+                storage.token.set(data.token);
+                let MenuAuthMap=new Map();
+                data.menu_auth.forEach(item=>{
+                    if(!utils.empty(item.crouter)){
+                        MenuAuthMap[item.crouter]=item.auth;
+                    }
+                });
+                storage.menuAuthMap.set(MenuAuthMap);
                 resolve();
             }).catch(err => {})
         })

@@ -99,6 +99,7 @@ func (this *Admin)Add()(bool,string){
 	if ok {
 		return false,"管理员账号已经存在"
 	}
+	this.Password=common.PassWordEncryption(this.Password)
 	rows, err := common.DbEngine.Insert(this)
 	if rows > 0 && err == nil {
 		this.Password = ""

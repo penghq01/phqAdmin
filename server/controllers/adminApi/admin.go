@@ -37,12 +37,8 @@ func (this *Admin) EditPass() {
 }
 
 func (this *Admin) AuthList(){
-	a:=new(models.Auth)
-	this.AnalyseJson(a)
-	auth := make([]models.Auth, 0)
-	err :=common.DbEngine.Asc("sort").Where("auth_type=? AND is_show=?",a.AuthType,a.IsShow).Find(&auth)
-	if err != nil {
-		this.ServeError("","")
+	if ok,resData:=this.GetUserAuthMenu();ok{
+		this.ServeSuccess("",resData)
 	}
-	this.ServeSuccess("",auth)
+	this.ServeLOGIN("获取菜单失败，请重新登录","")
 }

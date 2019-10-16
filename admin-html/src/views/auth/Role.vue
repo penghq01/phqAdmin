@@ -1,9 +1,9 @@
 <template>
   <div class="role">
      <div style="padding-bottom:10px;">
-       <el-button type="primary" size="mini" @click="opened=true">添加角色</el-button>
+       <el-button v-if="menuAuth.add" type="primary" size="mini" @click="opened=true">添加角色</el-button>
      </div>
-    <div>
+    <div v-if="menuAuth.select">
       <el-table  v-loading="loading" :data="roleList" border size="mini">
         <el-table-column label="ID" prop="id"></el-table-column>
         <el-table-column label="名称" prop="role_name"></el-table-column>
@@ -11,6 +11,7 @@
         <el-table-column label="操作" align="center" width="120">
           <template slot-scope="scope">
             <Poptip
+                    v-if="menuAuth.delete"
                     transfer
                     confirm
                     title="确定删除吗?"
@@ -19,7 +20,7 @@
             </Poptip>
             <span class="interval-span"></span>
 
-            <el-button type="primary" size="mini" @click="showEdit(scope.row)" icon="el-icon-edit-outline"></el-button>
+            <el-button v-if="menuAuth.edit" type="primary" size="mini" @click="showEdit(scope.row)" icon="el-icon-edit-outline"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -43,10 +44,10 @@
                 {{ node.data.title }}
 
               <span v-if="data.visit==2 && data.auth!=''" style="padding-left:5px">
-                 <el-checkbox v-model="data.auth.select.action" v-if="data.auth.select.show">查询</el-checkbox>
-                 <el-checkbox v-model="data.auth.add.action" v-if="data.auth.add.show" >添加</el-checkbox>
-                 <el-checkbox v-model="data.auth.edit.action" v-if="data.auth.edit.show" >修改</el-checkbox>
-                 <el-checkbox v-model="data.auth.delete.action" v-if="data.auth.delete.show" >删除</el-checkbox>
+                 <el-checkbox v-model="data.auth.select.action" @change="checkBoxChange($event,data,node)" v-if="data.auth.select.show">查询</el-checkbox>
+                 <el-checkbox v-model="data.auth.add.action" @change="checkBoxChange($event,data,node)" v-if="data.auth.add.show" >添加</el-checkbox>
+                 <el-checkbox v-model="data.auth.edit.action" @change="checkBoxChange($event,data,node)" v-if="data.auth.edit.show" >修改</el-checkbox>
+                 <el-checkbox v-model="data.auth.delete.action" @change="checkBoxChange($event,data,node)" v-if="data.auth.delete.show" >删除</el-checkbox>
               </span>
 
            </span>
@@ -60,6 +61,7 @@
   import http from "../../lib/http";
   import utils from "../../lib/utils";
   import message from "../../lib/message";
+  import logic from "../../lib/logic";
 
   export default {
     name: 'Role',
@@ -73,10 +75,12 @@
         postData:{},
         authList:[],
         authTree:[],
-        checkedAuth:[]
+        checkedAuth:[],
+          menuAuth:{}
       }
     },
     mounted () {
+        this.menuAuth=logic.getMenuAuth(this);
       this.getAuthList();
       this.getRoleList();
     },
@@ -89,6 +93,18 @@
             this.$set(tem,"children",this.listTotree(data,item.id));
             if(!utils.empty(tem.auth)){
               tem.auth=JSON.parse(tem.auth);
+              if(utils.empty(tem.auth.add.action)){
+                  this.$set(tem.auth.add,"action",false);
+              }
+              if(utils.empty(tem.auth.delete.action)){
+                  this.$set(tem.auth.delete,"action",false);
+              }
+                if(utils.empty(tem.auth.edit.action)){
+              this.$set(tem.auth.edit,"action",false);
+                }
+                if(utils.empty(tem.auth.select.action)) {
+                    this.$set(tem.auth.select, "action", false);
+                }
             }
             list.push(tem);
           }
@@ -102,7 +118,7 @@
         }).catch(err => {
         });
       },
-        getRoleList(){
+      getRoleList(){
           this.loading=true;
           http.post("role/list").then(data=>{
               this.roleList=data;
@@ -111,7 +127,11 @@
           });
         },
       getCheckAuth(){
-        let arr=this.$refs.treeAuth.getCheckedNodes();
+        let arr=this.$refs.treeAuth.getHalfCheckedNodes();
+        let checkArr=this.$refs.treeAuth.getCheckedNodes();
+        checkArr.forEach(item=>{
+            arr.push(item)
+        });
         let res=[];
         arr.forEach(item=>{
            let a={"auth_id":item.id,"select":false,"add":false,"edit":false,"delete":false};
@@ -137,6 +157,18 @@
           }).catch(err=>{})
 
       },
+      //查找是否存在分类被选择
+      findTreeAuthChildrenDelId(authTree){
+          authTree.forEach(item=>{
+             if(!utils.empty(item.children) && item.children.length>0){
+                 let index=this.checkedAuth.findIndex(id=>id==item.id);
+                 if(index>=0){
+                     this.checkedAuth.splice(index,1);
+                 }
+                 this.findTreeAuthChildrenDelId(item.children);
+             }
+          });
+       },
       showEdit(row){
           let list=utils.NewObject(this.authList);
           let rl=JSON.parse(row.auth_list);
@@ -161,6 +193,7 @@
               }
           });
           this.authTree=this.listTotree(list,0);
+          this.findTreeAuthChildrenDelId(this.authTree);
           this.postData=utils.NewObject(row);
           this.opened=true;
           this.isEdit=true;
@@ -197,15 +230,37 @@
           }).catch(err=>{});
       },
       checkChange(data,check,children){
-         if(data.auth!=""){
-           for (let key in data.auth){
-             this.$set(data.auth[key],"action",check);
-           }
-         }
+          if(check){
+              data.auth.select.action=true;
+          }else{
+              if(data.auth!=""){
+                  for (let key in data.auth){
+                      this.$set(data.auth[key],"action",false);
+                  }
+              }
+          }
       },
-        cs(node){
-          console.log(node);
-        }
+      checkBoxChange(isCheck,data,node){
+          if(isCheck){
+              if(!data.auth.select.action){
+                  data.auth.select.action=true;
+              }
+              if(!node.checked){
+                  node.checked=true;
+              }
+          }
+          let nodeChecked=false;
+          for (let key in node.data.auth) {
+              if(node.data.auth[key].show){
+                  if(data.auth[key].action){
+                      nodeChecked=true;
+                  }
+              }
+          }
+         if(!nodeChecked){
+             node.checked=false;
+         }
+      }
     }
   }
 </script>

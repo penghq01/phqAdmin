@@ -1,9 +1,9 @@
 <template>
   <div class="admin">
     <div class="action">
-      <el-button type="primary" size="mini" @click="opened=true">添加管理员</el-button>
+      <el-button v-if="menuAuth.add" type="primary" size="mini" @click="opened=true">添加管理员</el-button>
     </div>
-    <div class="table">
+    <div class="table" v-if="menuAuth.select">
       <el-table  v-loading="loading" :data="adminList" border size="mini">
         <el-table-column label="ID" prop="admin_id"></el-table-column>
         <el-table-column label="账号" prop="username"></el-table-column>
@@ -17,6 +17,7 @@
         <el-table-column label="操作" align="center" width="120">
           <template slot-scope="scope">
             <Poptip
+                    v-if="menuAuth.delete"
                     transfer
                     confirm
                     title="确定删除吗?"
@@ -24,8 +25,7 @@
               <el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
             </Poptip>
             <span class="interval-span"></span>
-
-            <el-button type="primary" size="mini" @click="showEdit(scope.row)" icon="el-icon-edit-outline"></el-button>
+            <el-button v-if="menuAuth.edit" type="primary" size="mini" @click="showEdit(scope.row)" icon="el-icon-edit-outline"></el-button>
           </template>
         </el-table-column>
       </el-table>
@@ -52,6 +52,7 @@
   import utils from "../../lib/utils";
   import md5 from "js-md5"
   import message from "../../lib/message";
+  import logic from "../../lib/logic";
   export default {
     name: 'admin',
     data () {
@@ -62,10 +63,12 @@
         isEdit:false,
         adminList:[],
         roleList:[],
-        addAdmin:{"role":[]}
+        addAdmin:{"role":[]},
+        menuAuth:{}
       }
     },
     mounted () {
+      this.menuAuth=logic.getMenuAuth(this);
       this.getRoleList();
       this.GetAdminList();
     },
@@ -75,7 +78,7 @@
            this.adminList=data;
            this.adminList.forEach(item=>{
              item.login_time=utils.UnixToDateTime(item.login_time);
-             item.role=JSON.parse(item.role);
+             item.role=item.role.split(",");
            });
            this.loading=false;
          }).catch(err=>{this.loading=false;})
@@ -102,11 +105,11 @@
         message.loading.show("添加中");
         let data=utils.NewObject(this.addAdmin);
         data.password=md5(data.password);
-        data.role=JSON.stringify(data.role);
-         http.post("admin/add",this.addAdmin).then((data)=>{
+        data.role=data.role.join(",");
+         http.post("admin/add",data).then((data)=>{
             this.close();
            data.login_time=utils.UnixToDateTime(data.login_time);
-           data.role=JSON.parse(data.role);
+           data.role=data.role.split(",");
            this.adminList.unshift(data);
          }).catch((err)=>{})
       },
@@ -120,7 +123,9 @@
         this.titleName="修改管理员";
         this.$set(this.addAdmin,"username",rows.username);
         this.$set(this.addAdmin,"admin_id",rows.admin_id);
-        this.$set(this.addAdmin,"role",rows.role);
+        let role=[];
+        rows.role.forEach(item=>role.push(parseInt(item)));
+        this.$set(this.addAdmin,"role",role);
         this.opened=true;
         this.isEdit=true;
       },
@@ -129,7 +134,7 @@
           message.msg.error("管理员账号不能为空");
           return
         }
-        let postData={"username":this.addAdmin.username,"admin_id":this.addAdmin.admin_id,"role":JSON.stringify(this.addAdmin.role)};
+        let postData={"username":this.addAdmin.username,"admin_id":this.addAdmin.admin_id,"role":this.addAdmin.role.join(",")};
         if(!utils.empty(this.addAdmin.password)){
           postData.password=md5(this.addAdmin.password);
         }

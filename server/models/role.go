@@ -2,7 +2,6 @@ package models
 
 import (
 	"errors"
-	"fmt"
 	"phqAdmin/server/common"
 )
 
@@ -89,7 +88,6 @@ func (this *Role)Edit()(bool,string){
 func (this *Role)List()(interface{},bool,string){
 	list:=make([]Role,0)
 	err:=common.DbEngine.Find(&list)
-	fmt.Println("查询错误",err)
 	if err==nil{
 		return list,true,""
 	}

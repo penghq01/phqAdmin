@@ -1,9 +1,9 @@
 <template>
     <div>
         <div style="padding-bottom: 10px;">
-            <el-button type="primary" size="mini" @click="showAdd(0)">添加</el-button>
+            <el-button v-if="menuAuth.add" type="primary" size="mini" @click="showAdd(0)">添加</el-button>
         </div>
-        <div>
+        <div v-if="menuAuth.select">
             <el-table v-loading="loading" :data="treeAuthList" border size="mini"  row-key="id">
                 <el-table-column label="标题" prop="title"></el-table-column>
                 <el-table-column label="图标" width="70">
@@ -39,10 +39,11 @@
                 <el-table-column label="排序" width="50" prop="sort"></el-table-column>
                 <el-table-column label="操作" width="180">
                     <template slot-scope="scope">
-                        <el-button type="primary"  @click="showAdd(scope.row.id,scope.row)" icon="el-icon-plus" size="mini"></el-button>
-                        <el-button type="warning"  @click="showEdit(scope.row)" icon="el-icon-edit-outline" size="mini"></el-button>
+                        <el-button type="primary" v-if="menuAuth.add" @click="showAdd(scope.row.id,scope.row)" icon="el-icon-plus" size="mini"></el-button>
+                        <el-button type="warning" v-if="menuAuth.edit" @click="showEdit(scope.row)" icon="el-icon-edit-outline" size="mini"></el-button>
                         <span class="interval-span"></span>
                         <Poptip
+                                v-if="menuAuth.delete"
                                 transfer
                                 confirm
                                 title="确定删除吗?"
@@ -138,10 +139,12 @@
     import utils from "../../lib/utils";
     import http from "../../lib/http";
     import message from "../../lib/message";
+    import logic from "../../lib/logic";
     export default {
         name: 'Auth',
         data() {
             return {
+                menuAuth:{},
                 showSelectIcon: false,
                 titleName: "添加权限",
                 opened: false,
@@ -152,10 +155,10 @@
                 uiRouterList:[],
                 postAuth: {
                     auth:{
-                        add:{show:false,router:""},
-                        delete:{show:false,router:""},
-                        edit:{show:false,router:""},
-                        select:{show:false,router:""},
+                        add:{show:false,router:[]},
+                        delete:{show:false,router:[]},
+                        edit:{show:false,router:[]},
+                        select:{show:false,router:[]},
                     },
                     visit:2,
                     auth_type: 0,
@@ -164,6 +167,7 @@
             }
         },
         mounted() {
+            this.menuAuth=logic.getMenuAuth(this);
             this.getAuthList();
             this.getRouterList();
             let routes=this.$router.options.routes;
@@ -242,10 +246,10 @@
                 this.opened = false;
                 this.postAuth = {
                     auth:{
-                        add:{show:false,router:""},
-                        delete:{show:false,router:""},
-                        edit:{show:false,router:""},
-                        select:{show:false,router:""},
+                        add:{show:false,router:[]},
+                        delete:{show:false,router:[]},
+                        edit:{show:false,router:[]},
+                        select:{show:false,router:[]},
                     },
                     visit:2,
                     auth_type: 0,
@@ -278,10 +282,10 @@
                 this.postAuth=utils.NewObject(row);
                 if(utils.empty(this.postAuth.auth)){
                     this.$set(this.postAuth,"auth",{
-                        add:{show:false,router:""},
-                        delete:{show:false,router:""},
-                        edit:{show:false,router:""},
-                        select:{show:false,router:""},
+                        add:{show:false,router:[]},
+                        delete:{show:false,router:[]},
+                        edit:{show:false,router:[]},
+                        select:{show:false,router:[]},
                     })
                 }
                 this.titleName=`正在修改【 ${row.title} 】`;
@@ -325,19 +329,16 @@
                 this.opened = true;
             },
             checkBoxAdd(e){
-               this.postAuth.auth.add.router="";
+               this.postAuth.auth.add.router=[];
             },
             checkBoxDelete(e){
-                this.postAuth.auth.delete.router="";
+                this.postAuth.auth.delete.router=[];
             },
             checkBoxEdit(e){
-                this.postAuth.auth.edit.router="";
+                this.postAuth.auth.edit.router=[];
             },
             checkBoxSelect(e){
-                this.postAuth.auth.select.router="";
-            },
-            aothSelect(e){
-                console.log(e);
+                this.postAuth.auth.select.router=[];
             },
             getUiRouterName(route){
                 let name="";

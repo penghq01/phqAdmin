@@ -26,9 +26,7 @@
             </div>
             <div class="index-content">
                 <div class="admin-index">
-                    <keep-alive :include="getCacheList">
-                        <router-view></router-view>
-                    </keep-alive>
+                    <router-view></router-view>
                 </div>
             </div>
         </div>
@@ -54,6 +52,8 @@
     import md5 from "js-md5"
     import Menu from "../components/Menu/Menu"
     import message from "../lib/message";
+    import routerList from "../router/routerList";
+    import router from "../router/router";
     export default {
         name: 'home',
         data() {
@@ -68,20 +68,13 @@
                 isPush:false,
                 routerHistoryWidth:0,
                 routerHistoryLeft:0,
-                cacheRouterList:["/admin","/auth","/role"],//需要缓存的路由列表
-            }
-        },
-        computed:{
-            getCacheList(){
-               //console.log(this.cacheRouterList.join(","));
-                return this.cacheRouterList.join(",");
             }
         },
         mounted() {
+            this.getAuthList();
             this.activeMenu=this.$router.history.current.path;
             //this.routerHistory=storage.routerHistory.get();
             this.getUserInfo();
-            this.getAuthList();
         },
         methods: {
             //点击菜单时触发
@@ -127,7 +120,6 @@
                    if(Routerwidth<width){
                        this.routerHistoryWidth=width;
                        let activeLeft=active.offsetLeft;
-                       console.log(active.offsetLeft);
                        let activeWidth=active.offsetWidth;
                        let eLeft=this.routerHistoryLeft;
                        activeLeft=activeLeft - Math.abs(eLeft);
@@ -195,36 +187,44 @@
                     }
                 }
             },
+            //菜单权限，转菜单树
             listTotree(data,pid=0){
                 let list=[];
                 data.forEach((item,key)=>{
-                    if(item.pid==pid){
-                        let tem={"title":item.title,"key":item.crouter,"icon":item.icon};
-                        let cd=this.listTotree(data,item.id);
-                        if(cd.length>0){
-                            tem.key=item.pid+"-"+item.id;
-                            this.$set(tem,"children",cd);
+                    if(item.auth_type==0 && item.is_show==1){
+                        if(item.pid==pid){
+                            let tem={"title":item.title,"key":item.crouter,"icon":item.icon};
+                            let cd=this.listTotree(data,item.id);
+                            if(cd.length>0){
+                                tem.key=item.pid+"-"+item.id;
+                                this.$set(tem,"children",cd);
+                            }
+                            if(!utils.empty(tem.auth)){
+                                tem.auth=JSON.parse(tem.auth);
+                            }
+                            list.push(tem);
+                            //data.splice(key,1);
                         }
-                        if(!utils.empty(tem.auth)){
-                            tem.auth=JSON.parse(tem.auth);
-                        }
-                        list.push(tem);
-                        //data.splice(key,1);
                     }
                 });
                 return list;
             },
             getAuthList() {
-                http.post("/admin/auth",{is_show:1,auth_type:0}).then(data => {
+                http.post("admin/auth").then(data => {
                     this.menuList=data;
                     this.menuTreeList=this.listTotree(data);
                     if(!this.isPush){
                         this.triggerSelect(this.$router.history.current.path);
                         this.isPush=true;
                     }
-                    //console.log(this.menuTreeList);
-                }).catch(err => {
-                });
+                    let MenuAuthMap=new Map();
+                    data.forEach(item=>{
+                        if(!utils.empty(item.crouter)){
+                            MenuAuthMap[item.crouter]=item.auth;
+                        }
+                    });
+                    storage.menuAuthMap.set(MenuAuthMap);
+                }).catch(err => {});
             },
             getUserInfo() {
                 http.post("admin/info").then(data => {
@@ -235,7 +235,7 @@
             outLogin() {
                 message.confirm("确定要推出登录吗?", {
                     okName: "确定退出", okFunction: () => {
-                        storage.clearToken();
+                        storage.clear();
                         this.$router.push({'path': "/login"});
                     }
                 });

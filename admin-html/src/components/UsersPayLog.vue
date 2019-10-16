@@ -1,6 +1,6 @@
 <template>
     <div>
-        <div>
+        <div v-if="menuAuth.select">
             <el-table  v-loading="loading" :data="payLogList" border size="mini" empty-text="暂无数据">
                 <el-table-column
                         label="头像"
@@ -33,6 +33,7 @@
     import http from "../lib/http";
     import Paging from "./Paging"
     import utils from "../lib/utils";
+    import logic from "../lib/logic";
     export default {
         name: 'UsersPayLog',
         props:{
@@ -43,6 +44,7 @@
         },
         data () {
             return {
+                menuAuth:{},
                 payLogList:[],
                 loading:true,
                 pageData:{
@@ -53,6 +55,7 @@
             }
         },
         mounted () {
+            this.menuAuth=logic.getMenuAuth(this);
             this.getPayLog();
         },
         methods: {

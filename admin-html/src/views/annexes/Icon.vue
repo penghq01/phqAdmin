@@ -1,9 +1,9 @@
 <template>
-    <Icon></Icon>
+    <myIcon></myIcon>
 </template>
 
 <script>
-    import Icon from "../../components/Icon"
+    import myIcon from "../../components/Icon"
     export default {
         methods:{
             select(icon){
@@ -11,7 +11,7 @@
             }
         },
         components:{
-            Icon
+            myIcon
         }
     }
 </script>
