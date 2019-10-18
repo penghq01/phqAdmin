@@ -13,7 +13,8 @@ const HTTP_CODE = {
     NOAUTH:4003  //您没有权限访问
 };
 
-const post = (url = '', params = {}, isToast = true,upload=false,progress=()=>{}) => {
+export default {
+    post(url = '', params = {}, isToast = true,upload=false,progress=()=>{}){
     let httpURL = config.host + config.apiPath + url;
     let time=new Date().getTime();
     time=time.toString();
@@ -50,19 +51,19 @@ const post = (url = '', params = {}, isToast = true,upload=false,progress=()=>{}
                 case HTTP_CODE.NOAUTH:
                     message.alert(data.msg, {title: '提示',okFunction:()=>{
 
-                    }});
+                        }});
                     retData = Promise.reject(data.msg);
                     break;
                 case HTTP_CODE.LOGIN:
                     message.alert(data.msg,{title:"登录提示",okFunction:()=>{
-                            storage.clearToken();
+                            storage.clear();
                             window.location.href = '/login';
                         }});
                     retData = Promise.reject(data.msg);
                     break;
                 case HTTP_CODE.RELOGIN:
                     message.alert(data.msg, {title:'登录过期',okFunction:()=>{
-                            storage.clearToken();
+                            storage.clear();
                             window.location.href = '/login';
                         }});
                     retData = Promise.reject(data.msg);
@@ -81,8 +82,5 @@ const post = (url = '', params = {}, isToast = true,upload=false,progress=()=>{}
             return Promise.reject(error)
         });
     return instance.post(httpURL,params);
-};
-
-export default {
-    post
+}
 }

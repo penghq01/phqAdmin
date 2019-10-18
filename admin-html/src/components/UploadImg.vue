@@ -129,7 +129,7 @@
             //获取分类列表
             getFileClassList() {
                 message.loading.show("加载数据");
-                http.post("/files/list/class").then(data => {
+                http.post("files/list/class").then(data => {
                     this.$set(this.classList[0], "children", this.classListToTree(0, data));
                 }).catch(err => {
                 });
@@ -160,7 +160,7 @@
                 let param = new FormData();
                 param.append("upload_img", file.file);
                 param.append("class_id", this.selectFileClassId);
-                http.post("/files/upload/img", param, true, true, progress => {
+                http.post("files/upload/img", param, true, true, progress => {
                     this.selectUploadImageProgress = parseInt((progress.loaded / progress.total) * 100);
                 }).then(data => {
                     this.imgList.unshift(data);
@@ -200,7 +200,7 @@
                 if (data.id > 0) {
                     if( this.menuAuth.edit){
                         message.loading.show("修改中");
-                        http.post("/files/edit/class", {"id": data.id, "pid": data.pid, "label": data.label}).then(res => {
+                        http.post("files/edit/class", {"id": data.id, "pid": data.pid, "label": data.label}).then(res => {
                             data.edit = false;
                         }).catch(err => {
                             data.edit = false;
@@ -210,7 +210,7 @@
                 } else {
                     if( this.menuAuth.add) {
                         message.loading.show("添加中");
-                        http.post("/files/add/class", {"label": data.label, "pid": data.pid}).then(res => {
+                        http.post("files/add/class", {"label": data.label, "pid": data.pid}).then(res => {
                             //console.log(res);
                             data.id = res.id;
                             data.edit = false;
@@ -239,7 +239,7 @@
                     message.confirm("确定要删除吗？", {
                         okName: "删除", okFunction: () => {
                             message.loading.show("删除中");
-                            http.post("/files/del/class", {"id": data.id}).then(res => {
+                            http.post("files/del/class", {"id": data.id}).then(res => {
                                 this.removeTree(node, data);
                             }).catch(err => {
                             });
@@ -274,7 +274,7 @@
             nodeDrop(dropNode, toNode, type) {
                 //console.log(toNode);
                 message.loading.show("修改中");
-                http.post("/files/edit/class", {
+                http.post("files/edit/class", {
                     "id": dropNode.data.id,
                     "pid": toNode.data.id,
                     "label": dropNode.data.label
@@ -300,7 +300,7 @@
             delImg(img){
                 message.confirm("确定要删除吗？",{okName:"删除",okFunction:()=>{
                         message.loading.show("删除中");
-                        http.post("/files/del",{"id":img.id}).then(data=>{
+                        http.post("files/del",{"id":img.id}).then(data=>{
                             let index=this.imgList.findIndex(i=>i.id==img.id);
                             this.imgList.splice(index,1);
                         }).catch(err=>{});

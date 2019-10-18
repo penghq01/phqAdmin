@@ -63,7 +63,7 @@
                 return utils.UnixToDateTime(val);
             },
             getPayLog(){
-                http.post(`/user/pay/log/${this.pageData.page_size}/${this.pageData.page}`,{"user_id":this.userId}).then(data=>{
+                http.post(`user/pay/log/${this.pageData.page_size}/${this.pageData.page}`,{"user_id":this.userId}).then(data=>{
                     this.pageData=data.paginate;
                     this.payLogList=data.data;
                     this.loading=false;

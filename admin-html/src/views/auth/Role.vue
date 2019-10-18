@@ -151,7 +151,7 @@
           }
           message.loading.show("添加中");
           this.postData.auth_list=JSON.stringify(this.getCheckAuth());
-          http.post("/role/add",this.postData).then(data=>{
+          http.post("role/add",this.postData).then(data=>{
               this.roleList.unshift(data);
               this.close();
           }).catch(err=>{})
@@ -214,7 +214,7 @@
           }
           message.loading.show("修改中");
           this.postData.auth_list=JSON.stringify(this.getCheckAuth());
-          http.post("/role/edit",this.postData).then(data=>{
+          http.post("role/edit",this.postData).then(data=>{
               let index=this.roleList.findIndex(i=>i.id==this.postData.id);
               if(index>=0){
                   this.$set(this.roleList,index,this.postData);
@@ -225,7 +225,7 @@
       },
       del(row){
           message.loading.show("删除中");
-          http.post("/role/del",{"id":row.id}).then(data=>{
+          http.post("role/del",{"id":row.id}).then(data=>{
               this.roleList.splice(this.roleList.findIndex(i=>i.id==row.id),1);
           }).catch(err=>{});
       },
