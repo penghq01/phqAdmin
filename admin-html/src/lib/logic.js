@@ -19,7 +19,7 @@ export default {
     let routerArr=defaultRouter.getDefaultRouterList();
     //console.log(routerArr);
     let MenuAuthMap=storage.menuAuthMap.get();
-    routerList.routerList.forEach(route=>{
+    routerList.routerList().forEach(route=>{
       let routeAuth=MenuAuthMap[route.path];
       if(!utils.empty(routeAuth)){
         routerArr[0].children.push(route);

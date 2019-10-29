@@ -112,7 +112,7 @@
         return list;
       },
       getAuthList() {
-        http.post("auth/list").then(data => {
+        http.post("role/auth-list").then(data => {
            this.authList=data;
            this.authTree=this.listTotree(data);
         }).catch(err => {

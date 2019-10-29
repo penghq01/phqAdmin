@@ -193,6 +193,12 @@ func GetServerRouterList()[]RouterInfo{
 			MappingMethods: "post:List",
 		},
 		{
+			Name:"获取角色权限列表",
+			Path:AdminRootPath+"/role/auth-list",
+			Controller:      &adminApi.Role{},
+			MappingMethods: "post:AuthList",
+		},
+		{
 			Name:"删除角色",
 			Path:AdminRootPath+"/role/del",
 			Controller:      &adminApi.Role{},

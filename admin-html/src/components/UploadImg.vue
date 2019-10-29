@@ -47,7 +47,7 @@
                 <transition-group name="list-animate" tag="div">
                     <div class="img-list" v-for="(img,index) in imgList" :key="img.id">
                         <div v-if="isSelect" class="img-action img-action-see" @click="selectImg(img)">选择图片</div>
-                        <img @click="previewImg=imgHost+img.src" :src="imgHost+img.src"/>
+                        <img @click="previewImg=img.src" :src="imgHost+img.src"/>
                         <div class="img-action img-action-del" v-if="menuAuth.delete" @click="delImg(img)">删除</div>
                     </div>
                 </transition-group>
@@ -57,9 +57,7 @@
 
             </div>
         </div>
-        <div class="previewImg" v-show="previewImg!=''" @click="previewImg=''">
-            <img   :src="previewImg" />
-        </div>
+        <PreviewImg v-model="previewImg"/>
     </div>
 </template>
 
@@ -69,8 +67,10 @@
     import utils from "../lib/utils";
     import config from "../config/index"
     import logic from "../lib/logic";
+    import PreviewImg from "./PreviewImg";
     export default {
         name: "UploadImg",
+        components:{PreviewImg},
         props:{
             isSelect:{
                 type:Boolean,
@@ -462,22 +462,6 @@
             }
         }
     }
-    .previewImg{
-        transition:all 0.5s ease-out;
-        display:flex;
-        justify-content:center;
-        align-items: center;
-        width:100%;
-        height:100%;
-        position:absolute;
-        z-index:999;
-        top:0;
-        left:0;
-        background-color:rgba(0,0,0,0.2);
-        &>img{
-            max-width:80%;
-            max-height:80%;
-        }
-    }
+
 
 </style>
