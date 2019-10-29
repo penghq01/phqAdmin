@@ -28,11 +28,11 @@ export default {
             {
                 path: '/404',
                 name: 'NoPage',
-                nickname:"页面不错在",
+                nickname:"404错误页面",
                 component: () => import( '../views/NoPage.vue')
             },
             {
-                path: "*",
+                path: "/*",
                 redirect:"/404"
             },
         ];

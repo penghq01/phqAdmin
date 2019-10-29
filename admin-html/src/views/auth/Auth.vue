@@ -140,6 +140,8 @@
     import http from "../../lib/http";
     import message from "../../lib/message";
     import logic from "../../lib/logic";
+    import defaultRouter from "../../router/defaultRouter";
+    import routerList from "../../router/routerList";
     export default {
         name: 'Auth',
         data() {
@@ -170,7 +172,11 @@
             this.menuAuth=logic.getMenuAuth(this);
             this.getAuthList();
             this.getRouterList();
-            let routes=this.$router.options.routes;
+            let routes=defaultRouter.getDefaultRouterList();
+            let router_list=routerList.routerList();
+            router_list.forEach(item=>{
+                routes[0].children.push(item);
+            });
             this.routersToArror(routes);
         },
         methods: {
