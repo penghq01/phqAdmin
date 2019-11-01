@@ -32,7 +32,7 @@ func (this *User) List() {
 	if rows <= 0 || err != nil {
 		this.ServeError("", "")
 	}
-	this.Paginate.CalcPaginate(int(rows))
+	this.Paginate.CalcPaginate(rows)
 	if err := session1.Omit("password").Limit(this.Paginate.Limit, this.Paginate.Start).Find(&userList); err == nil {
 		data := common.PaginateData{
 			Data:     userList,
@@ -55,7 +55,7 @@ func (this *User) PayLog() {
 	if rows <= 0 || err != nil {
 		this.ServeError("", "")
 	}
-	this.Paginate.CalcPaginate(int(rows))
+	this.Paginate.CalcPaginate(rows)
 	sin1 := common.DbEngine.Desc("users_pay_log.add_time")
 	if userId > 0 {
 		sin1.Where("users_pay_log.user_id=?", userId)

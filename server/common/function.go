@@ -21,17 +21,17 @@ func Md5String(str string) string {
 }
 
 //计算分页数据totalCount总记录条数
-func (this *Paginate) CalcPaginate(totalCount int) {
+func (this *Paginate) CalcPaginate(totalCount int64) {
 	if this.Page <= 0 {
 		this.Page = 1
 	}
 	if this.PageSize <= 0 {
 		this.PageSize = 10
 	}
-	this.Limit = this.PageSize
-	this.Start = (this.Page - 1) * this.PageSize
+	this.Limit = int(this.PageSize)
+	this.Start = int((this.Page - 1) * this.PageSize)
 	this.TotalCount = totalCount
-	this.TotalPage = int(math.Ceil(float64(totalCount) / float64(this.PageSize)))
+	this.TotalPage = int64(math.Ceil(float64(totalCount) / float64(this.PageSize)))
 }
 
 //密码加密函数
@@ -126,11 +126,11 @@ func ToString(data interface{}) string {
 
 //字符串转Byte
 func Str2Bytes(s string) []byte {
-	     x := (*[2]uintptr)(unsafe.Pointer(&s))
-	     h := [3]uintptr{x[0], x[1], x[1]}
-	     return *(*[]byte)(unsafe.Pointer(&h))
- }
+	x := (*[2]uintptr)(unsafe.Pointer(&s))
+	h := [3]uintptr{x[0], x[1], x[1]}
+	return *(*[]byte)(unsafe.Pointer(&h))
+}
 //Byte转字符串
 func Bytes2Str(b []byte) string {
-     return *(*string)(unsafe.Pointer(&b))
+	return *(*string)(unsafe.Pointer(&b))
 }

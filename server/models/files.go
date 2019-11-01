@@ -64,7 +64,7 @@ func (this *Files)PageList(paginate common.Paginate,pageData *common.PaginateDat
 	if rows <= 0 || err != nil {
 		return false,""
 	}
-	paginate.CalcPaginate(int(rows))
+	paginate.CalcPaginate(rows)
 	files:=make([]Files,0)
 	if err := session1.Limit(paginate.Limit, paginate.Start).Find(&files); err == nil {
 			pageData.Data=files

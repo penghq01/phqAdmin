@@ -66,7 +66,7 @@ func (this *Icon)PageList(paginate common.Paginate,pageData *common.PaginateData
 	if rows <= 0 || err != nil {
 		return false, err.Error()
 	}
-	paginate.CalcPaginate(int(rows))
+	paginate.CalcPaginate(rows)
 	err =common.DbEngine.Desc("id").Limit(paginate.Limit, paginate.Start).Find(&icon)
 	if err != nil {
 		return false, err.Error()

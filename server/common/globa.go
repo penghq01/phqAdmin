@@ -24,12 +24,12 @@ type RouterInfo struct {
 
 //分页结构体
 type Paginate struct {
-	Page       int `json:"page"`        //页码
-	PageSize   int `json:"page_size"`   //每页条数
+	Page       int64 `json:"page"`        //页码
+	PageSize   int64 `json:"page_size"`   //每页条数
 	Limit      int `json:"limit"`       //获取天数
 	Start      int `json:"start"`       // 从第几条开始获取
-	TotalCount int `json:"total_count"` //总记录页数
-	TotalPage  int `json:"total_page"`  //总页数
+	TotalCount int64 `json:"total_count"` //总记录页数
+	TotalPage  int64 `json:"total_page"`  //总页数
 }
 
 //返回分页的数据
