@@ -43,7 +43,6 @@ func (this *Base) Prepare() {
 }
 //解析数据
 func (this *Base) AnalyseJson(obj interface{}) {
-	//fmt.Println(string(this.Ctx.Input.RequestBody))
 	err := json.Unmarshal(this.Ctx.Input.RequestBody, obj)
 	if err != nil {
 		this.ServeError("参数解析失败," + err.Error(), "")
@@ -52,13 +51,19 @@ func (this *Base) AnalyseJson(obj interface{}) {
 //获取分页前端传来的数据
 func (this *Base) GetPageParam() {
 	var err error
-	this.Paginate.Page, err = strconv.Atoi(this.Ctx.Input.Param(":page"))
+	params:=this.Ctx.Input.Params()
+	page:=params[":page"]
+	pageSize:=params[":page_size"]
+	//fmt.Println("page=",page,"pageszie=",pageSize)
+	this.Paginate.Page, err = strconv.ParseInt(page,10,32)
 	if err != nil {
-		common.Log.Error(fmt.Sprintf("获取分页[Page]错误=>%v", err))
+		this.ServeError(fmt.Sprintf("页码转换错误=>%v",err),"")
+		common.Log.Error(fmt.Sprintf("页码转换错误=>%v",err))
 	}
-	this.Paginate.PageSize, err = strconv.Atoi(this.Ctx.Input.Param(":pageszie"))
+	this.Paginate.PageSize, err = strconv.ParseInt(pageSize,10,32)
 	if err != nil {
-		common.Log.Error(fmt.Sprintf("获取分页[pageszie]错误=>%v", err))
+		this.ServeError(fmt.Sprintf("每页条数转换错误=>%v",err),"")
+		common.Log.Error(fmt.Sprintf("每页条数转换错误=>%v",err))
 	}
 }
 //获取参数，key为参数名称

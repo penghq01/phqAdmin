@@ -80,7 +80,7 @@ func GetServerRouterList()[]RouterInfo{
 		},
 		{
 			Name:"获取图标列表（分页）",
-			Path:AdminRootPath+"/icon/list/:pageszie/:page",
+			Path:AdminRootPath+"/icon/list/:page_size/:page",
 			Controller:      &adminApi.Icon{},
 			MappingMethods: "post:PageList",
 		},
@@ -98,7 +98,7 @@ func GetServerRouterList()[]RouterInfo{
 		},
 		{
 			Name:"获取会员列表（分页）",
-			Path:AdminRootPath+"/user/list/:pageszie/:page",
+			Path:AdminRootPath+"/user/list/:page_size/:page",
 			Controller:      &adminApi.User{},
 			MappingMethods: "post:List",
 		},
@@ -110,7 +110,7 @@ func GetServerRouterList()[]RouterInfo{
 		},
 		{
 			Name:"获取会员充值记录",
-			Path:AdminRootPath+"/user/pay/log/:pageszie/:page",
+			Path:AdminRootPath+"/user/pay/log/:page_size/:page",
 			Controller:      &adminApi.User{},
 			MappingMethods: "post:PayLog",
 		},
@@ -176,7 +176,7 @@ func GetServerRouterList()[]RouterInfo{
 		},
 		{
 			Name:"获取图片列表（分页）",
-			Path:AdminRootPath+"/files/list/:pageszie/:page",
+			Path:AdminRootPath+"/files/list/:page_size/:page",
 			Controller:      &adminApi.Files{},
 			MappingMethods: "post:PageList",
 		},
