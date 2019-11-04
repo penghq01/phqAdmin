@@ -1,17 +1,17 @@
 <template>
     <el-dialog
             :title="title"
-            :visible.sync="isShow"
+            :visible.sync="showBox"
             :width="width"
-            :before-close="close"
+            @closed="close"
             :close-on-click-modal="false"
     :close-on-press-escape="false">
             <span>
               <slot></slot>
             </span>
         <span slot="footer" class="dialog-footer">
-            <el-button v-if="!one" @click="close">{{closeTitle}}</el-button>
-           <el-button type="primary" @click="okClick">{{okTitle}}</el-button>
+           <el-button v-if="!one" @click="showBox=false">{{closeTitle}}</el-button>
+           <el-button v-if="!isSee" type="primary" @click="okClick">{{okTitle}}</el-button>
         </span>
     </el-dialog>
 </template>
@@ -28,6 +28,10 @@
                 type: Function,
                 default: () => {
                 }
+            },
+            isSee:{
+                type:Boolean,
+                default:false,
             },
             okClick: {
                 type: Function,
@@ -56,11 +60,18 @@
             }
         },
         data() {
-            return {}
+            return {
+                showBox:false,
+            }
         },
         mounted() {
+            this.showBox=this.isShow;
         },
-        methods: {},
+        watch:{
+            isShow(val){
+                this.showBox=val;
+            }
+        }
     }
 </script>
 
