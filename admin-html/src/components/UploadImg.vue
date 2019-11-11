@@ -29,7 +29,7 @@
                             <span v-else>{{node.label}}</span>
                         </span>
                         <span class="tree-action">
-                             <el-dropdown @command="handleCommand" trigger="click">
+                             <el-dropdown @command="handleCommand" trigger="hover">
                                 <span class="el-dropdown-link">
                                   <i class="el-icon-more"></i>
                                 </span>
@@ -214,6 +214,7 @@
                             //console.log(res);
                             data.id = res.id;
                             data.edit = false;
+                            this.selectFileClassId =  res.id;
                         }).catch(err => {
                             this.removeTree(node, data)
                         });

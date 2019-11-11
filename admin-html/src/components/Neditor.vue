@@ -1,13 +1,21 @@
 <template>
-    <vue-neditor-wrap v-model="content" :config="myConfig" :destroy="false" @ready="ready"></vue-neditor-wrap>
+    <div>
+        <vue-neditor-wrap v-model="content" :config="myConfig" :destroy="false" @ready="ready"></vue-neditor-wrap>
+        <Pmodel v-model="showImage">
+            <UploadImg :is-select="true" @select="selectImage"></UploadImg>
+        </Pmodel>
+    </div>
 </template>
 
 <script>
     import VueNeditorWrap from 'vue-neditor-wrap'
     import utils from "../lib/utils";
+    import Pmodel from "./Pmodel";
+    import UploadImg from "./UploadImg";
+    import config from "../config"
     export default {
         name: "Neditor",
-        components:{VueNeditorWrap},
+        components:{VueNeditorWrap,Pmodel,UploadImg},
         props:{
           value:{
               type:String,
@@ -23,17 +31,22 @@
           },
         },
         mounted(){
+          this.imgHost=config.imgHost;
           this.myConfig.initialFrameHeight=this.height;
           this.myConfig.readonly=this.readonly;
         },
         data () {
             return {
+                imgHost:"",
                 content:"",
+                insert_images:"",
+                showImage:false,
+                NeditorInsertImage:()=>{},
                 myConfig: {
                     // 如果需要上传功能,找后端小伙伴要服务器接口地址
                     //serverUrl: '/api/web/upload/ueditor',
                     // 你的UEditor资源存放的路径,相对于打包后的index.html
-                    UEDITOR_HOME_URL: '/NEditor/',
+                    UEDITOR_HOME_URL: './NEditor/',
                     // 编辑器不自动被内容撑高
                     autoHeightEnabled: false,
                     // 初始容器高度
@@ -135,12 +148,21 @@
                             "help"
                         ]
                     ],
-                }
+                },
             }
         },
         methods:{
             ready(Neditor){
                 this.init();
+                Neditor.insertImage=this.insertImage;
+            },
+            insertImage(insertimg){
+                this.NeditorInsertImage=insertimg;
+                this.showImage=true;
+            },
+            selectImage(image){
+                this.NeditorInsertImage(`${this.imgHost}${image.src}`);
+                this.showImage=false;
             },
             init(){
                 if(utils.empty(this.value)){

@@ -12252,7 +12252,6 @@ UE.commands["insertimage"] = {
           html.push(str);
         }
       }
-
       me.execCommand("insertHtml", html.join(""));
     }
 
@@ -31241,103 +31240,102 @@ UE.ui = baidu.editor.ui = {};
         }
         (function(cmd) {
           editorui[cmd] = function(editor, iframeUrl, title) {
-            iframeUrl =
-              iframeUrl ||
-              (editor.options.iframeUrlMap || {})[cmd] ||
-              iframeUrlMap[cmd];
-            title =
-              editor.options.labelMap[cmd] ||
-              editor.getLang("labelMap." + cmd) ||
-              "";
+                    iframeUrl =iframeUrl ||(editor.options.iframeUrlMap || {})[cmd] ||iframeUrlMap[cmd];
+                    title =editor.options.labelMap[cmd] ||editor.getLang("labelMap." + cmd) ||"";
+                    var dialog;
+                    //没有iframeUrl不创建dialog
+                    if (iframeUrl) {
+                        dialog = new editorui.Dialog(
+                            utils.extend(
+                                {
+                                    iframeUrl: editor.ui.mapUrl(iframeUrl),
+                                    editor: editor,
+                                    className: "edui-for-" + cmd,
+                                    title: title,
+                                    holdScroll: cmd === "insertimage",
+                                    fullscreen: /charts|preview/.test(cmd),
+                                    closeDialog: editor.getLang("closeDialog")
+                                },
+                                type == "ok"
+                                    ? {
+                                        buttons: [
+                                            {
+                                                className: "edui-okbutton",
+                                                label: editor.getLang("ok"),
+                                                editor: editor,
+                                                onclick: function() {
+                                                    dialog.close(true);
+                                                }
+                                            },
+                                            {
+                                                className: "edui-cancelbutton",
+                                                label: editor.getLang("cancel"),
+                                                editor: editor,
+                                                onclick: function() {
+                                                    dialog.close(false);
+                                                }
+                                            }
+                                        ]
+                                    }
+                                    : {}
+                            )
+                        );
 
-            var dialog;
-            //没有iframeUrl不创建dialog
-            if (iframeUrl) {
-              dialog = new editorui.Dialog(
-                utils.extend(
-                  {
-                    iframeUrl: editor.ui.mapUrl(iframeUrl),
-                    editor: editor,
-                    className: "edui-for-" + cmd,
-                    title: title,
-                    holdScroll: cmd === "insertimage",
-                    fullscreen: /charts|preview/.test(cmd),
-                    closeDialog: editor.getLang("closeDialog")
-                  },
-                  type == "ok"
-                    ? {
-                        buttons: [
-                          {
-                            className: "edui-okbutton",
-                            label: editor.getLang("ok"),
-                            editor: editor,
-                            onclick: function() {
-                              dialog.close(true);
+                        editor.ui._dialogs[cmd + "Dialog"] = dialog;
+                    }
+                    var ui = new editorui.Button({
+                        className: "edui-for-" + cmd,
+                        title: title,
+                        onclick: function() {
+                            if (dialog) {
+                                switch (cmd) {
+                                    case "wordimage":
+                                        var images = editor.execCommand("wordimage");
+                                        if (images && images.length) {
+                                            dialog.render();
+                                            dialog.open();
+                                        }
+                                        break;
+                                    case "scrawl":
+                                        if (editor.queryCommandState("scrawl") != -1) {
+                                            dialog.render();
+                                            dialog.open();
+                                        }
+
+                                        break;
+                                        //自定义修改 insertimage
+                                    case "insertimage":
+                                        //opt 是一个对象数组
+                                        //{alt: "",border: "",floatStyle: "none",height: "",src: "aaa",style: "width:px;height:px;",vspace: "",width: "",_src: "aaa"}
+                                        editor.insertImage((imgsrc)=>{
+                                            editor.execCommand("insertimage",{alt: "",border: "",floatStyle: "none",height: "",src:imgsrc,style: "",vspace: "",width: "",_src: imgsrc});
+                                        });
+                                        break;
+                                    default:
+                                    dialog.render();
+                                    dialog.open();
+                                }
                             }
-                          },
-                          {
-                            className: "edui-cancelbutton",
-                            label: editor.getLang("cancel"),
-                            editor: editor,
-                            onclick: function() {
-                              dialog.close(false);
-                            }
-                          }
-                        ]
-                      }
-                    : {}
-                )
-              );
+                        },
+                        theme: editor.options.theme,
+                        disabled:
+                            (cmd == "scrawl" && editor.queryCommandState("scrawl") == -1) ||
+                            cmd == "charts"
+                    });
+                    editorui.buttons[cmd] = ui;
+                    editor.addListener("selectionchange", function() {
+                        //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
+                        var unNeedCheckState = { edittable: 1 };
+                        if (cmd in unNeedCheckState) return;
 
-              editor.ui._dialogs[cmd + "Dialog"] = dialog;
-            }
-
-            var ui = new editorui.Button({
-              className: "edui-for-" + cmd,
-              title: title,
-              onclick: function() {
-                if (dialog) {
-                  switch (cmd) {
-                    case "wordimage":
-                      var images = editor.execCommand("wordimage");
-                      if (images && images.length) {
-                        dialog.render();
-                        dialog.open();
-                      }
-                      break;
-                    case "scrawl":
-                      if (editor.queryCommandState("scrawl") != -1) {
-                        dialog.render();
-                        dialog.open();
-                      }
-
-                      break;
-                    default:
-                      dialog.render();
-                      dialog.open();
-                  }
-                }
-              },
-              theme: editor.options.theme,
-              disabled:
-                (cmd == "scrawl" && editor.queryCommandState("scrawl") == -1) ||
-                  cmd == "charts"
-            });
-            editorui.buttons[cmd] = ui;
-            editor.addListener("selectionchange", function() {
-              //只存在于右键菜单而无工具栏按钮的ui不需要检测状态
-              var unNeedCheckState = { edittable: 1 };
-              if (cmd in unNeedCheckState) return;
-
-              var state = editor.queryCommandState(cmd);
-              if (ui.getDom()) {
-                ui.setDisabled(state == -1);
-                ui.setChecked(state);
-              }
-            });
-
-            return ui;
-          };
+                        var state = editor.queryCommandState(cmd);
+                        if (ui.getDom()) {
+                            ui.setDisabled(state == -1);
+                            ui.setChecked(state);
+                        }
+                    });
+                    return ui;
+                };
         })(ci.toLowerCase());
       }
     })(p, dialogBtns[p]);
@@ -31635,7 +31633,6 @@ UE.ui = baidu.editor.ui = {};
     });
     return ui;
   };
-
   //自定义标题
   editorui.customstyle = function(editor) {
     var list = editor.options["customstyle"] || [],
@@ -31743,7 +31740,6 @@ UE.ui = baidu.editor.ui = {};
     });
     return ui;
   };
-
   editorui.lineheight = function(editor) {
     var val = editor.options.lineheight || [];
     if (!val.length) return;
