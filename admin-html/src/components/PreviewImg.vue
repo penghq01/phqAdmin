@@ -1,12 +1,13 @@
 <template>
-    <div class="previewImg" v-show="value!=''">
+    <div class="previewImg" v-if="value!=''">
         <div class="previewImg-close"  @click="close">×</div>
-        <img   :src="imgHost+value" />
+        <img :src="value|getImageSrc" />
     </div>
 </template>
 
 <script>
     import config from "../config"
+    import utils from "../lib/utils";
     export default {
         name: "PreviewImg",
         props:{
@@ -15,17 +16,8 @@
                 default:""
             }
         },
-        data(){
-            return{
-                imgHost:""
-            }
-        },
-        mounted(){
-            this.imgHost=config.imgHost;
-        },
         methods:{
             close(){
-                this.value="";
                 this.$emit("input","");
             }
         }

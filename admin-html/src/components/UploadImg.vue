@@ -65,7 +65,7 @@
     import message from "../lib/message";
     import http from "../lib/http";
     import utils from "../lib/utils";
-    import config from "../config/index"
+    import config from "../config"
     import logic from "../lib/logic";
     import PreviewImg from "./PreviewImg";
     export default {

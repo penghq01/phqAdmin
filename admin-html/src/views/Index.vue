@@ -13,9 +13,7 @@
       return {}
     },
     mounted(){
-      let ad=utils.GetDateTimeUnix();
-      console.log(ad);
-      console.log(utils.UnixToDateTime(ad));
+
     },
     methods: {}
   }

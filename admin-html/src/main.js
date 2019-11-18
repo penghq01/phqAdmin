@@ -15,6 +15,9 @@ import myDialog from "./components/myDialog"
 import Paging from "./components/Paging"
 import logic from "./lib/logic";
 
+import filter from "./lib/filter"
+
+//Vue.use(filter);
 Vue.use(iview);
 Vue.use(ElementUI);
 Vue.component("myDialog",myDialog);
