@@ -233,7 +233,7 @@
                 });
             },
             outLogin() {
-                message.confirm("确定要推出登录吗?", {
+                message.confirm("确定要退出登录吗?", {
                     okName: "确定退出", okFunction: () => {
                         storage.clear();
                         this.$router.push({'path': "/login"});
