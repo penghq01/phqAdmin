@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 29/10/2019 17:38:44
+ Date: 21/11/2019 10:54:07
 */
 
 SET NAMES utf8mb4;
@@ -49,7 +49,7 @@ CREATE TABLE `auth`  (
   `icon` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '图标',
   `crouter` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '前端界面',
   `auth` varchar(4096) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '权限',
-  `visit` tinyint(1) NOT NULL DEFAULT 0 COMMENT '访问权限 0公开，1登录，2权限，3,超级管理员',
+  `visit` tinyint(1) NOT NULL DEFAULT 0 COMMENT '访问权限 0公开，1登录，2权限，3,系统管理员',
   `auth_type` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '路由类型 0菜单，1操作（按钮）',
   `is_show` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否显示',
   `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序',

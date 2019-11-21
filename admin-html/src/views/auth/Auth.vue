@@ -21,7 +21,7 @@
                         <el-tag v-if="scope.row.visit==0" type="info" size="mini" >公开</el-tag>
                         <el-tag v-if="scope.row.visit==1" type="success" size="mini" >登录</el-tag>
                         <el-tag v-if="scope.row.visit==2" type="warning" size="mini" >权限</el-tag>
-                        <el-tag v-if="scope.row.visit==3" type="danger" size="mini" >超级管理员</el-tag>
+                        <el-tag v-if="scope.row.visit==3" type="danger" size="mini" >系统管理员</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="类型" :width="70">
@@ -115,7 +115,7 @@
                 <el-radio v-model="postAuth.visit" :label="0">公开</el-radio>
                 <el-radio v-model="postAuth.visit" :label="1">登录</el-radio>
                 <el-radio v-model="postAuth.visit" :label="2">权限</el-radio>
-                <el-radio v-model="postAuth.visit" :label="3">超级管理员</el-radio>
+                <el-radio v-model="postAuth.visit" :label="3">系统管理员</el-radio>
             </div>
             <div class="input-div">权限类型：
                 <el-radio v-model="postAuth.auth_type" :label="0">菜单</el-radio>
