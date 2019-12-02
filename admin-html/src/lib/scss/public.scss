@@ -33,37 +33,42 @@ html,body{
   border-right:none;
 }
 .el-menu-item i,.el-submenu__title i{
-  color:$gray3-color;
+  color:$text-gray3-color;
 }
+//设置导航背景颜色和字体颜色
 .el-menu-item,.el-submenu__title{
-  background-color:$dark-color;
-  color:#FFFFFF;
+  background-color:$menu-background-color;
+  color:$menu-text-color;
 }
+//设置导航hover时背景颜色和字体颜色
 .el-menu-item:hover,.el-submenu__title:hover{
-  background-color:$primary-color;
+  background-color:$menu-hover-background-color;
+  color:$menu-hover-text-color;
 }
+//设置导航激活时背景颜色和字体颜色
 .el-menu-item.is-active{
-  background-color:$primary-color;
-  color:#FFFFFF;
+  background-color:$menu-active-background-color;
+  color:$menu-active-text-color;
 }
+
 .index{
   &-left{
     position:relative;
     z-index:99;
     width:240px;
-    background:$dark-color;
+    background:$menu-background-color;//设置导航背景颜色
     height:100%;
   }
   &-right{
     width:calc(100% - 240px);
     height:100%;
-    background:$gray2-color;
+    background:$background-color;
   }
   &-header{
     width:100%;
     height:45px;
     background:$white-color;
-    box-shadow:0 0 5px $gray1-color;
+    box-shadow:0 0 5px $box-gray1-color;
     display:flex;
     justify-content:flex-end;
     align-items:center;
@@ -81,7 +86,7 @@ html,body{
     width:100%;
     height:100%;
     background:#FFFFFF;
-    box-shadow:0 0 5px $gray1-color;
+    box-shadow:0 0 5px $box-gray1-color;
     border-radius:5px;
     padding:10px;
     overflow-y:auto;
@@ -164,7 +169,7 @@ html,body{
     }
   }
  .h-modal-footer{
-   background-color:$gray4-color;
+   background-color:$border-color4;
  }
 
 .pagination{

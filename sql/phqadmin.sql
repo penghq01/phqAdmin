@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 21/11/2019 10:54:07
+ Date: 02/12/2019 17:13:27
 */
 
 SET NAMES utf8mb4;
@@ -34,9 +34,8 @@ CREATE TABLE `admin`  (
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'administrator', '0b178dfde1b181b81d01ffb628f9c9bd', '', 1571362261, 'localhost:8181');
-INSERT INTO `admin` VALUES (2, 'penghq', '0b178dfde1b181b81d01ffb628f9c9bd', '5', 1571362253, 'localhost:8181');
-INSERT INTO `admin` VALUES (7, 'aaaaaa', '0b178dfde1b181b81d01ffb628f9c9bd', '7', 0, '');
+INSERT INTO `admin` VALUES (1, 'root', '0b178dfde1b181b81d01ffb628f9c9bd', '', 1575275440, 'localhost:8181');
+INSERT INTO `admin` VALUES (2, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', '5', 1575276511, 'localhost:8181');
 
 -- ----------------------------
 -- Table structure for auth
@@ -66,12 +65,12 @@ INSERT INTO `auth` VALUES (6, 0, '用户管理', 'fa fa-user', '', '{\"add\":{\"
 INSERT INTO `auth` VALUES (7, 4, '管理员管理', 'fa fa-user', '/admin', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/admin/add\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/admin/del\"]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/admin/edit\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/admin/list\",\"/admin-api/role/list\"]}}', 2, 0, 1, 0);
 INSERT INTO `auth` VALUES (8, 4, '角色管理', 'fa fa-address-book', '/role', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/role/add\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/role/del\"]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/role/edit\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/role/list\",\"/admin-api/role/auth-list\"]}}', 2, 0, 1, 1);
 INSERT INTO `auth` VALUES (9, 4, '权限管理', 'fa fa-gears', '/auth', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/auth/add\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/auth/del\"]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/auth/edit\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/auth/list\",\"/admin-api/auth/get/router-list\",\"/admin-api/icon/list/:pageszie/:page\"]}}', 3, 0, 1, 2);
-INSERT INTO `auth` VALUES (10, 5, '图标管理', 'fa fa-info-circle', '/icon', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/icon/add\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/icon/del\"]},\"edit\":{\"show\":false,\"router\":[]},\"select\":{\"show\":true,\"router\":[\"/admin-api/icon/list/:pageszie/:page\"]}}', 2, 0, 1, 1);
-INSERT INTO `auth` VALUES (11, 6, '会员列表', 'fa fa-users', '/user', '{\"add\":{\"show\":false,\"router\":[]},\"delete\":{\"show\":false,\"router\":[]},\"edit\":{\"show\":false,\"router\":[]},\"select\":{\"show\":true,\"router\":[\"/admin-api/user/total/money-points\",\"/admin-api/user/list/:pageszie/:page\",\"/admin-api/user/pay/log/:pageszie/:page\"]}}', 2, 0, 1, 0);
-INSERT INTO `auth` VALUES (12, 6, '充值记录', 'fa fa-cc-visa', '/paylog', '{\"add\":{\"show\":false,\"router\":[]},\"delete\":{\"show\":false,\"router\":[]},\"edit\":{\"show\":false,\"router\":[]},\"select\":{\"show\":true,\"router\":[\"/admin-api/user/pay/log/:pageszie/:page\"]}}', 2, 0, 1, 0);
+INSERT INTO `auth` VALUES (10, 5, '图标管理', 'fa fa-info-circle', '/icon', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/icon/add\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/icon/del\"]},\"edit\":{\"show\":false,\"router\":[]},\"select\":{\"show\":true,\"router\":[\"/admin-api/icon/list/:page_size/:page\"]}}', 2, 0, 1, 1);
+INSERT INTO `auth` VALUES (11, 6, '会员列表', 'fa fa-users', '/user', '{\"add\":{\"show\":false,\"router\":[]},\"delete\":{\"show\":false,\"router\":[]},\"edit\":{\"show\":false,\"router\":[]},\"select\":{\"show\":true,\"router\":[\"/admin-api/user/total/money-points\",\"/admin-api/user/pay/log/:page_size/:page\",\"/admin-api/user/list/:page_size/:page\"]}}', 2, 0, 1, 0);
+INSERT INTO `auth` VALUES (12, 6, '充值记录', 'fa fa-cc-visa', '/paylog', '{\"add\":{\"show\":false,\"router\":[]},\"delete\":{\"show\":false,\"router\":[]},\"edit\":{\"show\":false,\"router\":[]},\"select\":{\"show\":true,\"router\":[\"/admin-api/user/total/money-points\"]}}', 2, 0, 1, 0);
 INSERT INTO `auth` VALUES (13, 0, '基本权限', 'fa fa-hand-paper-o', '/', '{\"add\":{\"show\":false,\"router\":[]},\"delete\":{\"show\":false,\"router\":[]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/admin/edit/pass\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/admin/info\",\"/admin-api/admin/auth\"]}}', 1, 1, 0, 1);
 INSERT INTO `auth` VALUES (16, 0, '后台登录', 'fa fa-sign-in', '/login', '{\"add\":{\"show\":false,\"router\":[]},\"delete\":{\"show\":false,\"router\":[]},\"edit\":{\"show\":false,\"router\":[]},\"select\":{\"show\":true,\"router\":[\"/admin-api/login\"]}}', 0, 1, 0, 0);
-INSERT INTO `auth` VALUES (17, 5, '图片管理', 'fa fa-file-image-o', '/images', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/files/upload/img\",\"/admin-api/files/add/class\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/files/del\",\"/admin-api/files/del/class\"]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/files/edit/class\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/files/list/class\",\"/admin-api/files/list/:pageszie/:page\"]}}', 2, 0, 1, 0);
+INSERT INTO `auth` VALUES (17, 5, '图片管理', 'fa fa-file-image-o', '/images', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/files/upload/img\",\"/admin-api/files/add/class\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/files/del\",\"/admin-api/files/del/class\"]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/files/edit/class\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/files/list/class\",\"/admin-api/files/list/:page_size/:page\"]}}', 2, 0, 1, 0);
 
 -- ----------------------------
 -- Table structure for files

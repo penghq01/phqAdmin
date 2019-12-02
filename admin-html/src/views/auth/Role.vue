@@ -265,10 +265,10 @@
   }
 </script>
 <style>
-  .el-checkbox{
+  .role .el-checkbox{
     margin-right:10px;
   }
-  .el-checkbox__label{
+  .role .el-checkbox__label{
     padding-left:5px;
   }
 </style>
@@ -276,10 +276,10 @@
 .select-auth{
   padding:5px;
   border-radius:5px;
-  border:1px $gray2-color solid;
+  border:1px $border-color2 solid;
   & > div:first-child{
      padding:5px 0;
-    color:$gray-color;
+    color:$text-gray-color;
   }
 }
 </style>

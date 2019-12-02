@@ -389,7 +389,7 @@
     }
     .select-tip{
         font-size:12px;
-        color:$gray0-color;
+        color:$text-gray0-color;
         padding-left:10px;
     }
 </style>

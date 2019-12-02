@@ -293,7 +293,7 @@
         }
 
         &:hover {
-            background-color: $blue-color;
+            background-color: $primary-color;
             color: #fff;
             cursor: pointer;
             & > div {
@@ -321,9 +321,9 @@
     .router{
         height:90%;
         width:calc(100% - 160px);
-        background-color:$gray4-color;
-        box-shadow:inset 0 0 5px $gray0-color;
-        border:1px $gray0-color solid;
+        background-color:$background-color;
+        box-shadow:inset 0 0 5px $box-gray0-color;
+        border:1px $border-color1 solid;
         border-radius:5px;
         overflow: hidden;
         min-width:300px;
@@ -354,7 +354,7 @@
                 border-radius:5px;
                 cursor:pointer;
                 margin:0 5px;
-                border:1px $gray1-color solid;
+                border:1px $border-color1 solid;
                 &:hover{
                     border:1px $primary-gray solid;
                     background-color:$primary-gray;
@@ -393,7 +393,7 @@
         }
     }
     .routerRight{
-       border-right:1px $gray2-color solid;
+       border-right:1px $border-color2 solid;
     }
 
 </style>

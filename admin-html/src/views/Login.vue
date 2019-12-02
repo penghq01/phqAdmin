@@ -7,7 +7,7 @@
                     <el-button style="float: right; padding: 3px 0" type="text">没有账号？请联系管理员</el-button>
                 </div>
                 <div class="login-info">
-                   <div> <el-input v-model="postData.username"  placeholder="请输登录账号"></el-input></div>
+                   <div> <el-input v-model="postData.username"  placeholder="请输入登录账号"></el-input></div>
                     <div> <el-input type="password" v-model="postData.password" placeholder="请输入密码"></el-input></div>
                     <div> <el-button type="primary" @click="login">登录</el-button></div>
                 </div>

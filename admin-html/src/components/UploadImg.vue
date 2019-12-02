@@ -331,7 +331,7 @@
         &-title {
             position: absolute;
             top: 2px;
-            color: $dark-color;
+            color:$text-primary-color;
             left: calc(50% - 50px);
         }
     }
@@ -351,8 +351,8 @@
 
         & > input {
             border-radius: 5px;
-            border: 1px $gray2-color solid;
-            box-shadow: 0 0 5px $gray1-color;
+            border: 1px $border-color1 solid;
+            box-shadow: 0 0 5px $box-gray1-color;
             font-size: 14px;
             padding: 0 5px;
             width: 120px;
@@ -372,10 +372,10 @@
 
             &:first-child {
                 margin-right: 5px;
-                color: $gray-color;
+                color: $text-gray-color;
 
                 &:active {
-                    color: $dark-color;
+                    color: $text-primary-color;
                 }
             }
         }
@@ -385,7 +385,7 @@
         width: 240px;
         margin-right: 10px;
         padding: 10px;
-        box-shadow: 0 0 5px $gray2-color;
+        box-shadow: 0 0 5px $box-gray2-color;
     }
 
     .custom-tree-node {
@@ -406,7 +406,7 @@
     .file-list {
         width: calc(100% - 250px);
         padding: 10px;
-        box-shadow: 0 0 5px $gray2-color;
+        box-shadow: 0 0 5px $box-gray2-color;
 
         & > div {
             display: flex;
@@ -420,8 +420,8 @@
                     align-items: center;
                     margin-right: 15px;
                     margin-bottom: 15px;
-                    border: 1px $gray2-color solid;
-                    background-color: $gray2-color;
+                    border: 1px $border-color1 solid;
+                    background-color: $background-color;
                     overflow: hidden;
                     position:relative;
                 & > img {

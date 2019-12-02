@@ -1,41 +1,39 @@
-@import "element-color";
-
 /*element 颜色变量*/
 //主题颜色
 $--color-primary: $primary-color;
 //成功颜色
-$--color-success:#67C23A;
+$--color-success:$success-color;
 //警告颜色
-$--color-warning:#E6A23C;
+$--color-warning:$warning-color;
 //危险颜色
-$--color-danger:#F56C6C;
+$--color-danger:$danger-color;
 //信息颜色
-$--color-info:#909399;
+$--color-info:$info-color;
 
 //主要文字颜色
-$--color-text-primary:#303133;
+$--color-text-primary:$text-primary-color;
 //常规文字颜色
-$--color-text-regular:#606266;
+$--color-text-regular:$text-regular-color;
 //次要文字颜色
-$--color-text-secondary:#909399;
+$--color-text-secondary:$text-secondary-color;
 //占位文字颜色
-$--color-text-placeholder:#C0C4CC;
+$--color-text-placeholder:$text-placeholder-color;
 
 //一级边框颜色
-$--border-color-base:#DCDFE6;
+$--border-color-base:$border-color1;
 //二级边框颜色
-$--border-color-light:#E4E7ED;
+$--border-color-light:$border-color2;
 //三级边框颜色
-$--border-color-lighter:#EBEEF5;
+$--border-color-lighter:$border-color3;
 //四级边框颜色
-$--border-color-extra-light:#F2F6FC;
+$--border-color-extra-light:$border-color4;
 
 //基础白色
-$--color-white:#FFFFFF;
+$--color-white:$white-color;
 //基础黑色
-$--color-black:#000000;
+$--color-black:$dark-color;
 //基础背景色
-$--background-color-base:#F5F7FA;
+$--background-color-base:$background-color;
 
 
 /* 改变 icon 字体路径变量，必需 */

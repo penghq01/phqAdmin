@@ -57,14 +57,14 @@ export default {
                 case HTTP_CODE.LOGIN:
                     message.alert(data.msg,{title:"登录提示",okFunction:()=>{
                             storage.clear();
-                            window.location.href = '/login';
+                            window.location.href = '/admin/#/login';
                         }});
                     retData = Promise.reject(data.msg);
                     break;
                 case HTTP_CODE.RELOGIN:
                     message.alert(data.msg, {title:'登录过期',okFunction:()=>{
                             storage.clear();
-                            window.location.href = '/login';
+                            window.location.href = '/admin/#/login';
                         }});
                     retData = Promise.reject(data.msg);
                     break;
