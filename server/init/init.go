@@ -15,6 +15,7 @@ func init() {
 func ServerInit() {
 	fmt.Println("----------------启动初始化----------------")
 	common.Log = logs.NewLogger()
+	common.Log.Info("----------------启动初始化----------------")
 	var err error
 	//设置日志写出文件
 	err = common.Log.SetLogger(logs.AdapterFile, `{"filename":"ServerRunLog.log"}`)
@@ -48,8 +49,9 @@ func ServerInit() {
 	if err != nil {
 		common.Log.Error(fmt.Sprintf("连接数据库失败，%v", err))
 	}
-	common.Log.Error("数据库连接成功")
+	common.Log.Info("数据库连接成功")
 	//common.DbEngine.ShowSQL(true)                     //则会在控制台打印出生成的SQL语句；
 	//common.DbEngine.Logger().SetLevel(core.LOG_DEBUG) //则会在控制台打印调试及以上的信息
 	fmt.Println("----------------初始化完成----------------")
+	common.Log.Info("----------------初始化完成----------------")
 }

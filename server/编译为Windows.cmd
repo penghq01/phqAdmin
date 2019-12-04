@@ -1,5 +1,5 @@
 SET GOARCH=amd64
 SET GOOS=windows
-go build
+go build -ldflags "-H windowsgui"
 
 pause

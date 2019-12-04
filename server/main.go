@@ -16,4 +16,5 @@ func main() {
 		common.Log.Error("关闭数据库连接成功")
 	}()
 	beego.Run()
+	common.Log.Info("服务启动成功")
 }
