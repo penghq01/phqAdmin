@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地
+ Source Server         : 本地数据
  Source Server Type    : MySQL
  Source Server Version : 50717
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 02/12/2019 17:13:27
+ Date: 04/12/2019 23:34:14
 */
 
 SET NAMES utf8mb4;
@@ -38,6 +38,17 @@ INSERT INTO `admin` VALUES (1, 'root', '0b178dfde1b181b81d01ffb628f9c9bd', '', 1
 INSERT INTO `admin` VALUES (2, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', '5', 1575276511, 'localhost:8181');
 
 -- ----------------------------
+-- Table structure for admin_and_role
+-- ----------------------------
+DROP TABLE IF EXISTS `admin_and_role`;
+CREATE TABLE `admin_and_role`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `admin_id` int(11) NOT NULL COMMENT '管理员表ID',
+  `admin_role_id` int(11) NOT NULL COMMENT '角色表ID',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
 -- Table structure for auth
 -- ----------------------------
 DROP TABLE IF EXISTS `auth`;
@@ -53,7 +64,7 @@ CREATE TABLE `auth`  (
   `is_show` tinyint(1) UNSIGNED NOT NULL DEFAULT 0 COMMENT '是否显示',
   `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
   PRIMARY KEY (`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 18 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 19 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of auth
@@ -71,6 +82,7 @@ INSERT INTO `auth` VALUES (12, 6, '充值记录', 'fa fa-cc-visa', '/paylog', '{
 INSERT INTO `auth` VALUES (13, 0, '基本权限', 'fa fa-hand-paper-o', '/', '{\"add\":{\"show\":false,\"router\":[]},\"delete\":{\"show\":false,\"router\":[]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/admin/edit/pass\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/admin/info\",\"/admin-api/admin/auth\"]}}', 1, 1, 0, 1);
 INSERT INTO `auth` VALUES (16, 0, '后台登录', 'fa fa-sign-in', '/login', '{\"add\":{\"show\":false,\"router\":[]},\"delete\":{\"show\":false,\"router\":[]},\"edit\":{\"show\":false,\"router\":[]},\"select\":{\"show\":true,\"router\":[\"/admin-api/login\"]}}', 0, 1, 0, 0);
 INSERT INTO `auth` VALUES (17, 5, '图片管理', 'fa fa-file-image-o', '/images', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/files/upload/img\",\"/admin-api/files/add/class\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/files/del\",\"/admin-api/files/del/class\"]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/files/edit/class\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/files/list/class\",\"/admin-api/files/list/:page_size/:page\"]}}', 2, 0, 1, 0);
+INSERT INTO `auth` VALUES (18, 4, '数据备份恢复', 'fa fa-server', '/sql', '{\"add\":{\"show\":true,\"router\":[\"/admin-api/sql/exprot\"]},\"delete\":{\"show\":true,\"router\":[\"/admin-api/sql/del\"]},\"edit\":{\"show\":true,\"router\":[\"/admin-api/sql/improt\"]},\"select\":{\"show\":true,\"router\":[\"/admin-api/sql/list\"]}}', 2, 0, 1, 3);
 
 -- ----------------------------
 -- Table structure for files

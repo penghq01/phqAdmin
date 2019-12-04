@@ -38,6 +38,12 @@ export default {
                 component: () => import('../views/user/User.vue')
             },
             {
+                path: '/sql',
+                name: 'sql',
+                nickname: "数据备份恢复",
+                component: () => import('../views/system/System.vue')
+            },
+            {
                 path: '/paylog',
                 name: 'paylog',
                 nickname: "会员充值记录",

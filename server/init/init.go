@@ -15,7 +15,6 @@ func init() {
 func ServerInit() {
 	fmt.Println("----------------启动初始化----------------")
 	common.Log = logs.NewLogger()
-	common.Log.Info("----------------启动初始化----------------")
 	var err error
 	//设置日志写出文件
 	err = common.Log.SetLogger(logs.AdapterFile, `{"filename":"ServerRunLog.log"}`)

@@ -7,6 +7,8 @@ import (
 )
 
 var (
+	AppRunDir string // 程序运行目录
+	SqlPathDir string //sql存放目录
 	Log              *logs.BeeLogger //日志写出
 	EncryptionString string          //密码加密字串
 	TokenKeyString   string          //Token加密字串

@@ -216,6 +216,30 @@ func GetServerRouterList()[]RouterInfo{
 			Controller:      &adminApi.Role{},
 			MappingMethods: "post:Add",
 		},
+		{
+			Name:"SQL列表",
+			Path:AdminRootPath+"/sql/list",
+			Controller:      &adminApi.Admin{},
+			MappingMethods: "post:ListSql",
+		},
+		{
+			Name:"导出sql",
+			Path:AdminRootPath+"/sql/exprot",
+			Controller:      &adminApi.Admin{},
+			MappingMethods: "post:ExportSqL",
+		},
+		{
+			Name:"导入sql",
+			Path:AdminRootPath+"/sql/improt",
+			Controller:      &adminApi.Admin{},
+			MappingMethods: "post:ImportSqL",
+		},
+		{
+			Name:"删除sql",
+			Path:AdminRootPath+"/sql/del",
+			Controller:      &adminApi.Admin{},
+			MappingMethods: "post:DelSqL",
+		},
 		//后台api接口路由 ------end--------
 	}
 	return RouterList
