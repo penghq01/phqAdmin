@@ -72,15 +72,15 @@ func (this *Admin) ImportSqL(){
 	ok,err:=common.PathExists(filePath)
 	if err==nil && ok{
 		models:=models.Models{}
-		ok=models.DeleteAllTableData()
-		if ok{
+		err=models.DeleteAllTableData()
+		if err==nil{
 			if result,err:=common.DbEngine.ImportFile(filePath);err==nil{
 				this.ServeSuccess("数据恢复成功",result)
 			}else{
 				this.ServeError("数据恢复失败，"+err.Error(),"")
 			}
 		}else{
-			this.ServeError("数据恢复失败，数据可能丢失","")
+			this.ServeError("数据恢复失败，数据可能丢失,"+err.Error(),"")
 		}
 	}else{
 		this.ServeError("数据恢复失败,要恢复的sql文件不存在","")

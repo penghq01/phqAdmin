@@ -1,7 +1,7 @@
 /*
  Navicat Premium Data Transfer
 
- Source Server         : 本地
+ Source Server         : 本地数据
  Source Server Type    : MySQL
  Source Server Version : 50717
  Source Host           : localhost:3306
@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 10/12/2019 16:24:23
+ Date: 04/12/2019 23:34:14
 */
 
 SET NAMES utf8mb4;
@@ -36,6 +36,17 @@ CREATE TABLE `admin`  (
 -- ----------------------------
 INSERT INTO `admin` VALUES (1, 'root', '0b178dfde1b181b81d01ffb628f9c9bd', '', 1575275440, 'localhost:8181');
 INSERT INTO `admin` VALUES (2, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', '5', 1575276511, 'localhost:8181');
+
+-- ----------------------------
+-- Table structure for admin_and_role
+-- ----------------------------
+DROP TABLE IF EXISTS `admin_and_role`;
+CREATE TABLE `admin_and_role`  (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `admin_id` int(11) NOT NULL COMMENT '管理员表ID',
+  `admin_role_id` int(11) NOT NULL COMMENT '角色表ID',
+  PRIMARY KEY (`id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for auth
@@ -601,6 +612,42 @@ CREATE TABLE `role`  (
 -- ----------------------------
 INSERT INTO `role` VALUES (5, '超级管理员', '[{\"auth_id\":4,\"select\":true,\"add\":false,\"edit\":false,\"delete\":false},{\"auth_id\":7,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":8,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":5,\"select\":true,\"add\":false,\"edit\":false,\"delete\":false},{\"auth_id\":17,\"select\":true,\"add\":true,\"edit\":true,\"delete\":true},{\"auth_id\":10,\"select\":true,\"add\":true,\"edit\":false,\"delete\":true},{\"auth_id\":6,\"select\":true,\"add\":false,\"edit\":false,\"delete\":false},{\"auth_id\":11,\"select\":true,\"add\":false,\"edit\":false,\"delete\":false},{\"auth_id\":12,\"select\":true,\"add\":false,\"edit\":false,\"delete\":false}]', '拥有所有权限');
 INSERT INTO `role` VALUES (7, '管理员', '[{\"auth_id\":4,\"select\":false,\"add\":false,\"edit\":false,\"delete\":false},{\"auth_id\":5,\"select\":false,\"add\":false,\"edit\":false,\"delete\":false},{\"auth_id\":6,\"select\":false,\"add\":false,\"edit\":false,\"delete\":false},{\"auth_id\":7,\"select\":true,\"add\":false,\"edit\":false,\"delete\":false},{\"auth_id\":17,\"select\":true,\"add\":false,\"edit\":false,\"delete\":false},{\"auth_id\":11,\"select\":true,\"add\":false,\"edit\":false,\"delete\":false}]', '管理员，拥有部分权限');
+
+-- ----------------------------
+-- Table structure for store
+-- ----------------------------
+DROP TABLE IF EXISTS `store`;
+CREATE TABLE `store`  (
+  `store_id` bigint(20) NOT NULL AUTO_INCREMENT,
+  `store_name` varchar(300) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家名称',
+  `sore_account` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家账号',
+  `password` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家登录密码',
+  `pay_password` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家提现密码',
+  `money` decimal(11, 2) NOT NULL DEFAULT 0.00 COMMENT '商家余额（分）',
+  `discount` float(3, 2) NOT NULL DEFAULT 0.00 COMMENT '商家让利折扣',
+  `class_type_id` int(11) NOT NULL DEFAULT 0 COMMENT '商家所属分类id',
+  `longitude` double(11, 8) NOT NULL DEFAULT 0.00000000 COMMENT '经度',
+  `latitude` double(11, 8) NOT NULL DEFAULT 0.00000000 COMMENT '纬度',
+  `address` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家地址',
+  `phone` varchar(13) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家电话',
+  `state` tinyint(1) NOT NULL DEFAULT 0 COMMENT '商家状态 0申请中，1开启，2拒绝申请，3关闭',
+  `img_url` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家头像',
+  `rate` tinyint(1) NOT NULL DEFAULT 0 COMMENT '评分',
+  `sort` int(11) NOT NULL DEFAULT 0 COMMENT '排序',
+  `login_rand` varchar(128) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家登录随机字串',
+  `start_time` int(11) NOT NULL DEFAULT 0 COMMENT '开店时间',
+  `end_time` int(11) NOT NULL DEFAULT 0 COMMENT '关店时间',
+  `close_info` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '关店原因',
+  `qr_img` varchar(512) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '收款二维码地址',
+  `bus_time` varchar(150) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '营业时间',
+  `desc` varchar(1024) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '商家介绍',
+  `id_bus_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '营业执照图片',
+  `id_just_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '身份证正面',
+  `id_back_url` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '身份证背面',
+  `person_mobile` varchar(11) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL COMMENT '负责人手机',
+  `avg_price` decimal(11, 2) NOT NULL DEFAULT 0.00 COMMENT '平均消费',
+  PRIMARY KEY (`store_id`) USING BTREE
+) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Table structure for users
