@@ -157,10 +157,11 @@
             },
             //自定义上传回调
             httpRequest(file) {
-                let param = new FormData();
-                param.append("upload_img", file.file);
-                param.append("class_id", this.selectFileClassId);
-                http.post("files/upload/img", param, true, true, progress => {
+                let param = {
+                "upload_img":file.file,
+                "class_id":this.selectFileClassId
+                };
+                http.upload("files/upload/img",param,progress=> {
                     this.selectUploadImageProgress = parseInt((progress.loaded / progress.total) * 100);
                 }).then(data => {
                     this.imgList.unshift(data);
@@ -240,7 +241,7 @@
                     message.confirm("确定要删除吗？", {
                         okName: "删除", okFunction: () => {
                             message.loading.show("删除中");
-                            http.post("files/del/class", {"id": data.id}).then(res => {
+                            http.post("files/del/class",{"id": data.id}).then(res => {
                                 this.removeTree(node, data);
                             }).catch(err => {
                             });

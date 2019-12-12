@@ -83,7 +83,7 @@
             },
             del(item) {
                 message.loading.show("正在删除");
-                http.post("icon/del", {"id": item.id}).then(() => {
+                http.post("icon/del",{"id": item.id}).then(() => {
                     this.iconList.splice(this.iconList.indexOf(item), 1);
                 }).catch(err => {
                 });
@@ -94,7 +94,7 @@
                     return;
                 }
                 message.loading.show("添加中");
-                http.post("icon/add", this.addIcon).then(data => {
+                http.post("icon/add",this.addIcon).then(data => {
                     this.close();
                     this.iconList.unshift(data);
                 }).catch(err => {

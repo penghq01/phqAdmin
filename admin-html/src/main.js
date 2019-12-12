@@ -14,8 +14,8 @@ import "./lib/scss/public.scss"
 import myDialog from "./components/myDialog"
 import Paging from "./components/Paging"
 import logic from "./lib/logic";
-
-import filter from "./lib/filter"
+import "./lib/axios"
+import  "./lib/filter"
 
 //Vue.use(filter);
 Vue.use(iview);

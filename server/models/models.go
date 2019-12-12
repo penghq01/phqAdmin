@@ -8,8 +8,8 @@ import (
 type Models struct {
 
 }
-//清空所有表的数据
-func (this *Models) DeleteAllTableData()error{
+//删除所有表
+func (this *Models) DeleteAllTable()error{
 	sql:=fmt.Sprintf("select concat(table_name) as table_name from information_schema.TABLES where table_schema='%v'",common.DbIni.String("db"))
 	res,err:=common.DbEngine.Query(sql)
 	if err==nil{

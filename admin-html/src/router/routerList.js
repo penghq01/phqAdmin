@@ -41,7 +41,7 @@ export default {
                 path: '/sql',
                 name: 'sql',
                 nickname: "数据备份恢复",
-                component: () => import('../views/system/System.vue')
+                component: () => import('../views/system/Database.vue')
             },
             {
                 path: '/paylog',
