@@ -1,9 +1,14 @@
 <template>
-    <div class="title-btn" :class="style" v-on:click="click"/>
+    <div class="title-btn" :class="style" @click="clickBtn"/>
 </template>
 
 <script>
-import {ipcRenderer} from "electron"
+import config from "../../config";
+import message from "../../lib/message";
+let ipcRenderer={send:()=>{}};
+if(config.platform.isPC){
+     ipcRenderer=require("electron").ipcRenderer;
+}
 const icon={
     min:"el-icon-remove",
     max:"el-icon-circle-plus",
@@ -18,8 +23,17 @@ const icon={
             }
         },
         methods: {
-            click: function () {
-                ipcRenderer.send(this.type);
+           async clickBtn () {
+                if (this.type === "close") {
+                    await message.confirm("确定要关闭该系统吗?", {
+                        okName: "关闭系统",
+                        okFunction:()=>{
+                            ipcRenderer.send(this.type);
+                        }
+                    });
+                } else {
+                    ipcRenderer.send(this.type);
+                }
             }
         }
     }

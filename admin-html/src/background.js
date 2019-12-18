@@ -1,10 +1,7 @@
-'use strict'
+'use strict';
 
 import { app, protocol, BrowserWindow,Menu,ipcMain } from 'electron'
-import {
-  createProtocol,
-  installVueDevtools
-} from 'vue-cli-plugin-electron-builder/lib'
+import {createProtocol, installVueDevtools} from 'vue-cli-plugin-electron-builder/lib'
 
 //是否是开发环境
 const isDevelopment = process.env.NODE_ENV !== 'production';
@@ -60,7 +57,9 @@ ipcMain.on('max', e=> {
     win.maximize()
   }
 });
-ipcMain.on('close', e=> win.close());
+ipcMain.on('close', e=>{
+  app.quit();
+});
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar

@@ -1,5 +1,6 @@
 <template>
     <div class="login-body">
+        <WinTitle />
         <div class="login">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
@@ -18,9 +19,11 @@
 <script>
     import api from '../lib/api/api'
     import logic from "../lib/logic";
-
+    import WinTitle from "../components/WinTitle/WinTitle";
+    import config from "../config";
     export default {
         name: 'login',
+        components:{WinTitle},
         data() {
             return {
                 postData: {}

@@ -1,7 +1,7 @@
 <template>
     <div class="home">
-        <div class="index-title"><WinTitle /></div>
-        <div class="index-win">
+        <div class="index-title" v-if="platform.isPC"><WinTitle /></div>
+        <div class="index-win" :style="getWinStyle">
             <div class="index-left">
                 <div class="sys-name">PHQ后台管理系统</div>
                 <Menu :list="menuTreeList" :active-menu="activeMenu" @select="triggerSelect"/>
@@ -57,6 +57,7 @@
     import Menu from "../components/Menu/Menu"
     import message from "../lib/message";
     import WinTitle from "../components/WinTitle/WinTitle";
+    import config from "../config";
     export default {
         name: 'home',
         components:{Menu,WinTitle},
@@ -72,9 +73,11 @@
                 isPush:false,
                 routerHistoryWidth:0,
                 routerHistoryLeft:0,
+                platform:{isWeb:false,isPC:false},
             }
         },
         mounted() {
+            this.platform=config.platform;
             this.getAuthList();
             this.activeMenu=this.$router.history.current.path;
             //this.routerHistory=storage.routerHistory.get();
@@ -268,6 +271,18 @@
             close() {
                 this.opened = false;
                 this.editUser = {};
+            }
+        },
+        computed:{
+            //不同环境获取win-title样式
+            getWinStyle(){
+                if(this.platform.isWeb){
+                    return  'height:100%;';
+                }
+                if(this.platform.isPC){
+                    return  'height:calc(100% - 40px);';
+                }
+                return  'height:100%;';
             }
         }
     }

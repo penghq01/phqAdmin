@@ -40,8 +40,8 @@ const alert = (text = '', { title = '提示', okName = '确认',okFunction=()=>{
     }
   });
 };
-const confirm = (text = '', {type="warning",title = '提示', cancelName = '取消', okName = '确认' ,okFunction=()=>{},cancelFunction=()=>{}}) => {
-  MessageBox.confirm(text,title, {
+const  confirm =(text = '', {type="warning",title = '提示', cancelName = '取消', okName = '确认' ,okFunction=()=>{},cancelFunction=()=>{}})=>{
+  return MessageBox.confirm(text,title, {
     confirmButtonText: okName,
     cancelButtonText: cancelName,
     type:type
@@ -51,7 +51,7 @@ const confirm = (text = '', {type="warning",title = '提示', cancelName = '取�
     cancelFunction();
   });
 };
-const iframe = (url = '', title = '', icon = 'h-icon-menu') => {
+const iframe =(url = '', title = '', icon = 'h-icon-menu') => {
   layx.iframe('shadow', title, url, {
     skin: 'asphalt',
     shadable: true,//阻隔窗口
@@ -61,5 +61,5 @@ const iframe = (url = '', title = '', icon = 'h-icon-menu') => {
 };
 
 export default {
-  loading, msg, alert, confirm, prompt, iframe
+  loading, msg, alert,confirm,prompt, iframe
 }

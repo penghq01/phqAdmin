@@ -1,5 +1,5 @@
 <template>
-    <div id="win-title">
+    <div id="win-title" v-if="platform.isPC">
         <TitleBnt type="min" />
         <TitleBnt type="max" />
         <TitleBnt type="close" />
@@ -8,14 +8,17 @@
 
 <script>
     import TitleBnt from "./TitleBnt";
+    import config from "../../config";
     export default {
         name: "WinTitle",
         components:{TitleBnt},
         data() {
-            return {}
+            return {
+                platform:{isWeb:false,isPC:false},
+            }
         },
         mounted() {
-
+            this.platform=config.platform;
         },
         methods: {}
     }
