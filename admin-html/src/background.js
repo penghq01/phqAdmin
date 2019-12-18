@@ -1,31 +1,48 @@
 'use strict'
 
-import { app, protocol, BrowserWindow } from 'electron'
+import { app, protocol, BrowserWindow,Menu,ipcMain } from 'electron'
 import {
   createProtocol,
   installVueDevtools
 } from 'vue-cli-plugin-electron-builder/lib'
-const isDevelopment = process.env.NODE_ENV !== 'production'
+
+//是否是开发环境
+const isDevelopment = process.env.NODE_ENV !== 'production';
+//是否是生产环境
+const isProductionlopment = process.env.NODE_ENV === 'production';
 
 // Keep a global reference of the window object, if you don't, the window will
 // be closed automatically when the JavaScript object is garbage collected.
-let win
+let win;
 
 // Scheme must be registered before the app is ready
-protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }])
+protocol.registerSchemesAsPrivileged([{scheme: 'app', privileges: { secure: true, standard: true } }]);
 
 function createWindow () {
+   if(isProductionlopment){
+     Menu.setApplicationMenu(null) ;//隐藏菜单栏 按ALT键也不会显示 非mac系统
+   }
   // Create the browser window.
-  win = new BrowserWindow({ width: 800, height: 600, webPreferences: {
-    nodeIntegration: true
-  } })
+  let option={
+    width: 1440,
+    height: 960,
+    titleBarStyle: 'hidden',// 隐藏窗口标题和菜单栏 mac系统
+    frame: false,// 隐藏窗口标题和菜单栏 windows系统
+    //autoHideMenuBar: true,//隐藏菜单栏 非mac系统 按ALT键还会显示
+    webPreferences: {
+      nodeIntegration: true,
+      webSecurity: false //启用跨越访问
+    }
+  };
+
+  win = new BrowserWindow(option);
 
   if (process.env.WEBPACK_DEV_SERVER_URL) {
     // Load the url of the dev server if in development mode
     win.loadURL(process.env.WEBPACK_DEV_SERVER_URL)
     if (!process.env.IS_TEST) win.webContents.openDevTools()
   } else {
-    createProtocol('app')
+    createProtocol('app');
     // Load the index.html when not in development
     win.loadURL('app://./index.html')
   }
@@ -35,6 +52,15 @@ function createWindow () {
   })
 }
 
+ipcMain.on('min', e=> win.minimize());
+ipcMain.on('max', e=> {
+  if (win.isMaximized()) {
+    win.unmaximize()
+  } else {
+    win.maximize()
+  }
+});
+ipcMain.on('close', e=> win.close());
 // Quit when all windows are closed.
 app.on('window-all-closed', () => {
   // On macOS it is common for applications and their menu bar
@@ -42,7 +68,7 @@ app.on('window-all-closed', () => {
   if (process.platform !== 'darwin') {
     app.quit()
   }
-})
+});
 
 app.on('activate', () => {
   // On macOS it's common to re-create a window in the app when the
@@ -50,7 +76,7 @@ app.on('activate', () => {
   if (win === null) {
     createWindow()
   }
-})
+});
 
 // This method will be called when Electron has finished
 // initialization and is ready to create browser windows.
@@ -71,7 +97,7 @@ app.on('ready', async () => {
 
   }
   createWindow()
-})
+});
 
 // Exit cleanly on request from parent process in development mode.
 if (isDevelopment) {

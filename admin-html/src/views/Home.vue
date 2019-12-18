@@ -1,32 +1,36 @@
 <template>
     <div class="home">
-        <div class="index-left">
-            <Menu :list="menuTreeList" :active-menu="activeMenu" @select="triggerSelect"/>
-        </div>
-        <div class="index-right">
-            <div class="index-header">
-                <div class="routerLeft" @click="leftMove"><i class="el-icon-caret-left"></i></div>
-                <div class="router" ref="routerHistory">
-                    <transition-group ref="routerHistoryBox" name="list-complete" tag="div" :style="{width:routerHistoryWidth+'px',left:routerHistoryLeft+'px'}">
-                       <div ref="routerHistoryList" v-for="(item,index) in routerHistory" :key="item.id" :class="item.active?'active':''" @click="triggerSelect(item.key)">
-                           {{item.title}}
-                           <i class="el-icon-error" @click.stop="delRouterHistory(index)"></i>
-                       </div>
-                   </transition-group>
-                </div>
-                <div class="routerRight" @click="rightMove"><i class="el-icon-caret-right"></i></div>
-                <div class="user">
-                    <i class="fa fa-user" aria-hidden="true"></i> 欢迎：{{userInfo.username}}
-                    <div class="user-info">
-                        <div @click="opened=true">修改密码</div>
-                        <div>个人信息</div>
-                        <div @click="outLogin">退出登录</div>
+        <div class="index-title"><WinTitle /></div>
+        <div class="index-win">
+            <div class="index-left">
+                <div class="sys-name">PHQ后台管理系统</div>
+                <Menu :list="menuTreeList" :active-menu="activeMenu" @select="triggerSelect"/>
+            </div>
+            <div class="index-right">
+                <div class="index-header">
+                    <div class="routerLeft" @click="leftMove"><i class="el-icon-caret-left"></i></div>
+                    <div class="router" ref="routerHistory">
+                        <transition-group ref="routerHistoryBox" name="list-complete" tag="div" :style="{width:routerHistoryWidth+'px',left:routerHistoryLeft+'px'}">
+                            <div ref="routerHistoryList" v-for="(item,index) in routerHistory" :key="item.id" :class="item.active?'active':''" @click="triggerSelect(item.key)">
+                                {{item.title}}
+                                <i class="el-icon-error" @click.stop="delRouterHistory(index)"></i>
+                            </div>
+                        </transition-group>
+                    </div>
+                    <div class="routerRight" @click="rightMove"><i class="el-icon-caret-right"></i></div>
+                    <div class="user">
+                        <i class="fa fa-user" aria-hidden="true"></i> 欢迎：{{userInfo.username}}
+                        <div class="user-info">
+                            <div @click="opened=true">修改密码</div>
+                            <div>个人信息</div>
+                            <div @click="outLogin">退出登录</div>
+                        </div>
                     </div>
                 </div>
-            </div>
-            <div class="index-content">
-                <div class="admin-index">
-                    <router-view></router-view>
+                <div class="index-content">
+                    <div class="admin-index">
+                        <router-view></router-view>
+                    </div>
                 </div>
             </div>
         </div>
@@ -52,10 +56,10 @@
     import md5 from "js-md5"
     import Menu from "../components/Menu/Menu"
     import message from "../lib/message";
-    import routerList from "../router/routerList";
-    import router from "../router/router";
+    import WinTitle from "../components/WinTitle/WinTitle";
     export default {
         name: 'home',
+        components:{Menu,WinTitle},
         data() {
             return {
                 editUser: {},
@@ -265,15 +269,17 @@
                 this.opened = false;
                 this.editUser = {};
             }
-        },
-        components:{Menu}
+        }
     }
 </script>
 <style scoped lang="scss">
-    .home {
-        width: 100%;
-        height: 100%;
-        display: flex;
+    .sys-name{
+        display:flex;
+        align-items:center;
+        justify-content:center;
+        padding:20px 0;
+        color:$primary-gray;
+        font-size:22px;
     }
     .user {
         width:120px;
