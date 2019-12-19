@@ -12,10 +12,14 @@ type RouterInfo struct {
 	Controller     beego.ControllerInterface
 	MappingMethods string
 }
-
 func init() {
 	RouterList:=GetServerRouterList()
 	list:=make([]common.RouterInfo,0)
+	//设置api路由
+	ApiList:=GetApiRouterList()
+	for _,router:=range ApiList{
+		beego.Router(router.Path,router.Controller,router.MappingMethods)
+	}
 	for _,router:=range RouterList{
 		beego.Router(router.Path,router.Controller,router.MappingMethods)
 		list = append(list,common.RouterInfo{
@@ -241,6 +245,15 @@ func GetServerRouterList()[]RouterInfo{
 			MappingMethods: "post:DelSqL",
 		},
 		//后台api接口路由 ------end--------
+	}
+	return RouterList
+}
+//获取后台APi接口路由
+func GetApiRouterList()[]RouterInfo{
+	//var ApiRootPath string = "/api" //api接口路由root
+	RouterList:= []RouterInfo{
+		//api接口路由 ------start--------
+		//api接口路由 ------end--------
 	}
 	return RouterList
 }

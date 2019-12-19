@@ -1,12 +1,21 @@
 import util from './utils'
 import { Message } from 'element-ui';
 import { MessageBox } from 'element-ui';
+import { Loading } from 'element-ui';
+var loadingInstance=null;
 const loading = {
-  show (text = '加载中') {
-    layx.load('loadId', text);
+  show (text = '加载中',background="rgba(255,255,255,0.7)") {
+    loadingInstance=Loading.service({
+      text:text,
+      background:background
+    });
   },
   hide () {
-    layx.destroy('loadId');
+    if(loadingInstance!=null){
+      loadingInstance.close();
+      loadingInstance=null;
+    }
+
   }
 };
 const msg = {
@@ -36,7 +45,7 @@ const alert = (text = '', { title = '提示', okName = '确认',okFunction=()=>{
   MessageBox.alert(text,title,{
     confirmButtonText:okName,
     callback:action=>{
-       okFunction(action);
+      okFunction(action);
     }
   });
 };
@@ -51,15 +60,10 @@ const  confirm =(text = '', {type="warning",title = '提示', cancelName = '取�
     cancelFunction();
   });
 };
-const iframe =(url = '', title = '', icon = 'h-icon-menu') => {
-  layx.iframe('shadow', title, url, {
-    skin: 'asphalt',
-    shadable: true,//阻隔窗口
-    minMenu: false,//不显示最小化按钮
-    icon: ' <i class="' + icon + '"></i>'
-  })
+const iframe = (url = '', title = '', icon = 'h-icon-menu') => {
+
 };
 
 export default {
-  loading, msg, alert,confirm,prompt, iframe
+  loading, msg, alert, confirm, prompt, iframe
 }

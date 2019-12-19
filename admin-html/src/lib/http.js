@@ -47,7 +47,7 @@ const responseHandle=(data,executor={resolve:()=>{}, reject:()=>{},isToast:true}
 };
 export default {
     upload(url = '',params={},progress=()=>{},isToast=true){
-        return new Promise((resolve, reject,isToast) =>{
+        return new Promise((resolve, reject) =>{
             let config={
                 headers:{"Content-Type":'multipart/form-data'},
                 onUploadProgress:function (progressEvent) {
@@ -62,7 +62,7 @@ export default {
             axios.post(url,param,config).then(response=>{
                 // 对响应数据做点什么
                 let data = response.data;
-                responseHandle(data,{resolve, reject});
+                responseHandle(data,{resolve, reject,isToast});
             }).catch(err=>{
                 isToast && message.msg.error('网路繁忙');
                 reject(err);
