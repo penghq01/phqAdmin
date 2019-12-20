@@ -2,7 +2,7 @@ package models
 
 import (
 	"errors"
-	"phqAdmin/server/common"
+	"server/common"
 )
 
 //后台管理员角色表

@@ -2,7 +2,7 @@ package models
 
 import (
 	"os"
-	"phqAdmin/server/common"
+	"server/common"
 )
 
 

@@ -1,6 +1,6 @@
 package models
 
-import "phqAdmin/server/common"
+import "server/common"
 
 //图标管理
 type Icon struct {

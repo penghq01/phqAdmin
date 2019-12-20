@@ -4,8 +4,8 @@ import (
 	"encoding/json"
 	"errors"
 	"fmt"
-	"phqAdmin/server/common"
-	"phqAdmin/server/models"
+	"server/common"
+	"server/models"
 	"strings"
 )
 

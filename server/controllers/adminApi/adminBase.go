@@ -1,10 +1,10 @@
 package adminApi
 
 import (
-	"phqAdmin/server/common"
-	Auth2 "phqAdmin/server/common/Auth"
-	"phqAdmin/server/controllers"
-	"phqAdmin/server/models"
+	"server/common"
+	Auth2 "server/common/Auth"
+	"server/controllers"
+	"server/models"
 	"strings"
 )
 

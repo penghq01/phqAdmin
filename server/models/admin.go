@@ -2,7 +2,7 @@ package models
 
 import (
 	"fmt"
-	"phqAdmin/server/common"
+	"server/common"
 )
 
 //后台管理员表
@@ -46,7 +46,7 @@ func (this *AdminValid) Valid(obj *Admin) (bool, string) {
 func (this *Admin) UserNameGet(username string) bool {
 	ok, err := common.DbEngine.Where("username=?", username).Get(this)
 	if !ok {
-		common.Log.Error(fmt.Sprintf("通过用户名查找管理员:%v", err))
+		common.Logs.Error("通过用户名查找管理员:%v", err)
 		return false
 	} else {
 		return true
@@ -57,7 +57,7 @@ func (this *Admin) UserNameGet(username string) bool {
 func (this *Admin) IdNameGet(id int) bool {
 	ok, err := common.DbEngine.Where("admin_id=?", id).Get(this)
 	if !ok {
-		common.Log.Error(fmt.Sprintf("通过id查找管理员:%v", err))
+		common.Logs.Error(fmt.Sprintf("通过id查找管理员:%v", err))
 		return false
 	} else {
 		return true
@@ -68,7 +68,7 @@ func (this *Admin) IdNameGet(id int) bool {
 func (this *Admin) IdUserNameGet(id int, username string) bool {
 	ok, err := common.DbEngine.Where("admin_id=? AND username=?", id, username).Get(this)
 	if !ok {
-		common.Log.Error(fmt.Sprintf("通过ID和用户名查找管理员:%v", err))
+		common.Logs.Error("通过ID和用户名查找管理员:%v", err)
 		return false
 	} else {
 		return true
@@ -81,7 +81,7 @@ func (this *Admin) IdUpdate(id int) bool {
 	if rows > 0 && err == nil {
 		return true
 	} else {
-		common.Log.Error(fmt.Sprintf("更新登录信息:%v", err))
+		common.Logs.Error("更新登录信息:%v", err)
 		return false
 	}
 }

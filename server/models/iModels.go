@@ -1,6 +1,6 @@
 package models
 
-import "phqAdmin/server/common"
+import "server/common"
 
 type IModels interface {
 	Add()(bool,string)

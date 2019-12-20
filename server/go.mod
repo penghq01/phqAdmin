@@ -1,4 +1,4 @@
-module phqAdmin/server
+module server
 
 go 1.12
 

@@ -9,7 +9,9 @@ import (
 var (
 	AppRunDir string // 程序运行目录
 	SqlPathDir string //sql存放目录
-	Log              *logs.BeeLogger //日志写出
+	RunModeDev bool    //开发模式
+	RunModeProd bool   //生产模式
+	Logs              *logs.BeeLogger //日志写出
 	EncryptionString string          //密码加密字串
 	TokenKeyString   string          //Token加密字串
 	TokenExpiresAt   int64           //token过期时间（秒）
@@ -18,6 +20,7 @@ var (
 	DbEngine         *xorm.Engine    //Orm引擎
 	RouterList        []RouterInfo       //路由列表
 )
+
 
 type RouterInfo struct {
 	Path string `json:"path"`

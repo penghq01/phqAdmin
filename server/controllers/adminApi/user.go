@@ -1,8 +1,8 @@
 package adminApi
 
 import (
-	"phqAdmin/server/common"
-	"phqAdmin/server/models"
+	"server/common"
+	"server/models"
 )
 
 type User struct {

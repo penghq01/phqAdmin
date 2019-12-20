@@ -4,7 +4,6 @@ import (
 	"crypto/md5"
 	"encoding/base64"
 	"encoding/hex"
-	"fmt"
 	"github.com/dgrijalva/jwt-go"
 	"math"
 	"os"
@@ -81,7 +80,7 @@ func NewToken(id string, username string) (string, bool) {
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, claims)
 	ss, err := token.SignedString([]byte(TokenKeyString))
 	if err != nil {
-		Log.Error(fmt.Sprintf("生成Token错误：%v", err))
+		Logs.Error("生成Token错误：%v", err)
 		return "", false
 	}
 	return ss, true
@@ -93,7 +92,7 @@ func CheckToken(tokenStr string, callback func(id int, username string)) (bool, 
 		return []byte(TokenKeyString), nil
 	})
 	if err != nil {
-		Log.Error(fmt.Sprintf("Token验证错误：%v", err))
+		Logs.Error("Token验证错误：%v", err)
 		return false, "Token验证失败"
 	}
 	claim, ok := token.Claims.(jwt.MapClaims)

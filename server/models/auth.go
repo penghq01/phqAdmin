@@ -1,6 +1,6 @@
 package models
 
-import "phqAdmin/server/common"
+import "server/common"
 
 //权限表
 type Auth struct {

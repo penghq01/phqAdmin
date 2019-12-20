@@ -5,8 +5,8 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
-	"phqAdmin/server/common"
-	"phqAdmin/server/models"
+	"server/common"
+	"server/models"
 	"time"
 )
 

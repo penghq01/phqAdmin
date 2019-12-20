@@ -2,7 +2,7 @@ package models
 
 import (
 	"fmt"
-	"phqAdmin/server/common"
+	"server/common"
 )
 
 type Models struct {

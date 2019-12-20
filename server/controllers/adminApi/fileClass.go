@@ -1,7 +1,7 @@
 package adminApi
 
 
-import "phqAdmin/server/models"
+import "server/models"
 
 type FileClass struct {
 	AdminBase

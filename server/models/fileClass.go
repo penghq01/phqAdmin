@@ -1,6 +1,6 @@
 package models
 
-import "phqAdmin/server/common"
+import "server/common"
 
 //文件分类
 type FilesClass struct {

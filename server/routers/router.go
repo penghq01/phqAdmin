@@ -2,8 +2,8 @@ package routers
 
 import (
 	"github.com/astaxie/beego"
-	"phqAdmin/server/common"
-	"phqAdmin/server/controllers/adminApi"
+	"server/common"
+	"server/controllers/adminApi"
 )
 
 type RouterInfo struct {

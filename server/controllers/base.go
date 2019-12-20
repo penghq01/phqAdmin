@@ -3,13 +3,14 @@ package controllers
 import (
 	"crypto/md5"
 	"encoding/json"
+	"errors"
 	"fmt"
 	"github.com/astaxie/beego"
 	"math/rand"
 	"os"
 	"path"
-	"phqAdmin/server/common"
-	"phqAdmin/server/models"
+	"server/common"
+	"server/models"
 	"strconv"
 	"time"
 )
@@ -32,7 +33,7 @@ func (this *Base) Prepare() {
 	this.Uri = this.Ctx.Request.RequestURI
 	this.AuthToken = this.Ctx.Input.Header("auth-token")
 	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &this.Params); err != nil {
-		common.Log.Error(fmt.Sprintf("参数解析错误=>%v", err))
+		common.Logs.Error("参数解析错误=>%v", err)
 	}
 	if !noSignRouter[this.Uri] {
 		ok := common.CheckParams(this.Ctx.Input.Header("sign"), this.Ctx.Input.RequestBody)
@@ -58,12 +59,12 @@ func (this *Base) GetPageParam() {
 	this.Paginate.Page, err = strconv.ParseInt(page,10,32)
 	if err != nil {
 		this.ServeError(fmt.Sprintf("页码转换错误=>%v",err),"")
-		common.Log.Error(fmt.Sprintf("页码转换错误=>%v",err))
+		common.Logs.Error("页码转换错误=>%v",err)
 	}
 	this.Paginate.PageSize, err = strconv.ParseInt(pageSize,10,32)
 	if err != nil {
 		this.ServeError(fmt.Sprintf("每页条数转换错误=>%v",err),"")
-		common.Log.Error(fmt.Sprintf("每页条数转换错误=>%v",err))
+		common.Logs.Error("每页条数转换错误=>%v",err)
 	}
 }
 //获取参数，key为参数名称
@@ -73,6 +74,8 @@ func (this *Base) Input(key string) interface{} {
 	}
 	return this.Params[key]
 }
+
+//上传图片
 func (this *Base) UploadImg(key string) {
 	var AllowExtMap map[string]bool = map[string]bool{
 		".jpg":  true,
@@ -81,53 +84,76 @@ func (this *Base) UploadImg(key string) {
 		".gif":  true,
 		".bmp":  true,
 	}
-	this.uploadFile("图片", key, AllowExtMap)
+	err,imgPath:=this.UploadFile(true,"图片", key, AllowExtMap,"",false)
+	if err==nil{
+		this.ServeSuccess("上传成功",imgPath)
+	}else{
+		this.ServeSuccess(err.Error(),"")
+	}
 }
-//上传图片
-func (this *Base) uploadFile(fileType string, key string, allowExtMap map[string]bool) {
-	classId,err:=this.GetInt("class_id",0)
-	if err!=nil{
-		classId=0
+//上传excel
+func (this *Base) UploadExcel(key string)(err error,path string){
+	var AllowExtMap map[string]bool = map[string]bool{
+		".xlsx":true,
+	}
+	return this.UploadFile(false,"Excel", key, AllowExtMap,"",false)
+}
+//上传文件
+func (this *Base) UploadFile(saveDateBases bool,fileType string, key string, allowExtMap map[string]bool,uploadDir string,isUploadFileName bool)(error,string){
+	classId, err := this.GetInt("class_id", 0)
+	if err != nil {
+		classId = 0
 	}
 	file, fileHeader, _ := this.GetFile(key)
 	defer file.Close()
 	if fileHeader.Size > (30 * 1024 * 1024) {
-		this.ServeError(fileType+"太大了", "")
+		return errors.New(fileType+"太大了"),""
 	}
 	ext := path.Ext(fileHeader.Filename)
 	//验证后缀名是否符合要求
 	if _, ok := allowExtMap[ext]; !ok {
-		this.ServeError(fileType+"格式不正确", "")
+		return errors.New(fileType+"格式不正确"),""
 	}
 	//创建目录
-	uploadDir := "static/upload/" + time.Now().Format("2006/01/02/")
-	err = os.MkdirAll(uploadDir, 777)
-	if err != nil {
-		this.ServeError("上传失败（100）", "")
+	if uploadDir==""{
+		uploadDir = "static/upload/" + time.Now().Format("2006/01/02/")
 	}
-	//构造文件名称
-	rand.Seed(time.Now().UnixNano())
-	randNum := fmt.Sprintf("%d", rand.Intn(9999)+1000)
-	hashName := md5.Sum([]byte(time.Now().Format("2006_01_02_15_04_05_") + randNum))
-	fileName := fmt.Sprintf("%x", hashName) + ext
+	err = os.MkdirAll(uploadDir, 0666)
+	if err != nil {
+		return errors.New("上传失败（100）"),""
+	}
+	fileName:=""
+	if !isUploadFileName {
+		//构造文件名称
+		randNum := fmt.Sprintf("%d", rand.Intn(9999)+1000)
+		hashName := md5.Sum([]byte(time.Now().Format("2006_01_02_15_04_05_") + randNum))
+		fileName = fmt.Sprintf("%x", hashName) + ext
+	}else{
+		fileName=fileHeader.Filename
+	}
 	fpath := uploadDir + fileName
 	err = this.SaveToFile(key, fpath)
 	if err != nil {
-		this.ServeError("上传失败（101）", "")
+		return errors.New("上传失败（101）"),""
 	}
-	ft:=new(models.Files)
-	ft.ClassId=classId;
-	ft.AddTime=time.Now().Unix()
-	ft.Src=fpath
-	ft.Label=fileHeader.Filename
-	if ok,_:=ft.Add();ok{
-		this.ServeSuccess("上传成功", ft)
+	if saveDateBases{
+		ft := new(models.Files)
+		ft.ClassId = classId
+		ft.AddTime = time.Now().Unix()
+		ft.Src = fpath
+		ft.Label = fileHeader.Filename
+		if ok, _ := ft.Add(); ok {
+			return nil,fpath
+		}
+		if err := os.Remove(fpath); err != nil {
+			common.Logs.Error("删除文件失败：%v", fpath)
+		}
+		return errors.New("上传失败"),""
+	}else{
+		return nil,fpath
 	}
-	if err:=os.Remove(fpath);err!=nil{
-		common.Log.Error(fmt.Sprintf("删除文件失败：%v",fpath));
-	}
-	this.ServeError("上传失败","")
 }
+
 func (this *Base) jsonReturn(code int, msg interface{}, data interface{}) {
 	this.Data["json"] = map[string]interface{}{"code": code, "msg": msg, "data": data}
 	this.ServeJSON(true)
