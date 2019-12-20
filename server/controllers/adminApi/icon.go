@@ -7,7 +7,6 @@ type Icon struct {
 }
 
 func (this *Icon) Prepare() {
-	this.ActionModel=new(models.Icon)
+	this.ActionModel = new(models.Icon)
 	this.AdminBase.Prepare()
 }
-

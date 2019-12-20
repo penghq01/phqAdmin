@@ -4,9 +4,10 @@ import "server/common"
 
 //图标管理
 type Icon struct {
-	Id    int    `json:"id" xorm:"autoincr"` //图标id
-	Title string `json:"title"`              //图标名称
-	Icon  string `json:"icon"`               //图标
+	Models `xorm:"-"`
+	Id    int    `json:"id" xorm:"int(11) pk notnull unique autoincr"` //图标id
+	Title string `json:"title" xorm:"varchar(60)"`              //图标名称
+	Icon  string `json:"icon" xorm:"varchar(100)"`               //图标
 }
 
 //图标数据校验
@@ -32,10 +33,10 @@ func (this *IconValid) Valid(obj *Icon) (bool, string) {
 	return true, ""
 }
 
-func (this *Icon) List()(interface{},bool,string) {
+func (this *Icon) List() (interface{}, bool, string) {
 	return nil, false, ""
 }
-func (this *Icon) Add()(bool,string){
+func (this *Icon) Add() (bool, string) {
 	vd := IconValid{
 		Icon: true,
 	}
@@ -47,7 +48,7 @@ func (this *Icon) Add()(bool,string){
 	}
 	return false, "添加失败"
 }
-func (this *Icon)Delete()(bool,string) {
+func (this *Icon) Delete() (bool, string) {
 	vd := IconValid{
 		Id: true,
 	}
@@ -59,19 +60,19 @@ func (this *Icon)Delete()(bool,string) {
 	}
 	return false, "删除失败"
 }
-func (this *Icon)Edit()(bool,string){return false,""}
-func (this *Icon)PageList(paginate common.Paginate,pageData *common.PaginateData)(bool,string){
+func (this *Icon) Edit() (bool, string) { return false, "" }
+func (this *Icon) PageList(paginate common.Paginate, pageData *common.PaginateData) (bool, string) {
 	icon := make([]Icon, 0)
 	rows, err := common.DbEngine.Desc("id").Count(new(Icon))
 	if rows <= 0 || err != nil {
 		return false, err.Error()
 	}
 	paginate.CalcPaginate(rows)
-	err =common.DbEngine.Desc("id").Limit(paginate.Limit, paginate.Start).Find(&icon)
+	err = common.DbEngine.Desc("id").Limit(paginate.Limit, paginate.Start).Find(&icon)
 	if err != nil {
 		return false, err.Error()
 	}
-	pageData.Data=icon
-	pageData.Paginate=paginate
+	pageData.Data = icon
+	pageData.Paginate = paginate
 	return true, ""
 }

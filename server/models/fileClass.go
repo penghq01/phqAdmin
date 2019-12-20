@@ -4,9 +4,10 @@ import "server/common"
 
 //文件分类
 type FilesClass struct {
-	Id    int    `json:"id" xorm:"autoincr"`
-	Pid   int    `json:"pid"`
-	Label string `json:"label"`
+	Models `xorm:"-"`
+	Id    int    `json:"id" xorm:"int(11) pk notnull unique autoincr"`
+	Pid   int    `json:"pid" xorm:"int(11) notnull default(0)"`
+	Label string `json:"label" xorm:"varchar(255)"`
 }
 
 type FilesClassVaild struct {
@@ -32,13 +33,13 @@ func (this *FilesClassVaild) Valid(obj *FilesClass) (bool, string) {
 	return true, ""
 }
 
-func (this *FilesClass) List()(interface{},bool,string) {
+func (this *FilesClass) List() (interface{}, bool, string) {
 	fileClass := make([]FilesClass, 0)
 	err := common.DbEngine.Find(&fileClass)
 	if err != nil {
-		return "",false,""
+		return "", false, ""
 	}
-	return fileClass,true,""
+	return fileClass, true, ""
 }
 func (this *FilesClass) Add() (bool, string) {
 	vd := FilesClassVaild{
@@ -91,6 +92,6 @@ func (this *FilesClass) Delete() (bool, string) {
 	}
 	return false, "删除失败"
 }
-func (this *FilesClass)PageList(paginate common.Paginate,pageData *common.PaginateData)(bool,string) {
-	return false,""
+func (this *FilesClass) PageList(paginate common.Paginate, pageData *common.PaginateData) (bool, string) {
+	return false, ""
 }

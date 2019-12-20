@@ -19,6 +19,7 @@ func Md5String(str string) string {
 	m.Write([]byte(str))
 	return hex.EncodeToString(m.Sum(nil))
 }
+
 /*
 判断文件或文件夹是否存在:
 如果返回的错误为nil,说明文件或文件夹存在
@@ -35,6 +36,7 @@ func PathExists(path string) (bool, error) {
 	}
 	return false, err
 }
+
 //计算分页数据totalCount总记录条数
 func (this *Paginate) CalcPaginate(totalCount int64) {
 	if this.Page <= 0 {
@@ -145,6 +147,7 @@ func Str2Bytes(s string) []byte {
 	h := [3]uintptr{x[0], x[1], x[1]}
 	return *(*[]byte)(unsafe.Pointer(&h))
 }
+
 //Byte转字符串
 func Bytes2Str(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))

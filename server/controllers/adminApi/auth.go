@@ -10,11 +10,10 @@ type Auth struct {
 }
 
 func (this *Auth) Prepare() {
-	this.ActionModel=new(models.Auth)
+	this.ActionModel = new(models.Auth)
 	this.AdminBase.Prepare()
 }
 
-func(this *Auth) GetAuthList(){
-     this.ServeSuccess("",common.RouterList)
+func (this *Auth) GetAuthList() {
+	this.ServeSuccess("", common.RouterList)
 }
-

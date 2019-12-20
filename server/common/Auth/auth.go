@@ -62,14 +62,15 @@ func GetAdminNoLoginController() (map[string]bool, bool) {
 	rt := make([]models.Auth, 0)
 	err := common.DbEngine.Where("visit=0").Find(&rt)
 	if err != nil {
-		fmt.Println("加载路由信息错误：" + err.Error())
+		common.Logs.Error("加载路由信息错误：%v",err)
 		return AdminNoLoginController, false
 	}
 	for _, r := range rt {
 		auth := AuthInfo{}
+		fmt.Println(r.Auth)
 		err = json.Unmarshal(common.Str2Bytes(r.Auth), &auth)
 		if err != nil {
-			fmt.Println("解析不用登录的路由数据错误：" + err.Error())
+			common.Logs.Error("解析不用登录的路由数据错误：%v",err)
 			return AdminNoLoginController, false
 		}
 		for _, q := range auth.Add.Router {
@@ -94,14 +95,14 @@ func GetAdminLoginController() (map[string]bool, bool) {
 	rt := make([]models.Auth, 0)
 	err := common.DbEngine.Where("visit=1").Find(&rt)
 	if err != nil {
-		fmt.Println("加载路由信息错误：" + err.Error())
+		common.Logs.Error("加载路由信息错误：%v",err)
 		return AdminLoginController, false
 	}
 	for _, r := range rt {
 		auth := AuthInfo{}
 		err = json.Unmarshal(common.Str2Bytes(r.Auth), &auth)
 		if err != nil {
-			fmt.Println("解析只需登录的路由数据错误：" + err.Error())
+			common.Logs.Error("解析只需登录的路由数据错误：%v",err)
 			return AdminLoginController, false
 		}
 		for _, q := range auth.Add.Router {
@@ -135,7 +136,7 @@ func GetAdminLoginRouter() ([]models.Auth, bool) {
 func GetRouterList(roleIdStr string) ([]map[string]interface{}, bool, error) {
 	roleIdArr := strings.Split(roleIdStr, ",")
 	routerList := make([]map[string]interface{}, 0)
-	MaprouterList:=make(map[int]map[string]interface{})
+	MaprouterList := make(map[int]map[string]interface{})
 	AdminLoginRouter, ok := GetAdminLoginRouter()
 	if !ok {
 		return routerList, false, errors.New("权限验证失败")
@@ -158,73 +159,74 @@ func GetRouterList(roleIdStr string) ([]map[string]interface{}, bool, error) {
 				"delete": true,
 				"select": true,
 			}
-			MaprouterList[r.Id]=tem
+			MaprouterList[r.Id] = tem
 		}
 	}
 	Role := FindRole(roleIdStr)
 	Router := FindRouter()
-	for _,roleId:=range roleIdArr{
-		listStr:=Role[roleId].AuthList
-		if listStr!=""{
-			roleList:=make([]RoleAuth,0)
-			if err:=json.Unmarshal(common.Str2Bytes(listStr),&roleList);err!=nil{
-				return routerList,false,errors.New("权限验证错误："+err.Error())
+	for _, roleId := range roleIdArr {
+		listStr := Role[roleId].AuthList
+		if listStr != "" {
+			roleList := make([]RoleAuth, 0)
+			if err := json.Unmarshal(common.Str2Bytes(listStr), &roleList); err != nil {
+				return routerList, false, errors.New("权限验证错误：" + err.Error())
 			}
-			for _,roleAuth:=range roleList{
-				route:=Router[roleAuth.AuthId]
-				if route.AuthType==0 && route.IsShow==1{
-					tem:=make(map[string]interface{})
-					tem["id"]=route.Id
-					tem["title"]=route.Title
-					tem["pid"]=route.Pid
-					tem["icon"]=route.Icon
-					tem["crouter"]=route.Crouter
-					tem["visit"]=route.Visit
-					tem["auth_type"]=route.AuthType
-					tem["is_show"]=route.IsShow
-					tem["sort"] =route.Sort
-					if route.Auth!=""{
-						auth:=AuthInfo{}
-						if err:=json.Unmarshal(common.Str2Bytes(route.Auth),&auth);err!=nil{
-							return routerList,false,errors.New("权限验证错误："+err.Error())
+			for _, roleAuth := range roleList {
+				route := Router[roleAuth.AuthId]
+				if route.AuthType == 0 && route.IsShow == 1 {
+					tem := make(map[string]interface{})
+					tem["id"] = route.Id
+					tem["title"] = route.Title
+					tem["pid"] = route.Pid
+					tem["icon"] = route.Icon
+					tem["crouter"] = route.Crouter
+					tem["visit"] = route.Visit
+					tem["auth_type"] = route.AuthType
+					tem["is_show"] = route.IsShow
+					tem["sort"] = route.Sort
+					if route.Auth != "" {
+						auth := AuthInfo{}
+						if err := json.Unmarshal(common.Str2Bytes(route.Auth), &auth); err != nil {
+							return routerList, false, errors.New("权限验证错误：" + err.Error())
 						}
-						temA,ok:=MaprouterList[route.Id]
-						if ok{
-							temAuth:=temA["auth"].(map[string]bool)
-							tem["auth"]=map[string]bool{
-								"add":roleAuth.Add || temAuth["add"],
-								"edit":roleAuth.Edit || temAuth["edit"],
-								"delete":roleAuth.Delete || temAuth["delete"],
-								"select":roleAuth.Select || temAuth["select"],
+						temA, ok := MaprouterList[route.Id]
+						if ok {
+							temAuth := temA["auth"].(map[string]bool)
+							tem["auth"] = map[string]bool{
+								"add":    roleAuth.Add || temAuth["add"],
+								"edit":   roleAuth.Edit || temAuth["edit"],
+								"delete": roleAuth.Delete || temAuth["delete"],
+								"select": roleAuth.Select || temAuth["select"],
 							}
-						}else{
-							tem["auth"]=map[string]bool{
-								"add":roleAuth.Add,
-								"edit":roleAuth.Edit,
-								"delete":roleAuth.Delete,
-								"select":roleAuth.Select,
+						} else {
+							tem["auth"] = map[string]bool{
+								"add":    roleAuth.Add,
+								"edit":   roleAuth.Edit,
+								"delete": roleAuth.Delete,
+								"select": roleAuth.Select,
 							}
 						}
 
 					}
-					MaprouterList[route.Id]=tem
+					MaprouterList[route.Id] = tem
 				}
 			}
 		}
 	}
-	for _,router:=range MaprouterList{
-		routerList=append(routerList,router)
+	for _, router := range MaprouterList {
+		routerList = append(routerList, router)
 	}
-	listLen:=len(routerList)
-	for index:=0;index<listLen;index++ {
-		for key:=index+1;key<listLen;key++ {
-			if routerList[index]["sort"].(int) >routerList[key]["sort"].(int){
-				routerList[index],routerList[key]=routerList[key],routerList[index]
+	listLen := len(routerList)
+	for index := 0; index < listLen; index++ {
+		for key := index + 1; key < listLen; key++ {
+			if routerList[index]["sort"].(int) > routerList[key]["sort"].(int) {
+				routerList[index], routerList[key] = routerList[key], routerList[index]
 			}
 		}
 	}
 	return routerList, true, nil
 }
+
 //获取验证权限路由列表
 func GetRouterPathList(roleIdStr string) (map[string]bool, bool, error) {
 	pathList := make(map[string]bool)

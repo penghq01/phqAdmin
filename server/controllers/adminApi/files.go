@@ -7,6 +7,6 @@ type Files struct {
 }
 
 func (this *Files) Prepare() {
-	this.ActionModel=new(models.Files)
+	this.ActionModel = new(models.Files)
 	this.AdminBase.Prepare()
 }
