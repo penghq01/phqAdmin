@@ -57,6 +57,7 @@ func init() {
 		common.Logs.Info("▶ 当前日志模式为：本地文件记录")
 	}
 	common.AppRunDir = getCurrentDirectory()
+	rand.Seed(time.Now().UnixNano())//初始化随机数种子
 	common.Logs.Info("▶ 当前运行目录：%v",common.AppRunDir)
 	ServerInit()
 }

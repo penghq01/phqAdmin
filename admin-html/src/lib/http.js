@@ -49,6 +49,7 @@ export default {
     upload(url = '',params={},progress=()=>{},isToast=true){
         return new Promise((resolve, reject) =>{
             let config={
+				timeout:1000 * 60 * 15,
                 headers:{"Content-Type":'multipart/form-data'},
                 onUploadProgress:function (progressEvent) {
                     // 对原生进度事件的处理
