@@ -1,5 +1,3 @@
 SET GOARCH=amd64
 SET GOOS=windows
-go build
-
-pause
+go build -o phqAdminServer.exe & pause

@@ -1,2 +1,1 @@
 bee run
-pause
