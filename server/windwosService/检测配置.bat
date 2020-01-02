@@ -1,1 +1,2 @@
-%cd%\svc check & pause
+cd /D %~dp0
+svc check & pause
