@@ -1,0 +1,1 @@
+%cd%\svc remove & pause

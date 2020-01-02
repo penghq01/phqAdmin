@@ -1,0 +1,1 @@
+%cd%\svc start & pause
