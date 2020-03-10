@@ -4,6 +4,7 @@
             :visible.sync="showBox"
             :width="width"
             @closed="close"
+			 :append-to-body="true"
             :close-on-click-modal="false"
     :close-on-press-escape="false">
             <span>

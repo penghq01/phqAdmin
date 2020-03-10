@@ -111,7 +111,7 @@ func ServerInit() {
 				common.Logs.Error("创建数据目录失败,%v",err)
 			}
 		}
-		dbPath:=filepath.Join(path,common.DbIni.String("db"))
+		dbPath:=filepath.Join(path,common.DbIni.String("db_file_name"))
 		common.DbEngine, err = xorm.NewEngine("sqlite3",dbPath)
 		if err != nil {
 			common.Logs.Error("✖ 连接SQLite3数据库失败，%v", err)
