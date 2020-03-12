@@ -17,6 +17,7 @@ import (
 	"time"
 	"xorm.io/core"
 )
+
 /*
 获取程序运行路径
 */
@@ -59,8 +60,8 @@ func init() {
 		common.Logs.Info("▶ 当前日志模式为：本地文件记录")
 	}
 	common.AppRunDir = getCurrentDirectory()
-	rand.Seed(time.Now().UnixNano())//初始化随机数种子
-	common.Logs.Info("▶ 当前运行目录：%v",common.AppRunDir)
+	rand.Seed(time.Now().UnixNano()) //初始化随机数种子
+	common.Logs.Info("▶ 当前运行目录：%v", common.AppRunDir)
 	ServerInit()
 }
 func ServerInit() {
@@ -90,7 +91,7 @@ func ServerInit() {
 	} else {
 		common.Logs.Error("✖ Token过期时间读取失败，%v", err)
 	}
-	common.SqlPathDir = filepath.Join(common.AppRunDir,common.DbIni.String("back_dir"))
+	common.SqlPathDir = filepath.Join(common.AppRunDir, common.DbIni.String("back_dir"))
 	dbMode := common.DbIni.String("db_mode")
 	if dbMode == "0" {
 		//使用MySql数据库
@@ -103,55 +104,56 @@ func ServerInit() {
 	if dbMode == "1" {
 		//SQLite3
 		common.Logs.Info("▶ 当前数据库为：SQLite3")
-		path:=filepath.Join(common.AppRunDir,"/conf/app-data")
+		path := filepath.Join(common.AppRunDir, "/conf/app-data")
 		ok, err := common.PathExists(path)
 		if !ok {
 			err = os.MkdirAll(path, 0666)
 			if err != nil {
-				common.Logs.Error("创建数据目录失败,%v",err)
+				common.Logs.Error("创建数据目录失败,%v", err)
 			}
 		}
-		dbPath:=filepath.Join(path,common.DbIni.String("db_file_name"))
-		common.DbEngine, err = xorm.NewEngine("sqlite3",dbPath)
+		dbPath := filepath.Join(path, common.DbIni.String("db_file_name"))
+		common.DbEngine, err = xorm.NewEngine("sqlite3", dbPath)
 		if err != nil {
 			common.Logs.Error("✖ 连接SQLite3数据库失败，%v", err)
 		}
 	}
 	common.Logs.Info("▶ 同步数据库……")
-	err=common.DbEngine.Sync2(new(models.Admin),new(models.Auth),new(models.FilesClass),new(models.Files),new(models.Icon),new(models.Role),new(models.Users),new(models.UsersPayLog))
-	if err!=nil {
+	err = common.DbEngine.Sync2(new(models.Admin), new(models.Auth), new(models.FilesClass), new(models.Files), new(models.Icon), new(models.Role), new(models.Users), new(models.UsersPayLog))
+	if err != nil {
 		common.Logs.Error("✖ 同步数据库失败，%v", err)
-	}else{
+	} else {
 		common.Logs.Info("✔ 同步数据库完成")
 	}
-	sqlPath:=filepath.Join(common.AppRunDir,"/conf/sql")
-	TableSqlPaths,err:=ioutil.ReadDir(sqlPath)
-	if err==nil{
-		for _,table:=range TableSqlPaths {
-             if !table.IsDir(){
-             	sqlName:=table.Name()
-             	ext:=filepath.Ext(sqlName)
-             	if ext==".sql" {}
-             	strEnd:=len(sqlName)-len(ext)
-				 tableName:=sqlName[:strEnd]
-				 empty,err := common.DbEngine.IsTableEmpty(tableName)
-				 //fmt.Println("判断表["+tableName+"]是否为空",empty,err)
-				 if err == nil {
-				 	if empty {
-				 		common.Logs.Info("▶ 初始化表[%v]……",tableName)
-				 		sqlPath:=filepath.Join(sqlPath,sqlName)
-				 		if _, err := common.DbEngine.ImportFile(sqlPath); err == nil {
-				 			common.Logs.Info("✔ 表[%v]初始化完成",tableName)
-				 		} else {
-				 			common.Logs.Error("✖ 表[%v]初始化失败，%v",tableName,err)
-				 		}
-				 	}
-				 } else {
-				 	common.Logs.Error("✖ 判断表[%v]是否为空，错误：%v",tableName,err)
-				 }
-			 }
+	sqlPath := filepath.Join(common.AppRunDir, "/conf/sql")
+	TableSqlPaths, err := ioutil.ReadDir(sqlPath)
+	if err == nil {
+		for _, table := range TableSqlPaths {
+			if !table.IsDir() {
+				sqlName := table.Name()
+				ext := filepath.Ext(sqlName)
+				if ext == ".sql" {
+				}
+				strEnd := len(sqlName) - len(ext)
+				tableName := sqlName[:strEnd]
+				empty, err := common.DbEngine.IsTableEmpty(tableName)
+				//fmt.Println("判断表["+tableName+"]是否为空",empty,err)
+				if err == nil {
+					if empty {
+						common.Logs.Info("▶ 初始化表[%v]……", tableName)
+						sqlPath := filepath.Join(sqlPath, sqlName)
+						if _, err := common.DbEngine.ImportFile(sqlPath); err == nil {
+							common.Logs.Info("✔ 表[%v]初始化完成", tableName)
+						} else {
+							common.Logs.Error("✖ 表[%v]初始化失败，%v", tableName, err)
+						}
+					}
+				} else {
+					common.Logs.Error("✖ 判断表[%v]是否为空，错误：%v", tableName, err)
+				}
+			}
 		}
-	}else{
+	} else {
 		common.Logs.Error("✖ 获取初始化数据表列表失败，%v", err)
 	}
 

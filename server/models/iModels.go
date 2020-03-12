@@ -2,10 +2,17 @@ package models
 
 import "server/common"
 
+type CurdResult struct {
+	Err error
+	Msg string
+}
+
 type IModels interface {
-	Add() (bool, string)
-	Delete() (bool, string)
-	List() (interface{}, bool, string)
-	Edit() (bool, string)
-	PageList(paginate common.Paginate, pageData *common.PaginateData) (bool, string)
+	Get() CurdResult
+	Add() CurdResult
+	Delete() CurdResult
+	Edit() CurdResult
+	List() (interface{}, CurdResult)
+	PageList(pageData *common.PaginateData) CurdResult
+	TableName()string
 }

@@ -72,8 +72,8 @@ func (this *Admin) ImportSqL() {
 	filePath := filepath.Join(common.SqlPathDir, name)
 	ok, err := common.PathExists(filePath)
 	if err == nil && ok {
-		models := models.Models{}
-		err = models.DeleteAllTable()
+		md := models.Models{}
+		err = md.DeleteAllTable()
 		if err == nil {
 			if result, err := common.DbEngine.ImportFile(filePath); err == nil {
 				this.ServeSuccess("数据恢复成功", result)

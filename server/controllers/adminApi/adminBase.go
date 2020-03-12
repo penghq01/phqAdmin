@@ -116,51 +116,68 @@ func (this *AdminBase) UploadImage() {
 //添加操作
 func (this *AdminBase) Add() {
 	this.AnalyseJson(this.ActionModel)
-	ok, msg := this.ActionModel.Add()
-	if ok {
-		this.ServeSuccess(msg, this.ActionModel)
+	res := this.ActionModel.Add()
+	if res.Err == nil {
+		this.ServeSuccess(res.Msg, this.ActionModel)
+	} else {
+		this.ServeError(res.Msg, "")
 	}
-	this.ServeError(msg, "")
+}
+
+//获取单条
+func (this *AdminBase) Get() {
+	this.AnalyseJson(this.ActionModel)
+	res := this.ActionModel.Get()
+	if res.Err == nil {
+		this.ServeSuccess(res.Msg, this.ActionModel)
+	} else {
+		this.ServeError(res.Msg, "")
+	}
 }
 
 //获取列表
 func (this *AdminBase) List() {
 	this.AnalyseJson(this.ActionModel)
-	list, ok, msg := this.ActionModel.List()
-	if ok {
-		this.ServeSuccess(msg, list)
+	list, res := this.ActionModel.List()
+	if res.Err == nil {
+		this.ServeSuccess(res.Msg, list)
+	} else {
+		this.ServeError(res.Msg, "")
 	}
-	this.ServeError(msg, "")
 }
 
 //获取带分页的列表
 func (this *AdminBase) PageList() {
 	this.AnalyseJson(this.ActionModel)
 	this.GetPageParam()
-	pd := new(common.PaginateData)
-	ok, msg := this.ActionModel.PageList(this.Paginate, pd)
-	if ok {
-		this.ServeSuccess(msg, pd)
+	pd := common.PaginateData{
+		Data:     nil,
+		Paginate: this.Paginate,
 	}
-	this.ServeError(msg, "")
+	res := this.ActionModel.PageList(&pd)
+	if res.Err == nil {
+		this.ServeSuccess("", pd)
+	} else {
+		this.ServeError(res.Msg, "")
+	}
 }
 
 //删除
 func (this *AdminBase) Del() {
 	this.AnalyseJson(this.ActionModel)
-	ok, msg := this.ActionModel.Delete()
-	if ok {
-		this.ServeSuccess(msg, "")
+	res := this.ActionModel.Delete()
+	if res.Err == nil {
+		this.ServeSuccess(res.Msg, "")
 	}
-	this.ServeError(msg, "")
+	this.ServeError(res.Msg, "")
 }
 
 //修改
 func (this *AdminBase) Edit() {
 	this.AnalyseJson(this.ActionModel)
-	ok, msg := this.ActionModel.Edit()
-	if ok {
-		this.ServeSuccess(msg, this.ActionModel)
+	res := this.ActionModel.Edit()
+	if res.Err == nil {
+		this.ServeSuccess(res.Msg, this.ActionModel)
 	}
-	this.ServeError(msg, "")
+	this.ServeError(res.Msg, "")
 }

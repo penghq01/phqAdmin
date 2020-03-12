@@ -62,7 +62,7 @@ func GetAdminNoLoginController() (map[string]bool, bool) {
 	rt := make([]models.Auth, 0)
 	err := common.DbEngine.Where("visit=0").Find(&rt)
 	if err != nil {
-		common.Logs.Error("加载路由信息错误：%v",err)
+		common.Logs.Error("加载路由信息错误：%v", err)
 		return AdminNoLoginController, false
 	}
 	for _, r := range rt {
@@ -70,7 +70,7 @@ func GetAdminNoLoginController() (map[string]bool, bool) {
 		fmt.Println(r.Auth)
 		err = json.Unmarshal(common.Str2Bytes(r.Auth), &auth)
 		if err != nil {
-			common.Logs.Error("解析不用登录的路由数据错误：%v",err)
+			common.Logs.Error("解析不用登录的路由数据错误：%v", err)
 			return AdminNoLoginController, false
 		}
 		for _, q := range auth.Add.Router {
@@ -95,14 +95,14 @@ func GetAdminLoginController() (map[string]bool, bool) {
 	rt := make([]models.Auth, 0)
 	err := common.DbEngine.Where("visit=1").Find(&rt)
 	if err != nil {
-		common.Logs.Error("加载路由信息错误：%v",err)
+		common.Logs.Error("加载路由信息错误：%v", err)
 		return AdminLoginController, false
 	}
 	for _, r := range rt {
 		auth := AuthInfo{}
 		err = json.Unmarshal(common.Str2Bytes(r.Auth), &auth)
 		if err != nil {
-			common.Logs.Error("解析只需登录的路由数据错误：%v",err)
+			common.Logs.Error("解析只需登录的路由数据错误：%v", err)
 			return AdminLoginController, false
 		}
 		for _, q := range auth.Add.Router {

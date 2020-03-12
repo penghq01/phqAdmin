@@ -1,15 +1,21 @@
 package models
 
-import "server/common"
+import (
+	"errors"
+	"github.com/go-xorm/xorm"
+	"server/common"
+)
 
 //图标管理
 type Icon struct {
 	Models `xorm:"-"`
-	Id    int    `json:"id" xorm:"int(11) pk notnull unique autoincr"` //图标id
-	Title string `json:"title" xorm:"varchar(60)"`              //图标名称
-	Icon  string `json:"icon" xorm:"varchar(100)"`               //图标
+	Id     int    `json:"id" xorm:"int(11) pk notnull unique autoincr"` //图标id
+	Title  string `json:"title" xorm:"varchar(60)"`                     //图标名称
+	Icon   string `json:"icon" xorm:"varchar(100)"`                     //图标
 }
-
+func (this *Icon)TableName()string{
+	return "icon"
+}
 //图标数据校验
 type IconValid struct {
 	BaseVaild
@@ -33,46 +39,40 @@ func (this *IconValid) Valid(obj *Icon) (bool, string) {
 	return true, ""
 }
 
-func (this *Icon) List() (interface{}, bool, string) {
-	return nil, false, ""
-}
-func (this *Icon) Add() (bool, string) {
+func (this *Icon) Add() CurdResult {
 	vd := IconValid{
 		Icon: true,
 	}
 	if ok, msg := vd.Valid(this); !ok {
-		return false, msg
+		return CurdResult{
+			Err: errors.New(msg),
+			Msg: msg,
+		}
 	}
-	if row, err := common.DbEngine.Insert(this); row > 0 && err == nil {
-		return true, "添加成功"
-	}
-	return false, "添加失败"
+	return Insert(this,func(db *xorm.Session) {})
 }
-func (this *Icon) Delete() (bool, string) {
+
+func (this *Icon) Delete() CurdResult {
 	vd := IconValid{
 		Id: true,
 	}
 	if ok, msg := vd.Valid(this); !ok {
-		return false, msg
+		return CurdResult{
+			Err: errors.New(msg),
+			Msg: msg,
+		}
 	}
-	if row, err := common.DbEngine.Where("id=?", this.Id).Delete(this); row > 0 && err == nil {
-		return true, "删除成功"
-	}
-	return false, "删除失败"
+	return Delete(this,func(db *xorm.Session) {
+		db.Where("id=?", this.Id)
+	})
 }
-func (this *Icon) Edit() (bool, string) { return false, "" }
-func (this *Icon) PageList(paginate common.Paginate, pageData *common.PaginateData) (bool, string) {
-	icon := make([]Icon, 0)
-	rows, err := common.DbEngine.Desc("id").Count(new(Icon))
-	if rows <= 0 || err != nil {
-		return false, err.Error()
-	}
-	paginate.CalcPaginate(rows)
-	err = common.DbEngine.Desc("id").Limit(paginate.Limit, paginate.Start).Find(&icon)
-	if err != nil {
-		return false, err.Error()
-	}
-	pageData.Data = icon
-	pageData.Paginate = paginate
-	return true, ""
+func (this *Icon) PageList(pageData *common.PaginateData) CurdResult {
+	return PageFind(this,pageData, func(db *xorm.Session) {
+		db.Desc("id")
+	}, func(db *xorm.Session) error {
+		icon := make([]Icon, 0)
+		err := db.Find(&icon)
+		pageData.Data = icon
+		return err
+	})
 }

@@ -149,7 +149,7 @@ func (this *Base) UploadFile(saveDateBases bool, fileType string, key string, al
 		ft.AddTime = time.Now().Unix()
 		ft.Src = fpath
 		ft.Label = fileHeader.Filename
-		if ok, _ := ft.Add(); ok {
+		if res := ft.Add(); res.Err == nil {
 			return nil, fpath
 		}
 		if err := os.Remove(fpath); err != nil {

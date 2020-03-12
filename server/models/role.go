@@ -2,18 +2,20 @@ package models
 
 import (
 	"errors"
-	"server/common"
+	"github.com/go-xorm/xorm"
 )
 
 //后台管理员角色表
 type Role struct {
-	Models `xorm:"-"`
+	Models   `xorm:"-"`
 	Id       int    `json:"id" xorm:"int(11) pk notnull unique autoincr"` //角色表ID
-	RoleName string `json:"role_name" xorm:"varchar(60)"`          //角色名称
-	AuthList string `json:"auth_list" xorm:"text"`          //权限列表
-	RoleDesc string `json:"role_desc" xorm:"varchar(512)"`          //角色描述
+	RoleName string `json:"role_name" xorm:"varchar(60)"`                 //角色名称
+	AuthList string `json:"auth_list" xorm:"text"`                        //权限列表
+	RoleDesc string `json:"role_desc" xorm:"varchar(512)"`                //角色描述
 }
-
+func (this *Role)TableName()string{
+	return "role"
+}
 type RoleValid struct {
 	BaseVaild
 	Id       bool
@@ -43,58 +45,56 @@ func (this *RoleValid) Valid(obj *Role) error {
 	return nil
 }
 
-func (this *Role) Add() (bool, string) {
+func (this *Role) Add() CurdResult {
 	v := RoleValid{
 		RoleName: true,
 		RoleDesc: true,
 	}
 	if err := v.Valid(this); err != nil {
-		return false, err.Error()
+		return CurdResult{
+			Err: err,
+			Msg: err.Error(),
+		}
 	}
-	row, err := common.DbEngine.Insert(this)
-	if row > 0 && err == nil {
-		return true, "添加成功"
-	}
-	return false, "添加失败"
+	return Insert(this,func(db *xorm.Session) {})
 }
 
-func (this *Role) Delete() (bool, string) {
+func (this *Role) Delete() CurdResult {
 	v := RoleValid{
 		Id: true,
 	}
 	if err := v.Valid(this); err != nil {
-		return false, err.Error()
+		return CurdResult{
+			Err: err,
+			Msg: err.Error(),
+		}
 	}
-	if row, err := common.DbEngine.Where("id=?", this.Id).Delete(this); row > 0 && err == nil {
-		return true, "删除成功"
-	}
-	return false, "删除失败"
+	return Delete(this,func(db *xorm.Session) {
+		db.Where("id=?", this.Id)
+	})
 }
 
-func (this *Role) Edit() (bool, string) {
+func (this *Role) Edit() CurdResult {
 	v := RoleValid{
 		Id:       true,
 		RoleName: true,
 		RoleDesc: true,
 	}
 	if err := v.Valid(this); err != nil {
-		return false, err.Error()
+		return CurdResult{
+			Err: err,
+			Msg: err.Error(),
+		}
 	}
-	if row, err := common.DbEngine.Where("id=?", this.Id).Update(this); row > 0 && err == nil {
-		return true, "修改成功"
-	}
-	return false, "修改失败"
+	return Update(this,func(db *xorm.Session) {
+		db.Where("id=?", this.Id)
+	})
 }
 
-func (this *Role) List() (interface{}, bool, string) {
+func (this *Role) List() (interface{}, CurdResult) {
 	list := make([]Role, 0)
-	err := common.DbEngine.Find(&list)
-	if err == nil {
-		return list, true, ""
-	}
-	return "", false, "获取数据失败"
-}
-
-func (this *Role) PageList(paginate common.Paginate, pageData *common.PaginateData) (bool, string) {
-	return false, ""
+	err := Find(this,func(db *xorm.Session) error {
+		return db.Find(&list)
+	})
+	return list, err
 }
