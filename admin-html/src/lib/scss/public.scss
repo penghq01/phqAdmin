@@ -40,10 +40,23 @@ html,body{
   background-color:$menu-background-color;
   color:$menu-text-color;
 }
+//设置导航图标颜色
+.el-menu-item i, .el-submenu__title i{
+   color:$menu-text-color;
+}
+//设置导航hover时图标颜色
+.el-menu-item:hover i, .el-submenu__title:hover i{;
+  color:$menu-hover-text-color;
+}
 //设置导航hover时背景颜色和字体颜色
 .el-menu-item:hover,.el-submenu__title:hover{
   background-color:$menu-hover-background-color;
   color:$menu-hover-text-color;
+}
+
+//设置导航激活时图标颜色
+.el-menu-item.is-active i{
+  color:$menu-active-text-color;
 }
 //设置导航激活时背景颜色和字体颜色
 .el-menu-item.is-active{
