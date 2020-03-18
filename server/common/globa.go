@@ -8,6 +8,8 @@ import (
 
 var (
 	AppRunDir        string          // 程序运行目录
+	FileUploadDir    string          //文件上传地址
+	UploadSavePath   string          //文件保存路径
 	SqlPathDir       string          //sql存放目录
 	RunModeDev       bool            //开发模式
 	RunModeProd      bool            //生产模式

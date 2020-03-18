@@ -57,8 +57,10 @@ func (this *Files) PageList(pageData *common.PaginateData) CurdResult {
 	return PageFind(this,pageData, func(db *xorm.Session) {
 		db.Desc("add_time").Where("class_id=?", this.ClassId)
 	}, func(db *xorm.Session) error {
+		files := make([]Files, 0)
+		err:=db.Find(&files)
 		pageData.Data=files
-		return db.Find(&files)
+		return err
 	})
 }
 func (this *Files) Delete() CurdResult {
@@ -79,8 +81,9 @@ func (this *Files) Delete() CurdResult {
 	}
 	if row, err := session.Where("id=?", this.Id).Delete(this); row > 0 && err == nil {
 		var delOK bool = true
-		if _, err := os.Stat(this.Src); err == nil {
-			if err := os.Remove(this.Src); err != nil {
+		imgPath:=filepath.Join(common.FileUploadDir,this.Src)
+		if _, err := os.Stat(imgPath); err == nil {
+			if err := os.Remove(imgPath); err != nil {
 				delOK = false
 			}
 		}

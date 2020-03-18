@@ -29,6 +29,16 @@ func getCurrentDirectory() string {
 	return dir
 }
 func init() {
+   //获取文件上传目录
+	common.FileUploadDir=beego.AppConfig.String("file_upload_dir")
+	if common.FileUploadDir==""{
+		common.FileUploadDir=common.AppRunDir
+	}
+	common.UploadSavePath=beego.AppConfig.String("upload_save_path")
+	if common.UploadSavePath==""{
+		common.UploadSavePath="/static/"
+	}
+	common.Logs.Info("▶ 文件上传目录：%v",filepath.FromSlash(common.FileUploadDir+common.UploadSavePath))
 	//✖ ▶ ✔
 	common.Logs = logs.NewLogger(10000) // 创建一个日志记录器，参数为缓冲区的大小
 	runmode := beego.AppConfig.String("runmode")

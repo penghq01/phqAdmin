@@ -89,9 +89,9 @@ func (this *Base) UploadImg(key string) {
 		".gif":  true,
 		".bmp":  true,
 	}
-	err, imgPath := this.UploadFile(true, "图片", key, AllowExtMap, "", false)
+	err, img := this.UploadFile(true, "图片", key, AllowExtMap, false)
 	if err == nil {
-		this.ServeSuccess("上传成功", imgPath)
+		this.ServeSuccess("上传成功", img)
 	} else {
 		this.ServeSuccess(err.Error(), "")
 	}
@@ -102,11 +102,13 @@ func (this *Base) UploadExcel(key string) (err error, path string) {
 	var AllowExtMap map[string]bool = map[string]bool{
 		".xlsx": true,
 	}
-	return this.UploadFile(false, "Excel", key, AllowExtMap, "", false)
+	err, img:=this.UploadFile(false, "Excel", key, AllowExtMap,  false)
+	return err,img.Src
 }
 
 //上传文件
-func (this *Base) UploadFile(saveDateBases bool, fileType string, key string, allowExtMap map[string]bool, uploadDir string, isUploadFileName bool) (error, string) {
+func (this *Base) UploadFile(saveDateBases bool, fileType string, key string, allowExtMap map[string]bool,isUploadFileName bool) (error,models.Files) {
+	resFile := models.Files{}
 	classId, err := this.GetInt("class_id", 0)
 	if err != nil {
 		classId = 0
@@ -114,20 +116,19 @@ func (this *Base) UploadFile(saveDateBases bool, fileType string, key string, al
 	file, fileHeader, _ := this.GetFile(key)
 	defer file.Close()
 	if fileHeader.Size > (30 * 1024 * 1024) {
-		return errors.New(fileType + "太大了"), ""
+		return errors.New(fileType + "太大了"),resFile
 	}
 	ext := path.Ext(fileHeader.Filename)
 	//验证后缀名是否符合要求
 	if _, ok := allowExtMap[ext]; !ok {
-		return errors.New(fileType + "格式不正确"), ""
+		return errors.New(fileType + "格式不正确"),resFile
 	}
 	//创建目录
-	if uploadDir == "" {
-		uploadDir = "static/upload/" + time.Now().Format("2006/01/02/")
-	}
+	resPath:=filepath.Join(common.UploadSavePath,"upload",time.Now().Format("2006/01/02/"))
+	uploadDir:=filepath.Join(common.FileUploadDir,resPath)
 	err = os.MkdirAll(uploadDir, 0666)
 	if err != nil {
-		return errors.New("上传失败（100）"), ""
+		return errors.New("上传失败（100）"),resFile
 	}
 	fileName := ""
 	if !isUploadFileName {
@@ -138,28 +139,31 @@ func (this *Base) UploadFile(saveDateBases bool, fileType string, key string, al
 	} else {
 		fileName = fileHeader.Filename
 	}
-	fpath := uploadDir + fileName
+	resPath=filepath.Join("/",resPath,"/",fileName)
+	resPath=strings.Replace(resPath, "\\", "/", -1)
+	fpath :=filepath.Join(uploadDir , "/", fileName)
 	err = this.SaveToFile(key, fpath)
 	if err != nil {
-		return errors.New("上传失败（101）"), ""
+		return errors.New("上传失败（101）"),resFile
 	}
+	resFile.ClassId = classId
+	resFile.AddTime = time.Now().Unix()
+	resFile.Src = resPath
+	resFile.Label = fileHeader.Filename
 	if saveDateBases {
-		ft := new(models.Files)
-		ft.ClassId = classId
-		ft.AddTime = time.Now().Unix()
-		ft.Src = fpath
-		ft.Label = fileHeader.Filename
-		if res := ft.Add(); res.Err == nil {
-			return nil, fpath
+		if err := resFile.Add(); err.Err == nil {
+			return nil,resFile
 		}
 		if err := os.Remove(fpath); err != nil {
 			common.Logs.Error("删除文件失败：%v", fpath)
 		}
-		return errors.New("上传失败"), ""
+		return errors.New("上传失败"),resFile
 	} else {
-		return nil, fpath
+		return nil,resFile
 	}
 }
+
+
 
 func (this *Base) jsonReturn(code int, msg interface{}, data interface{}) {
 	this.Data["json"] = map[string]interface{}{"code": code, "msg": msg, "data": data}
