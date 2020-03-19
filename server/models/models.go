@@ -7,7 +7,7 @@ import (
 )
 
 type Models struct {
-
+	BaseVaild `xorm:"-"`
 }
 
 //删除所有表
@@ -49,12 +49,12 @@ func (this *Models) PageList(pageData *common.PaginateData) CurdResult {
 	return CurdResult{}
 }
 
-func (this *Models)TableName()string{
+func (this *Models) TableName() string {
 	return ""
 }
 
-func First(model IModels,where func(db *xorm.Session)) CurdResult {
-	db:= common.DbEngine.Table(model.TableName())
+func First(model IModels, where func(db *xorm.Session)) CurdResult {
+	db := common.DbEngine.Table(model.TableName())
 	where(db)
 	if ok, err := db.Get(model); ok && err == nil {
 		return CurdResult{
@@ -69,9 +69,8 @@ func First(model IModels,where func(db *xorm.Session)) CurdResult {
 		}
 	}
 }
-func Insert(model IModels,where func(db *xorm.Session)) CurdResult {
-	db:= common.DbEngine.Table(model.TableName())
-	where(db)
+func Insert(model IModels) CurdResult {
+	db := common.DbEngine.Table(model.TableName())
 	if row, err := db.Insert(model); row > 0 && err == nil {
 		return CurdResult{
 			Err: nil,
@@ -85,8 +84,8 @@ func Insert(model IModels,where func(db *xorm.Session)) CurdResult {
 		}
 	}
 }
-func Delete(model IModels,where func(db *xorm.Session)) CurdResult {
-	db:= common.DbEngine.Table(model.TableName())
+func Remove(model IModels, where func(db *xorm.Session)) CurdResult {
+	db := common.DbEngine.Table(model.TableName())
 	where(db)
 	if row, err := db.Delete(model); err == nil && row > 0 {
 		return CurdResult{
@@ -101,8 +100,8 @@ func Delete(model IModels,where func(db *xorm.Session)) CurdResult {
 		}
 	}
 }
-func Update(model IModels,where func(db *xorm.Session)) CurdResult {
-	db:= common.DbEngine.Table(model.TableName())
+func Update(model IModels, where func(db *xorm.Session)) CurdResult {
+	db := common.DbEngine.Table(model.TableName())
 	where(db)
 	if row, err := db.Update(model); row > 0 && err == nil {
 		return CurdResult{
@@ -117,7 +116,7 @@ func Update(model IModels,where func(db *xorm.Session)) CurdResult {
 		}
 	}
 }
-func Find(model IModels,find func(db *xorm.Session) error) CurdResult {
+func Find(model IModels, find func(db *xorm.Session) error) CurdResult {
 	db := common.DbEngine.Table(model.TableName())
 	err := find(db)
 	fmt.Println(err)
@@ -134,7 +133,7 @@ func Find(model IModels,find func(db *xorm.Session) error) CurdResult {
 		}
 	}
 }
-func PageFind(model IModels,pageData *common.PaginateData, where func(db *xorm.Session), find func(db *xorm.Session) error) CurdResult {
+func PageFind(model IModels, pageData *common.PaginateData, where func(db *xorm.Session), find func(db *xorm.Session) error) CurdResult {
 	db := common.DbEngine.Table(model.TableName())
 	defer db.Close()
 	where(db)
@@ -146,7 +145,7 @@ func PageFind(model IModels,pageData *common.PaginateData, where func(db *xorm.S
 			Msg: "获取数据失败",
 		}
 	}
-	db= common.DbEngine.Table(model.TableName())
+	db = common.DbEngine.Table(model.TableName())
 	where(db)
 	pageData.Paginate.CalcPaginate(rows)
 	db.Limit(pageData.Paginate.Limit, pageData.Paginate.Start)

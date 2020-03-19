@@ -17,9 +17,11 @@ type Admin struct {
 	LoginTime int64  `json:"login_time" xorm:"int(11) notnull default(0)"` //上次登录时间
 	LoginIp   string `json:"login_ip" xorm:"varchar(100)"`                 //上次登录IP
 }
-func (this *Admin)TableName()string{
+
+func (this *Admin) TableName() string {
 	return "admin"
 }
+
 //管理员数据校验
 type AdminValid struct {
 	BaseVaild
@@ -57,6 +59,7 @@ func (this *Admin) UserNameGet(username string) bool {
 		return true
 	}
 }
+
 //通过id查找管理员
 func (this *Admin) IdNameGet(id int) bool {
 	ok, err := common.DbEngine.Where("admin_id=?", id).Get(this)
@@ -67,6 +70,7 @@ func (this *Admin) IdNameGet(id int) bool {
 		return true
 	}
 }
+
 //通过ID和用户名查找管理员
 func (this *Admin) IdUserNameGet(id int, username string) bool {
 	ok, err := common.DbEngine.Where("admin_id=? AND username=?", id, username).Get(this)
@@ -77,6 +81,7 @@ func (this *Admin) IdUserNameGet(id int, username string) bool {
 		return true
 	}
 }
+
 //更新登录信息
 func (this *Admin) IdUpdate(id int) bool {
 	rows, err := common.DbEngine.Where("admin_id=?", id).Update(this)
@@ -107,7 +112,7 @@ func (this *Admin) Add() CurdResult {
 		}
 	}
 	this.Password = common.PassWordEncryption(this.Password)
-	err := Insert(this,func(db *xorm.Session) {})
+	err := Insert(this)
 	this.Password = ""
 	return err
 }
@@ -128,7 +133,7 @@ func (this *Admin) Delete() CurdResult {
 			Msg: "您没有权限删除该账号",
 		}
 	}
-	return Delete(this,func(db *xorm.Session) {
+	return Remove(this, func(db *xorm.Session) {
 		db.Where("admin_id=?", this.AdminId)
 	})
 }
@@ -153,13 +158,13 @@ func (this *Admin) Edit() CurdResult {
 	if this.Password != "" {
 		this.Password = common.PassWordEncryption(this.Password)
 	}
-	return Update(this,func(db *xorm.Session) {
+	return Update(this, func(db *xorm.Session) {
 		db.Where("admin_id=?", this.AdminId)
 	})
 }
 func (this *Admin) List() (interface{}, CurdResult) {
 	list := make([]Admin, 0)
-	err := Find(this,func(db *xorm.Session) error {
+	err := Find(this, func(db *xorm.Session) error {
 		return db.Where("admin_id>?", 1).Omit("password").Find(&list)
 	})
 	return list, err

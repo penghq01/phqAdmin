@@ -13,9 +13,11 @@ type Role struct {
 	AuthList string `json:"auth_list" xorm:"text"`                        //权限列表
 	RoleDesc string `json:"role_desc" xorm:"varchar(512)"`                //角色描述
 }
-func (this *Role)TableName()string{
+
+func (this *Role) TableName() string {
 	return "role"
 }
+
 type RoleValid struct {
 	BaseVaild
 	Id       bool
@@ -56,7 +58,7 @@ func (this *Role) Add() CurdResult {
 			Msg: err.Error(),
 		}
 	}
-	return Insert(this,func(db *xorm.Session) {})
+	return Insert(this)
 }
 
 func (this *Role) Delete() CurdResult {
@@ -69,7 +71,7 @@ func (this *Role) Delete() CurdResult {
 			Msg: err.Error(),
 		}
 	}
-	return Delete(this,func(db *xorm.Session) {
+	return Remove(this, func(db *xorm.Session) {
 		db.Where("id=?", this.Id)
 	})
 }
@@ -86,14 +88,14 @@ func (this *Role) Edit() CurdResult {
 			Msg: err.Error(),
 		}
 	}
-	return Update(this,func(db *xorm.Session) {
+	return Update(this, func(db *xorm.Session) {
 		db.Where("id=?", this.Id)
 	})
 }
 
 func (this *Role) List() (interface{}, CurdResult) {
 	list := make([]Role, 0)
-	err := Find(this,func(db *xorm.Session) error {
+	err := Find(this, func(db *xorm.Session) error {
 		return db.Find(&list)
 	})
 	return list, err

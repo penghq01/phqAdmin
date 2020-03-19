@@ -4,6 +4,7 @@ import (
 	"errors"
 	"github.com/go-xorm/xorm"
 	"os"
+	"path/filepath"
 	"server/common"
 )
 
@@ -17,9 +18,11 @@ type Files struct {
 	Src     string `json:"src" xorm:"varchar(512)"`                     //文件地址
 	AddTime int64  `json:"add_time" xorm:"int(11) notnull default(0)"`  //上传时间
 }
-func (this *Files)TableName()string{
+
+func (this *Files) TableName() string {
 	return "files"
 }
+
 type FilesVaild struct {
 	BaseVaild
 	Id    bool
@@ -50,16 +53,15 @@ func (this *FilesVaild) Valid(obj *Files) (bool, string) {
 }
 
 func (this *Files) Add() CurdResult {
-	return Insert(this,func(db *xorm.Session) {})
+	return Insert(this)
 }
 func (this *Files) PageList(pageData *common.PaginateData) CurdResult {
-	files := make([]Files, 0)
-	return PageFind(this,pageData, func(db *xorm.Session) {
+	return PageFind(this, pageData, func(db *xorm.Session) {
 		db.Desc("add_time").Where("class_id=?", this.ClassId)
 	}, func(db *xorm.Session) error {
 		files := make([]Files, 0)
-		err:=db.Find(&files)
-		pageData.Data=files
+		err := db.Find(&files)
+		pageData.Data = files
 		return err
 	})
 }
@@ -81,7 +83,7 @@ func (this *Files) Delete() CurdResult {
 	}
 	if row, err := session.Where("id=?", this.Id).Delete(this); row > 0 && err == nil {
 		var delOK bool = true
-		imgPath:=filepath.Join(common.FileUploadDir,this.Src)
+		imgPath := filepath.Join(common.FileUploadDir, this.Src)
 		if _, err := os.Stat(imgPath); err == nil {
 			if err := os.Remove(imgPath); err != nil {
 				delOK = false

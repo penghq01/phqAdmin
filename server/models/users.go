@@ -22,6 +22,7 @@ type Users struct {
 	LoginTime int     `json:"login_time" xorm:"int(11) notnull default(0)"`     //上次登录时间
 	LoginRand string  `json:"login_rand" xorm:"varchar(256)"`                   //登录随机字串
 }
-func (this *Users)TableName()string{
+
+func (this *Users) TableName() string {
 	return "users"
 }

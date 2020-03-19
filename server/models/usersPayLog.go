@@ -10,9 +10,11 @@ type UsersPayLog struct {
 	Price         float64 `json:"price" xorm:"decimal(11,2) notnull default(0.00)"` //充值金额（分）
 	AddTime       int     `json:"add_time" xorm:"int(11) notnull default(0)"`       //充值时间
 }
-func (this *UsersPayLog)TableName()string{
+
+func (this *UsersPayLog) TableName() string {
 	return "users_pay_log"
 }
+
 type UsersPayLogTable struct {
 	UsersPayLog `xorm:"extends"`
 	Nickname    string `json:"nickname"`

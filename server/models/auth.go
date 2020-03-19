@@ -20,9 +20,11 @@ type Auth struct {
 	IsShow   int8   `json:"is_show" xorm:"tinyint(1) notnull default(0)"`   //是否显示
 	Sort     int    `json:"sort" xorm:"int(11) notnull default(0)"`         //排序
 }
-func (this *Auth)TableName()string{
+
+func (this *Auth) TableName() string {
 	return "auth"
 }
+
 type AuthValid struct {
 	BaseVaild
 	Id       bool //id
@@ -82,7 +84,7 @@ func (this *Auth) Add() CurdResult {
 			}
 		}
 	}
-	return Insert(this,func(db *xorm.Session) {})
+	return Insert(this)
 }
 
 func (this *Auth) Edit() CurdResult {
@@ -105,7 +107,7 @@ func (this *Auth) Edit() CurdResult {
 		}
 	}
 
-	return Update(this,func(db *xorm.Session) {
+	return Update(this, func(db *xorm.Session) {
 		db.Where("id=?", this.Id).Cols("title,icon,srouter,crouter,auth,visit,auth_type,is_show,sort")
 	})
 }
@@ -139,14 +141,14 @@ func (this *Auth) Delete() CurdResult {
 			Msg: "存在子路由不能删除",
 		}
 	}
-	return Delete(this,func(db *xorm.Session) {
+	return Remove(this, func(db *xorm.Session) {
 		db.Where("id=?", this.Id)
 	})
 }
 
 func (this *Auth) List() (interface{}, CurdResult) {
 	auth := make([]Auth, 0)
-	err := Find(this,func(db *xorm.Session) error {
+	err := Find(this, func(db *xorm.Session) error {
 		return db.Find(&auth)
 	})
 	return auth, err

@@ -13,9 +13,11 @@ type FilesClass struct {
 	Pid    int    `json:"pid" xorm:"int(11) notnull default(0)"`
 	Label  string `json:"label" xorm:"varchar(255)"`
 }
-func (this *FilesClass)TableName()string{
+
+func (this *FilesClass) TableName() string {
 	return "files_class"
 }
+
 type FilesClassVaild struct {
 	BaseVaild
 	Id    bool
@@ -41,7 +43,7 @@ func (this *FilesClassVaild) Valid(obj *FilesClass) (bool, string) {
 
 func (this *FilesClass) List() (interface{}, CurdResult) {
 	fileClass := make([]FilesClass, 0)
-	err := Find(this,func(db *xorm.Session) error {
+	err := Find(this, func(db *xorm.Session) error {
 		return db.Find(&fileClass)
 	})
 	return fileClass, err
@@ -56,7 +58,7 @@ func (this *FilesClass) Add() CurdResult {
 			Msg: msg,
 		}
 	}
-	return Insert(this,func(db *xorm.Session) {})
+	return Insert(this)
 }
 func (this *FilesClass) Edit() CurdResult {
 	vd := FilesClassVaild{
@@ -69,7 +71,7 @@ func (this *FilesClass) Edit() CurdResult {
 			Msg: msg,
 		}
 	}
-	return Update(this,func(db *xorm.Session) {
+	return Update(this, func(db *xorm.Session) {
 		db.Where("id=?", this.Id).Cols("pid,label")
 	})
 }
@@ -109,7 +111,7 @@ func (this *FilesClass) Delete() CurdResult {
 			Msg: "该分类下存在子分类不能删除",
 		}
 	}
-	return Delete(this,func(db *xorm.Session) {
+	return Remove(this, func(db *xorm.Session) {
 		db.Where("id=?", this.Id)
 	})
 }
