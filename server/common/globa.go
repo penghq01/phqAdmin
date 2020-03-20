@@ -10,7 +10,10 @@ var (
 	AppRunDir        string          // 程序运行目录
 	FileUploadDir    string          //文件上传地址
 	UploadSavePath   string          //文件保存路径
-	SqlPathDir       string          //sql存放目录
+	DbMode           string          //数据库模式
+	DbDir            string          //数据存放目录
+	SqlBakPathDir    string          //sql存放目录
+	SqliteFilePath   string          //sqlite3数据库文件目录
 	RunModeDev       bool            //开发模式
 	RunModeProd      bool            //生产模式
 	Logs             *logs.BeeLogger //日志写出

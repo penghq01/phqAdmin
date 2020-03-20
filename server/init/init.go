@@ -101,9 +101,9 @@ func ServerInit() {
 	} else {
 		common.Logs.Error("✖ Token过期时间读取失败，%v", err)
 	}
-	common.SqlPathDir = filepath.Join(common.AppRunDir, common.DbIni.String("back_dir"))
-	dbMode := common.DbIni.String("db_mode")
-	if dbMode == "0" {
+	common.SqlBakPathDir = filepath.Join(common.AppRunDir, common.DbIni.String("back_dir"))
+	common.DbMode = common.DbIni.String("db_mode")
+	if common.DbMode == "0" {
 		//使用MySql数据库
 		common.Logs.Info("▶ 当前数据库为：MySql")
 		common.DbEngine, err = xorm.NewEngine("mysql", fmt.Sprintf("%v:%v@(%v:%v)/%v?charset=%v", common.DbIni.String("user"), common.DbIni.String("pass"), common.DbIni.String("host"), common.DbIni.String("port"), common.DbIni.String("db"), common.DbIni.String("charset")))
@@ -111,18 +111,20 @@ func ServerInit() {
 			common.Logs.Error("✖ 连接MySql数据库失败，%v", err)
 		}
 	}
-	if dbMode == "1" {
+	if common.DbMode == "1" {
 		//SQLite3
 		common.Logs.Info("▶ 当前数据库为：SQLite3")
-		path := filepath.Join(common.AppRunDir, "/conf/app-data")
-		ok, err := common.PathExists(path)
+		dbDir:= common.DbIni.String("db_dir")
+		common.DbDir = filepath.Join(common.AppRunDir, dbDir)
+		ok, err := common.PathExists(common.DbDir)
 		if !ok {
-			err = os.MkdirAll(path, 0666)
+			err = os.MkdirAll(common.DbDir, 0666)
 			if err != nil {
 				common.Logs.Error("创建数据目录失败,%v", err)
 			}
 		}
-		dbPath := filepath.Join(path, common.DbIni.String("db_file_name"))
+		dbPath := filepath.Join(common.DbDir, common.DbIni.String("db_file_name"))+".sqlite"
+		common.SqliteFilePath=dbPath
 		common.DbEngine, err = xorm.NewEngine("sqlite3", dbPath)
 		if err != nil {
 			common.Logs.Error("✖ 连接SQLite3数据库失败，%v", err)
