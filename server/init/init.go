@@ -103,6 +103,7 @@ func ServerInit() {
 	}
 	common.SqlBakPathDir = filepath.Join(common.AppRunDir, common.DbIni.String("back_dir"))
 	common.DbMode = common.DbIni.String("db_mode")
+	sqlPath := ""
 	if common.DbMode == "0" {
 		//使用MySql数据库
 		common.Logs.Info("▶ 当前数据库为：MySql")
@@ -110,11 +111,12 @@ func ServerInit() {
 		if err != nil {
 			common.Logs.Error("✖ 连接MySql数据库失败，%v", err)
 		}
+		sqlPath = filepath.Join(common.AppRunDir, "/conf/mysql")
 	}
 	if common.DbMode == "1" {
 		//SQLite3
 		common.Logs.Info("▶ 当前数据库为：SQLite3")
-		dbDir:= common.DbIni.String("db_dir")
+		dbDir := common.DbIni.String("db_dir")
 		common.DbDir = filepath.Join(common.AppRunDir, dbDir)
 		ok, err := common.PathExists(common.DbDir)
 		if !ok {
@@ -123,13 +125,15 @@ func ServerInit() {
 				common.Logs.Error("创建数据目录失败,%v", err)
 			}
 		}
-		dbPath := filepath.Join(common.DbDir, common.DbIni.String("db_file_name"))+".sqlite"
-		common.SqliteFilePath=dbPath
+		dbPath := filepath.Join(common.DbDir, common.DbIni.String("db_file_name")) + ".sqlite"
+		common.SqliteFilePath = dbPath
 		common.DbEngine, err = xorm.NewEngine("sqlite3", dbPath)
 		if err != nil {
 			common.Logs.Error("✖ 连接SQLite3数据库失败，%v", err)
 		}
+		sqlPath = filepath.Join(common.AppRunDir, "/conf/sqlite")
 	}
+
 	common.Logs.Info("▶ 同步数据库……")
 	err = common.DbEngine.Sync2(new(models.Admin), new(models.Auth), new(models.FilesClass), new(models.Files), new(models.Icon), new(models.Role), new(models.Users), new(models.UsersPayLog))
 	if err != nil {
@@ -137,7 +141,6 @@ func ServerInit() {
 	} else {
 		common.Logs.Info("✔ 同步数据库完成")
 	}
-	sqlPath := filepath.Join(common.AppRunDir, "/conf/sql")
 	TableSqlPaths, err := ioutil.ReadDir(sqlPath)
 	if err == nil {
 		for _, table := range TableSqlPaths {
@@ -168,7 +171,6 @@ func ServerInit() {
 	} else {
 		common.Logs.Error("✖ 获取初始化数据表列表失败，%v", err)
 	}
-
 	if common.RunModeDev {
 		common.Logs.Info("▶ 当前运行模式为：开发模式")
 		common.DbEngine.ShowSQL(true)                     //则会在控制台打印出生成的SQL语句；
