@@ -2,6 +2,7 @@ import axios from 'axios'
 import util from './utils'
 import message from './message'
 import storage from './storage'
+import config from "../config";
 const HTTP_CODE = {
     SUCCESS:200,  //访问成功
     ERROR:400,    //访问失败
@@ -28,16 +29,16 @@ const responseHandle=(data,executor={resolve:()=>{}, reject:()=>{},isToast:true}
         case HTTP_CODE.LOGIN:
             message.alert(data.msg,{title:"登录提示",okFunction:()=>{
                     storage.clear();
-                    window.location.href = '/#/login';
+                    window.location.href = config.loginPath;
                 }});
-            //executor.reject(data.msg);
+            executor.reject(data.msg);
             break;
         case HTTP_CODE.RELOGIN:
             message.alert(data.msg, {title:'登录过期',okFunction:()=>{
                     storage.clear();
-                    window.location.href = '/#/login';
+                    window.location.href = config.loginPath;
                 }});
-            //reject(data.msg);
+            reject(data.msg);
             break;
         default:
             executor.isToast && message.msg.error('数据解析失败');

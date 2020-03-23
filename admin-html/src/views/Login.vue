@@ -50,7 +50,7 @@
     .login {
         width: 300px;
         position: fixed;
-        right: 15%;
+        right: 5%;
         top: calc(50% - 200px);
     }
     .login-info >div{
