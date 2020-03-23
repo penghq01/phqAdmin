@@ -26,10 +26,14 @@
 
 <style scoped lang="scss">
     #win-title {
-        position: absolute;
+        position:fixed;
+        z-index:4;
         width: 100%;
         height: 40px;
         background-color:$primary-color;
         -webkit-app-region: drag;
+        display:flex;
+        justify-content: flex-end;
+        justify-items:center;
     }
 </style>

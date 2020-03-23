@@ -1,40 +1,33 @@
 <template>
-    <div class="home">
-        <div class="index-title" v-if="platform.isPC"><WinTitle /></div>
-        <div class="index-win" :style="getWinStyle">
-            <div class="index-left">
-                <div class="sys-name">PHQ后台管理系统</div>
-                <Menu :list="menuTreeList" :active-menu="activeMenu" @select="triggerSelect"/>
+    <div class="home" :style="homePaddingTop">
+        <div class="index-left" :style="leftAndHeaderTop">
+            <div class="sys-name">PHQ后台管理系统</div>
+            <Menu :list="menuTreeList" :active-menu="activeMenu" @select="triggerSelect"/>
+        </div>
+        <div class="index-header" :style="leftAndHeaderTop">
+            <div class="routerLeft" @click="leftMove"><i class="el-icon-caret-left"></i></div>
+            <div class="router" ref="routerHistory">
+                <transition-group ref="routerHistoryBox" name="list-complete" tag="div" :style="{width:routerHistoryWidth+'px',left:routerHistoryLeft+'px'}">
+                    <div ref="routerHistoryList" v-for="(item,index) in routerHistory" :key="item.id" :class="item.active?'active':''" @click="triggerSelect(item.key)">
+                        {{item.title}}
+                        <i class="el-icon-error" @click.stop="delRouterHistory(index)"></i>
+                    </div>
+                </transition-group>
             </div>
-            <div class="index-right">
-                <div class="index-header">
-                    <div class="routerLeft" @click="leftMove"><i class="el-icon-caret-left"></i></div>
-                    <div class="router" ref="routerHistory">
-                        <transition-group ref="routerHistoryBox" name="list-complete" tag="div" :style="{width:routerHistoryWidth+'px',left:routerHistoryLeft+'px'}">
-                            <div ref="routerHistoryList" v-for="(item,index) in routerHistory" :key="item.id" :class="item.active?'active':''" @click="triggerSelect(item.key)">
-                                {{item.title}}
-                                <i class="el-icon-error" @click.stop="delRouterHistory(index)"></i>
-                            </div>
-                        </transition-group>
-                    </div>
-                    <div class="routerRight" @click="rightMove"><i class="el-icon-caret-right"></i></div>
-                    <div class="user">
-                        <i class="fa fa-user" aria-hidden="true"></i> 欢迎：{{userInfo.username}}
-                        <div class="user-info">
-                            <div @click="opened=true">修改密码</div>
-                            <div>个人信息</div>
-                            <div @click="outLogin">退出登录</div>
-                        </div>
-                    </div>
-                </div>
-                <div class="index-content">
-                    <div class="admin-index">
-                        <router-view></router-view>
-                    </div>
+            <div class="routerRight" @click="rightMove"><i class="el-icon-caret-right"></i></div>
+            <div class="user">
+                <i class="fa fa-user" aria-hidden="true"></i> 欢迎：{{userInfo.username}}
+                <div class="user-info">
+                    <div @click="opened=true">修改密码</div>
+                    <div>个人信息</div>
+                    <div @click="outLogin">退出登录</div>
                 </div>
             </div>
         </div>
-        <myDialog
+        <div class="index-right">
+            <router-view></router-view>
+        </div>
+        <Dialog
                 title="修改登录密码"
                 :is-show="opened"
                 :close="close"
@@ -45,7 +38,7 @@
             <div class="input-div"><el-input type="password" v-model="editUser.oldpass" placeholder="请输入旧的密码"/></div>
             <div class="input-div"><el-input type="password" v-model="editUser.newpass" placeholder="请输入新密码"/></div>
             <div class="input-div"><el-input type="password" v-model="editUser.okpass" placeholder="请再次输入密码"/></div>
-        </myDialog>
+        </Dialog>
     </div>
 </template>
 
@@ -58,9 +51,10 @@
     import message from "../lib/message";
     import WinTitle from "../components/WinTitle/WinTitle";
     import config from "../config";
+    import myDialog from "../components/myDialog";
     export default {
         name: 'home',
-        components:{Menu,WinTitle},
+        components:{Menu,WinTitle,myDialog},
         data() {
             return {
                 editUser: {},
@@ -74,6 +68,22 @@
                 routerHistoryWidth:0,
                 routerHistoryLeft:0,
                 platform:{isWeb:false,isPC:false},
+            }
+        },
+        computed:{
+            leftAndHeaderTop(){
+                if(this.platform.isWeb){
+                    return "top:0";
+                }else if(this.platform.isPC){
+                    return "top:40px";
+                }
+            },
+            homePaddingTop(){
+                if(this.platform.isWeb){
+                    return "padding-top:55px";
+                }else if(this.platform.isPC){
+                    return "padding-top:95px";
+                }
             }
         },
         mounted() {
@@ -271,19 +281,7 @@
             close() {
                 this.opened = false;
                 this.editUser = {};
-            }
-        },
-        computed:{
-            //不同环境获取win-title样式
-            getWinStyle(){
-                if(this.platform.isWeb){
-                    return  'height:100%;';
-                }
-                if(this.platform.isPC){
-                    return  'height:calc(100% - 40px);';
-                }
-                return  'height:100%;';
-            }
+            },
         }
     }
 </script>
@@ -340,12 +338,12 @@
         }
     }
     .router{
-        height:90%;
+        height:100%;
         width:calc(100% - 160px);
-        background-color:$background-color;
-        box-shadow:inset 0 0 5px $box-gray0-color;
-        border:1px $border-color1 solid;
-        border-radius:5px;
+        background-color:$text-gray3-color;
+       // box-shadow:inset 0 0 5px $box-gray0-color;
+        //border:1px $border-color1 solid;
+        //border-radius:3px;
         overflow: hidden;
         min-width:300px;
         &>div{
@@ -408,13 +406,14 @@
         display:flex;
         align-items:center;
         justify-content:center;
+        border-right:1px $border-color2 solid;
         &:hover{
             color:$primary-color;
             cursor: pointer;
         }
     }
     .routerRight{
-       border-right:1px $border-color2 solid;
+        border-left:1px $border-color2 solid;
     }
 
 </style>

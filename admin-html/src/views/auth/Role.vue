@@ -25,7 +25,7 @@
         </el-table-column>
       </el-table>
     </div>
-    <myDialog
+    <Dialog
             :title="titleName"
             :is-show="opened"
             :close="close"
@@ -53,7 +53,7 @@
            </span>
         </el-tree>
       </div>
-    </myDialog>
+    </Dialog>
   </div>
 </template>
 

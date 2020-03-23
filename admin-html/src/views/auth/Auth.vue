@@ -54,7 +54,7 @@
                 </el-table-column>
             </el-table>
         </div>
-        <myDialog
+        <Dialog
                 :title="titleName"
                 :is-show="opened"
                 :close="close"
@@ -126,7 +126,7 @@
                 <el-radio v-model="postAuth.is_show" :label="0">隐藏</el-radio>
             </div>
             <div class="input-div">排序数值：<el-input type="text" style="width:80px;" v-model="postAuth.sort" placeholder="排序"/></div>
-        </myDialog>
+        </Dialog>
         <Pmodel v-model="showSelectIcon" :title="'选择图标'">
             <MyIcon :is-select="true" @on-select="selectIcon"></MyIcon>
         </Pmodel>

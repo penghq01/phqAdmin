@@ -42,27 +42,23 @@ const icon={
 <style scoped lang="scss">
     .min{
         color:$warning-color;
-        right:100px;
     }
     .max {
         color:$success-color;
-        right:60px;
     }
     .close {
         color:$danger-color;
-        right:20px;
     }
     .title-btn {
-        position: absolute;
         width: 20px;
         height: 20px;
         top: 0;
         bottom: 0;
         font-size:24px;
-        margin: auto 0;
         display:flex;
         background-color:#fff;
         border-radius:50%;
+        margin:auto 5px;
         justify-content:center;
         align-items:center;
         -webkit-app-region: no-drag;

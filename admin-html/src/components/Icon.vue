@@ -23,7 +23,7 @@
             </span>
         </div>
         <Paging v-model="pageData" @change="pageChange" v-if="menuAuth.select"></Paging>
-        <myDialog
+        <Dialog
                 title="添加图标"
                 :is-show="opened"
                 :close="close"
@@ -37,7 +37,7 @@
             <div class="input-div">
                 <el-input v-model="addIcon.title" placeholder="图标名称（可选）"/>
             </div>
-        </myDialog>
+        </Dialog>
     </div>
 </template>
 
@@ -116,7 +116,7 @@
 
 <style scoped lang="scss">
     .add-icon {
-        padding: 10px;
+
     }
 
     .icon-list{

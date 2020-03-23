@@ -1,6 +1,5 @@
 <template>
     <div class="login-body">
-        <WinTitle />
         <div class="login">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
