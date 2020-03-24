@@ -1,20 +1,13 @@
 <template>
   <div class="users">
-     <div style="padding-bottom:10px;" v-if="menuAuth.select">
+     <div style="padding-bottom:10px;">
         <el-input style="width:150px;" type="text" size="mini" v-model="search.nickname" placeholder="请输入昵称"/>
          <span class="interval-span"></span>
          <el-input style="width:150px;" type="text" size="mini" v-model="search.mobile" placeholder="请输入手机号"/>
          <span class="interval-span"></span>
          <el-button icon="h-icon-search" type="primary" size="mini" @click="searchUsers">查找会员</el-button>
-         <span class="interval-span"></span>
-         <span class="interval-span"></span>
-         <span class="interval-span"></span>
-         会员总金额：{{totalData.money}} 元
-         <span class="interval-span"></span>
-         <span class="interval-span"></span>
-         会员总积分：{{totalData.points}}
      </div>
-      <div v-if="menuAuth.select">
+      <div>
           <el-table v-loading="loading" :data="userList" border size="mini">
               <el-table-column
                       label="头像"
@@ -55,35 +48,26 @@
 
               <el-table-column label="操作">
                   <template slot-scope="scope">
-                      <el-button type="primary" v-if="menuAuth.select" size="mini" @click="seePayLog(scope.row)"><i class="fa fa-money" aria-hidden="true"></i></el-button>
+
                   </template>
               </el-table-column>
           </el-table>
 
           <Paging v-model="pageData" @change="pageChange"></Paging>
 
-          <Pmodel v-model="showPayLog" :title="UserName">
-              <UsersPayLog :user-id="payLogUserId"></UsersPayLog>
-          </Pmodel>
       </div>
   </div>
 </template>
 
 <script>
   import http from "../../lib/http";
-  import UsersPayLog from "../../components/UsersPayLog"
-  import Pmodel from "../../components/Pmodel"
   import utils from "../../lib/utils";
-  import logic from "../../lib/logic";
   export default {
     name: 'user',
     data () {
       return {
-          menuAuth:{},
           showPayLog:false,
           payLogUserId:0,
-          UserName:"充值记录",
-         totalData:{money:0,points:0},
         loading:true,
         userList:[],
           search:{},
@@ -95,19 +79,11 @@
       }
     },
     mounted () {
-        this.menuAuth=logic.getMenuAuth(this);
         this.getUserList();
-        this.getTotalMoneyPoints();
     },
     methods: {
         unixToDateTime(val=0){
             return utils.UnixToDateTime(val);
-        },
-        getTotalMoneyPoints(){
-            http.post("user/total/money-points").then(data=>{
-               this.totalData.money=data[0]/100;
-               this.totalData.points=data[1];
-            }).catch(err=>{});
         },
         getUserList(){
             http.post(`user/list/${this.pageData.page_size}/${this.pageData.page}`,this.search).then(data=>{
@@ -124,11 +100,6 @@
             this.loading=true;
             this.getUserList();
         },
-        seePayLog(row){
-            this.payLogUserId=row.user_id;
-           this.UserName=`【${row.nickname}】的充值记录`;
-           this.showPayLog=true;
-        },
         pageChange() {
             this.loading=true;
             this.getUserList();
@@ -136,10 +107,7 @@
         imagePreview(url){
             this.$ImagePreview([url],0);
         }
-    },
-    components:{
-        UsersPayLog,Pmodel
-      }
+    }
   }
 </script>
 

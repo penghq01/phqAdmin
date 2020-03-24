@@ -20,13 +20,6 @@ export default {
             data.password=md5(data.password);
             http.post('login', data).then(data => {
                 storage.token.set(data.token);
-                let MenuAuthMap=new Map();
-                data.menu_auth.forEach(item=>{
-                    if(!utils.empty(item.crouter)){
-                        MenuAuthMap[item.crouter]=item.auth;
-                    }
-                });
-                storage.menuAuthMap.set(MenuAuthMap);
                 resolve();
             }).catch(err => {})
         })

@@ -35,11 +35,7 @@ func (this *Login) Login() {
 	}
 	updateAdmin.IdUpdate(user.AdminId)
 	this.LoginUser = user
-	if ok, resData := this.GetUserAuthMenu(); ok {
-		this.ServeSuccess("登录成功", map[string]interface{}{
-			"token":     token,
-			"menu_auth": resData,
-		})
-	}
-	this.ServeLOGIN("登录失败", "")
+	this.ServeSuccess("登录成功", map[string]interface{}{
+		"token":     token,
+	})
 }

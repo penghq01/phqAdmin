@@ -7,13 +7,15 @@ import (
 )
 
 type RouterInfo struct {
+	Id             int
 	Name           string
 	Path           string
 	Controller     beego.ControllerInterface
 	MappingMethods string
 }
 
-func init() {
+func InitRoute() {
+	common.Logs.Info("▶ 初始化数据接口路由")
 	RouterList := GetServerRouterList()
 	list := make([]common.RouterInfo, 0)
 	//设置api路由
@@ -28,12 +30,12 @@ func init() {
 			Name: router.Name,
 		})
 	}
-	common.RouterList = list
+	common.Logs.Info("▶ 数据接口路由初始化完成")
 }
 
 //获取后台管理数据接口路由
 func GetServerRouterList() []RouterInfo {
-	var AdminRootPath string = "/admin-api" //后台api接口路由root
+	var AdminRootPath string = "/admin/api" //后台api接口路由root
 	RouterList := []RouterInfo{
 		//后台api接口路由 ------start--------
 		{
@@ -109,18 +111,6 @@ func GetServerRouterList() []RouterInfo {
 			MappingMethods: "post:List",
 		},
 		{
-			Name:           "获取会员总余额和积分",
-			Path:           AdminRootPath + "/user/total/money-points",
-			Controller:     &adminApi.User{},
-			MappingMethods: "post:TotalMoneyPoints",
-		},
-		{
-			Name:           "获取会员充值记录",
-			Path:           AdminRootPath + "/user/pay/log/:page_size/:page",
-			Controller:     &adminApi.User{},
-			MappingMethods: "post:PayLog",
-		},
-		{
 			Name:           "获取权限列表",
 			Path:           AdminRootPath + "/auth/list",
 			Controller:     &adminApi.Auth{},
@@ -145,10 +135,34 @@ func GetServerRouterList() []RouterInfo {
 			MappingMethods: "post:Del",
 		},
 		{
-			Name:           "获取后台路由列表",
-			Path:           AdminRootPath + "/auth/get/router-list",
-			Controller:     &adminApi.Auth{},
-			MappingMethods: "post:GetAuthList",
+			Name:           "获取数据接口列表(分页)",
+			Path:           AdminRootPath + "/api/list/:page_size/:page",
+			Controller:     &adminApi.Api{},
+			MappingMethods: "post:PageList",
+		},
+		{
+			Name:           "获取数据接口列表",
+			Path:           AdminRootPath + "/api/list",
+			Controller:     &adminApi.Api{},
+			MappingMethods: "post:List",
+		},
+		{
+			Name:           "添加数据接口",
+			Path:           AdminRootPath + "/api/add",
+			Controller:     &adminApi.Api{},
+			MappingMethods: "post:Add",
+		},
+		{
+			Name:           "修改数据接口",
+			Path:           AdminRootPath + "/api/edit",
+			Controller:     &adminApi.Api{},
+			MappingMethods: "post:Edit",
+		},
+		{
+			Name:           "删除数据接口",
+			Path:           AdminRootPath + "/api/del",
+			Controller:     &adminApi.Api{},
+			MappingMethods: "post:Del",
 		},
 		{
 			Name:           "上传图片",

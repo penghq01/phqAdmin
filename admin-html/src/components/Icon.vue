@@ -2,14 +2,13 @@
     <div class="icon">
 
         <div class="add-icon" v-if="!isSelect">
-            <el-button type="primary" v-if="menuAuth.add" @click="opened=true">添加</el-button>
+            <el-button type="primary" size="mini"  @click="opened=true">添加</el-button>
         </div>
 
-        <div class="icon-list" v-if="menuAuth.select">
+        <div class="icon-list" >
             <span :class="item.icon" v-for="(item,index) in iconList" :key="index">
                  <span class="del" v-if="!isSelect">
                       <Poptip
-                              v-if="menuAuth.delete"
                               transfer
                               confirm
                               title="确定删除吗?"
@@ -22,7 +21,7 @@
                  </span>
             </span>
         </div>
-        <Paging v-model="pageData" @change="pageChange" v-if="menuAuth.select"></Paging>
+        <Paging v-model="pageData" @change="pageChange"></Paging>
         <Dialog
                 title="添加图标"
                 :is-show="opened"
@@ -57,7 +56,6 @@
         },
         data() {
             return {
-                menuAuth:{},
                 opened: false,
                 iconList: [],
                 addIcon: {},
@@ -69,7 +67,6 @@
             }
         },
         mounted() {
-            this.menuAuth=logic.getMenuAuth(this);
             this.getIconList();
         },
         methods: {

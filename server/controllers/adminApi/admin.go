@@ -6,6 +6,7 @@ import (
 	"io/ioutil"
 	"os"
 	"path/filepath"
+	"server/acc"
 	"server/common"
 	"server/models"
 	"time"
@@ -41,14 +42,11 @@ func (this *Admin) EditPass() {
 	}
 	this.ServeError("密码修改失败", "")
 }
+
+//获取前端导航列表
 func (this *Admin) AuthList() {
-	if ok, resData := this.GetUserAuthMenu(); ok {
-		this.ServeSuccess("", resData)
-	}
-	this.ServeLOGIN("获取菜单失败，请重新登录", "")
+	this.ServeSuccess("", acc.GetLoginAdminRoute(this.LoginUser))
 }
-
-
 //获取备份文件列表
 func (this *Admin) ListSql() {
 	list := make([]map[string]interface{}, 0)

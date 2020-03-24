@@ -5,18 +5,17 @@
                 <span slot="title">{{list.title}}</span>
             </template>
             <span v-for="(item,index) in list.children" :key="index">
-                        <PMenuItem v-if="item.children===undefined" :list="item">
-                        </PMenuItem>
-                        <PSubMenu v-else :list="item"></PSubMenu>
+                        <MenuItem v-if="item.children==undefined" :list="item"></MenuItem>
+                        <SubMenu v-else :list="item"></SubMenu>
             </span>
         </el-submenu>
 </template>
 
 <script>
-    import PSubMenu from "./SubMenu"
-    import PMenuItem from "./MenuItem"
+    import SubMenu from "./SubMenu"
+    import MenuItem from "./MenuItem"
     export default {
-        name: "submenu",
+        name: "SubMenu",
         props:{
             list:{
                 type:Object,
@@ -27,9 +26,10 @@
             return {}
         },
         mounted() {
+
         },
         methods: {},
-        components:{PSubMenu,PMenuItem}
+        components:{SubMenu,MenuItem}
     }
 </script>
 

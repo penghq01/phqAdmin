@@ -13,7 +13,7 @@ type Admin struct {
 	AdminId   int    `json:"admin_id" xorm:"int(11) pk notnull autoincr"`  //后台管理员表ID
 	Username  string `json:"username" xorm:"varchar(60) notnull unique"`   //账号
 	Password  string `json:"password" xorm:"varchar(128) notnull"`         //密码
-	Role      string `json:"role" xorm:"text"`                             //角色权限
+	Role      []int  `json:"role" xorm:"text json"`                        //角色权限
 	LoginTime int64  `json:"login_time" xorm:"int(11) notnull default(0)"` //上次登录时间
 	LoginIp   string `json:"login_ip" xorm:"varchar(100)"`                 //上次登录IP
 }
@@ -37,7 +37,7 @@ func (this *AdminValid) Valid(obj *Admin) (bool, string) {
 		}
 	}
 	if this.Username {
-		if ok, msg := this.RangeSize(obj.Username, 6, 20, "账号"); !ok {
+		if ok, msg := this.RangeSize(obj.Username, 4, 20, "账号"); !ok {
 			return false, msg
 		}
 	}

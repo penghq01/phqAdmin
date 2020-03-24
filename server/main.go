@@ -3,11 +3,12 @@ package main
 import (
 	"github.com/astaxie/beego"
 	"server/common"
-	_ "server/init"
-	_ "server/routers"
+	"server/routers"
+	"server/server"
 )
 
 func main() {
+	server.ServerInit()
 	defer func() {
 		if err := common.DbEngine.Close(); err != nil {
 			common.Logs.Error("关闭数据库连接失败，%v", err)
@@ -20,5 +21,6 @@ func main() {
 
 		common.Logs.Close()
 	}()
+	routers.InitRoute()
 	beego.Run()
 }

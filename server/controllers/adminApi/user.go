@@ -42,39 +42,3 @@ func (this *User) List() {
 	}
 	this.ServeError("", "")
 }
-
-func (this *User) PayLog() {
-	this.GetPageParam()
-	upl := make([]models.UsersPayLogTable, 0)
-	userId := this.Params["user_id"].(float64)
-	sin := common.DbEngine.Desc("id")
-	if userId > 0 {
-		sin.Where("user_id=?", userId)
-	}
-	rows, err := sin.Count(new(models.UsersPayLog))
-	if rows <= 0 || err != nil {
-		this.ServeError("", "")
-	}
-	this.Paginate.CalcPaginate(rows)
-	sin1 := common.DbEngine.Desc("users_pay_log.add_time")
-	if userId > 0 {
-		sin1.Where("users_pay_log.user_id=?", userId)
-	}
-	err = sin1.Select("users_pay_log.*,users.nickname,users.avatar_url,users.mobile").Join("INNER", "users", "users_pay_log.user_id = users.user_id").Limit(this.Paginate.Limit, this.Paginate.Start).Find(&upl)
-	if err != nil {
-		this.ServeError("", "")
-	}
-	data := common.PaginateData{
-		Data:     upl,
-		Paginate: this.Paginate,
-	}
-	this.ServeSuccess("", data)
-}
-
-func (this *User) TotalMoneyPoints() {
-	total, err := common.DbEngine.Sums(new(models.Users), "money", "points")
-	if err != nil {
-		this.ServeError("查询总金额和总积分失败", "")
-	}
-	this.ServeSuccess("", total)
-}

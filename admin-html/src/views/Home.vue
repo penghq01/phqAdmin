@@ -100,7 +100,7 @@
                 let index=this.routerHistory.findIndex(r=>r.key==key);
                 this.routerHistory.forEach(r=>r.active=false);
                 if(index<0){
-                    let i=this.menuList.findIndex(i=>i.crouter==key);
+                    let i=this.menuList.findIndex(i=>i.router==key);
                     let title="";
                     let id=this.routerHistory.length+1;
                     if(i>=0){
@@ -210,7 +210,7 @@
                 data.forEach((item,key)=>{
                     if(item.auth_type==0 && item.is_show==1){
                         if(item.pid==pid){
-                            let tem={"title":item.title,"key":item.crouter,"icon":item.icon};
+                            let tem={"title":item.title,"key":item.router,"icon":item.icon};
                             let cd=this.listTotree(data,item.id);
                             if(cd.length>0){
                                 tem.key=item.pid+"-"+item.id;
@@ -234,13 +234,6 @@
                         this.triggerSelect(this.$router.history.current.path);
                         this.isPush=true;
                     }
-                    let MenuAuthMap=new Map();
-                    data.forEach(item=>{
-                        if(!utils.empty(item.crouter)){
-                            MenuAuthMap[item.crouter]=item.auth;
-                        }
-                    });
-                    storage.menuAuthMap.set(MenuAuthMap);
                 }).catch(err => {});
             },
             getUserInfo() {

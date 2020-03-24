@@ -1,7 +1,6 @@
 package models
 
 import (
-	"fmt"
 	"github.com/go-xorm/xorm"
 	"server/common"
 )
@@ -100,7 +99,6 @@ func Update(model IModels, where func(db *xorm.Session)) CurdResult {
 func Find(model IModels, find func(db *xorm.Session) error) CurdResult {
 	db := common.DbEngine.Table(model.TableName())
 	err := find(db)
-	fmt.Println(err)
 	if err == nil {
 		return CurdResult{
 			Err: nil,

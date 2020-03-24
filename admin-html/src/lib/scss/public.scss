@@ -1,5 +1,5 @@
 html,body,#app{
-  font-size:14px;
+  font-size:$font-size;
   margin:0;
   padding:0;
 }
@@ -14,12 +14,12 @@ html,body,#app{
       height:100%;
       left:0;
       top:0;
-      z-index:3;
+      z-index:99;
     }
     &-header{
       position:fixed;
       left:240px;
-      z-index:2;
+      z-index:98;
       top:0;
       width:calc(100% - 240px);
       height:45px;
@@ -34,7 +34,8 @@ html,body,#app{
       }
     }
     &-right{
-      font-size:14px;
+      font-size:$font-size;
+      padding:10px;
     }
   }
 }
@@ -57,6 +58,11 @@ html,body,#app{
 }
 .input-div{
   padding:8px 0;
+  &>span:first-child{
+    display: inline-block;
+    width:100px;
+    text-align:right;
+  }
 }
 .phq-icon{
   font-size:16px;
@@ -203,4 +209,11 @@ html,body,#app{
 }
 .list-animate-move {
   transition:all 1s ease-out;
+}
+
+div.cell{
+  font-size:$font-size;
+}
+.el-tree__empty-block{
+  height:auto;
 }

@@ -1,6 +1,6 @@
 <template>
     <div class="upload-img">
-        <div v-if="menuAuth.add">
+        <div>
             <el-upload
                     class="upload-demo"
                     action="#"
@@ -15,13 +15,13 @@
             </el-upload>
         </div>
         <div class="files">
-            <div class="files-class" v-if="menuAuth.select">
+            <div class="files-class">
                 <el-tree :data="classList" @node-drag-start="nodeDragStart" @node-drop="nodeDrop"
                          @node-click="nodeClick" :allow-drag="allowDrag" :allow-drop="allowDrop" draggable node-key="id"
                          highlight-current default-expand-all :expand-on-click-node="false">
                     <span class="custom-tree-node" slot-scope="{ node, data }">
                         <span class="tree-title">
-                            <span class="tree-add" v-if="data.edit &&(menuAuth.add || menuAuth.edit)">
+                            <span class="tree-add" v-if="data.edit">
                                 <i class="el-icon-error" @click="closeEdit(node,data)"></i>
                                 <input v-model="data.label" placeholder="请输入分类名称"/>
                                <i class="el-icon-success" @click="editFileClass(node,data)"></i>
@@ -34,21 +34,21 @@
                                   <i class="el-icon-more"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item v-if="menuAuth.add" :command="{'action':'add','data':data}" icon="el-icon-plus">添加</el-dropdown-item>
-                                    <el-dropdown-item v-if="data.id>0 && menuAuth.edit" :command="{'action':'edit','data':data}" icon="el-icon-edit-outline">修改</el-dropdown-item>
-                                    <el-dropdown-item v-if="data.id>0 && menuAuth.delete" :command="{'action':'delete','data':data,'node':node}" icon="el-icon-delete">删除</el-dropdown-item>
+                                    <el-dropdown-item :command="{'action':'add','data':data}" icon="el-icon-plus">添加</el-dropdown-item>
+                                    <el-dropdown-item v-if="data.id>0" :command="{'action':'edit','data':data}" icon="el-icon-edit-outline">修改</el-dropdown-item>
+                                    <el-dropdown-item v-if="data.id>0" :command="{'action':'delete','data':data,'node':node}" icon="el-icon-delete">删除</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </span>
                     </span>
                 </el-tree>
             </div>
-            <div class="file-list" v-if="menuAuth.select">
+            <div class="file-list">
                 <transition-group name="list-animate" tag="div">
                     <div class="img-list" v-for="(img,index) in imgList" :key="img.id">
                         <div v-if="isSelect" class="img-action img-action-see" @click="selectImg(img)">选择图片</div>
                         <img @click="previewImg=img.src" :src="imgHost+img.src"/>
-                        <div class="img-action img-action-del" v-if="menuAuth.delete" @click="delImg(img)">删除</div>
+                        <div class="img-action img-action-del" @click="delImg(img)">删除</div>
                     </div>
                 </transition-group>
 
@@ -98,12 +98,10 @@
                     page: 1,
                     page_size: 20,
                     total_count: 0
-                },
-                menuAuth:{}
+                }
             }
         },
         mounted() {
-            this.menuAuth=logic.getMenuAuth(this);
             message.loading.show();
             this.imgHost=config.imgHost;
             this.getImageList();

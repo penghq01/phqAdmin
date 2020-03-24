@@ -31,7 +31,7 @@
         methods: {
             login() {
                 api.Login(this.postData).then(() =>{
-                    logic.addRoutes(this.$router);
+                    //logic.addRoutes(this.$router);
                     this.$router.push({path: '/'})
                 });
             }

@@ -15,9 +15,15 @@ export default {
             },
             {
                 path: '/auth',
-                name: 'auth',
-                nickname: "权限管理",
+                name: 'Auth',
+                nickname: "路由权限管理",
                 component: () => import('../views/auth/Auth.vue')
+            },
+            {
+                path: '/api',
+                name: 'Api',
+                nickname: "数据权限管理",
+                component: () => import('../views/auth/Api.vue')
             },
             {
                 path: '/images',
@@ -42,12 +48,6 @@ export default {
                 name: 'sql',
                 nickname: "数据备份恢复",
                 component: () => import('../views/system/Database.vue')
-            },
-            {
-                path: '/paylog',
-                name: 'paylog',
-                nickname: "会员充值记录",
-                component: () => import('../views/user/PayLog.vue')
             }
         ]
     }

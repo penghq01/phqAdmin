@@ -1,9 +1,9 @@
 <template>
     <div class="admin">
         <div class="action">
-            <el-button v-if="menuAuth.add" type="primary" size="mini" @click="opened=true">添加管理员</el-button>
+            <el-button  type="primary" size="mini" @click="opened=true">添加管理员</el-button>
         </div>
-        <div class="table" v-if="menuAuth.select">
+        <div class="table">
             <el-table v-loading="loading" :data="adminList" border size="mini">
                 <el-table-column label="ID" prop="admin_id"></el-table-column>
                 <el-table-column label="账号" prop="username"></el-table-column>
@@ -19,14 +19,13 @@
                 <el-table-column label="操作" align="center" width="120">
                     <template slot-scope="scope">
                         <Poptip
-                                v-if="menuAuth.delete"
                                 title="确定删除吗?"
                                 @on-ok="del(scope.row)">
                             <el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
                         </Poptip>
 
                         <span class="interval-span"></span>
-                        <el-button v-if="menuAuth.edit" type="primary" size="mini" @click="showEdit(scope.row)"
+                        <el-button type="primary" size="mini" @click="showEdit(scope.row)"
                                    icon="el-icon-edit-outline"></el-button>
                     </template>
                 </el-table-column>
@@ -71,11 +70,9 @@
                 adminList: [],
                 roleList: [],
                 addAdmin: {"role": []},
-                menuAuth: {}
             }
         },
         mounted() {
-            this.menuAuth = logic.getMenuAuth(this);
             this.getRoleList();
             this.GetAdminList();
         },
@@ -85,7 +82,6 @@
                     this.adminList = data;
                     this.adminList.forEach(item => {
                         item.login_time = utils.UnixToDateTime(item.login_time);
-                        item.role = item.role.split(",");
                     });
                     this.loading = false;
                 }).catch(err => {
@@ -115,11 +111,9 @@
                 message.loading.show("添加中");
                 let data = utils.NewObject(this.addAdmin);
                 data.password = md5(data.password);
-                data.role = data.role.join(",");
                 http.post("admin/add", data).then((data) => {
                     this.close();
                     data.login_time = utils.UnixToDateTime(data.login_time);
-                    data.role = data.role.split(",");
                     this.adminList.unshift(data);
                 }).catch((err) => {
                 })
@@ -149,7 +143,7 @@
                 let postData = {
                     "username": this.addAdmin.username,
                     "admin_id": this.addAdmin.admin_id,
-                    "role": this.addAdmin.role.join(",")
+                    "role": this.addAdmin.role
                 };
                 if (!utils.empty(this.addAdmin.password)) {
                     postData.password = md5(this.addAdmin.password);

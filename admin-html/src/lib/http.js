@@ -31,14 +31,14 @@ const responseHandle=(data,executor={resolve:()=>{}, reject:()=>{},isToast:true}
                     storage.clear();
                     window.location.href = config.loginPath;
                 }});
-            executor.reject(data.msg);
+            //executor.reject(data.msg);
             break;
         case HTTP_CODE.RELOGIN:
-            message.alert(data.msg, {title:'登录过期',okFunction:()=>{
+            message.alert(data.msg, {title:'登录提示',okFunction:()=>{
                     storage.clear();
                     window.location.href = config.loginPath;
                 }});
-            reject(data.msg);
+            //reject(data.msg);
             break;
         default:
             executor.isToast && message.msg.error('数据解析失败');
@@ -66,7 +66,7 @@ export default {
                 let data = response.data;
                 responseHandle(data,{resolve, reject,isToast});
             }).catch(err=>{
-                isToast && message.msg.error('网路繁忙');
+                isToast && message.msg.error('网络繁忙，请稍后重试');
                 reject(err);
             }).finally(()=>message.loading.hide())
         })
@@ -78,7 +78,7 @@ export default {
                 let data = response.data;
                 responseHandle(data,{resolve,reject,isToast});
             }).catch(err=>{
-                isToast && message.msg.error('网路繁忙');
+                isToast && message.msg.error('网络繁忙，请稍后重试');
                 reject(err);
             }).finally(()=>message.loading.hide())
         })

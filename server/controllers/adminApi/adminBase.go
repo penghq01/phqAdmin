@@ -1,11 +1,10 @@
 package adminApi
 
 import (
+	"server/acc"
 	"server/common"
-	Auth2 "server/common/Auth"
 	"server/controllers"
 	"server/models"
-	"strings"
 )
 
 type AdminBase struct {
@@ -18,10 +17,34 @@ type AdminBase struct {
 //初始化
 func (this *AdminBase) Prepare() {
 	this.Base.Prepare()
-	this.CheckAuth() //判断是否有权限访问
+
+	this.CheckAuthToken() //根据Token判断是否登录
+
+	//判断是否有权限访问数据接口
+	if this.isUserLogin {
+		this.CheckDateApiAuth(acc.GetLoginAdminDataApi(this.LoginUser))
+	} else {
+		this.CheckDateApiAuth(acc.GetNoLoginAdminDataApi())
+	}
 }
 
-func (this *AdminBase) CheckAuth() {
+//判断是否有权限访问数据接口
+func (this *AdminBase) CheckDateApiAuth(dataApi map[string]string) {
+	_, ok := dataApi[this.Uri]
+	if !ok {
+		_, ok = dataApi[this.UriReplacePage(this.Uri)]
+		if !ok {
+			if this.isUserLogin{
+				this.ServeNOAUTH("您没有权限访问该数据接口 [ "+this.Uri+" ]", "")
+			}else{
+				this.ServeRELOGIN("您还没有登录或者登录状态已过期，请登录后访问", "")
+			}
+		}
+	}
+}
+
+//根据Token判断是否登录
+func (this *AdminBase) CheckAuthToken() {
 	if this.AuthToken == "" {
 		this.isUserLogin = false
 	} else {
@@ -38,74 +61,7 @@ func (this *AdminBase) CheckAuth() {
 			this.isUserLogin = false
 		}
 	}
-	AdminNoLoginController, ok := Auth2.GetAdminNoLoginController()
-	if !ok {
-		this.ServeLOGIN("获取菜单列表失败，请重新登录", "")
-	}
-	if !AdminNoLoginController[this.Uri] {
-		if !this.isUserLogin {
-			this.ServeLOGIN("您没有登录或登录已经过期，请登录后访问", "")
-		}
-		AdminLoginController, ok := Auth2.GetAdminLoginController()
-		if !ok {
-			this.ServeLOGIN("登录验证失败，请重新登录", "")
-		}
-		if !AdminLoginController[this.Uri] {
-			if this.LoginUser.AdminId != 1 {
-				pathList, ok, err := Auth2.GetRouterPathList(this.LoginUser.Role)
-				if !ok || err != nil {
-					this.ServeNOAUTH(err.Error(), "")
-				}
-				if !pathList[this.Uri] {
-					arr := strings.Split(this.Uri, "/")
-					arrLen := len(arr)
-					arr[arrLen-2] = ":page_size"
-					arr[arrLen-1] = ":page"
-					uri := strings.Join(arr, "/")
-					if !pathList[uri] {
-						this.ServeNOAUTH("您没有权限，请与联系管理员，错误："+this.Uri, "")
-					}
-				}
-			}
-		}
-	}
-}
 
-//获取用户权限，和菜单
-func (this *AdminBase) GetUserAuthMenu() (bool, []map[string]interface{}) {
-	if this.LoginUser.AdminId == 1 {
-		resData := make([]map[string]interface{}, 0)
-		auth := make([]models.Auth, 0)
-		err := common.DbEngine.Asc("sort").Find(&auth)
-		if err != nil {
-			return false, resData
-		}
-		for _, r := range auth {
-			tem := make(map[string]interface{})
-			tem["id"] = r.Id
-			tem["title"] = r.Title
-			tem["pid"] = r.Pid
-			tem["icon"] = r.Icon
-			tem["crouter"] = r.Crouter
-			tem["visit"] = r.Visit
-			tem["auth_type"] = r.AuthType
-			tem["is_show"] = r.IsShow
-			tem["auth"] = map[string]bool{
-				"add":    true,
-				"edit":   true,
-				"delete": true,
-				"select": true,
-			}
-			resData = append(resData, tem)
-		}
-		return true, resData
-	} else {
-		RouterList, ok, err := Auth2.GetRouterList(this.LoginUser.Role)
-		if !ok || err != nil {
-			return false, RouterList
-		}
-		return true, RouterList
-	}
 }
 
 //上传图片

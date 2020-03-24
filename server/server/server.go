@@ -1,4 +1,4 @@
-package init
+package server
 
 import (
 	"fmt"
@@ -12,6 +12,7 @@ import (
 	"math/rand"
 	"os"
 	"path/filepath"
+	"server/acc"
 	"server/common"
 	"server/models"
 	"time"
@@ -28,7 +29,7 @@ func getCurrentDirectory() string {
 	}
 	return dir
 }
-func init() {
+func logsInit() {
 	//✖ ▶ ✔
 	common.Logs = logs.NewLogger(10000) // 创建一个日志记录器，参数为缓冲区的大小
 	runmode := beego.AppConfig.String("runmode")
@@ -62,9 +63,9 @@ func init() {
 	common.AppRunDir = getCurrentDirectory()
 	rand.Seed(time.Now().UnixNano()) //初始化随机数种子
 	common.Logs.Info("▶ 当前运行目录：%v", common.AppRunDir)
-	ServerInit()
 }
 func ServerInit() {
+	logsInit()
 	//✖ ▶ ✔
 	common.Logs.Info("▶ 初始化中……")
 	//获取文件上传目录
@@ -135,7 +136,7 @@ func ServerInit() {
 	}
 
 	common.Logs.Info("▶ 同步数据库……")
-	err = common.DbEngine.Sync2(new(models.Admin), new(models.Auth), new(models.FilesClass), new(models.Files), new(models.Icon), new(models.Role), new(models.Users), new(models.UsersPayLog))
+	err = common.DbEngine.Sync2(new(models.Admin), new(models.Auth), new(models.FilesClass), new(models.Files), new(models.Icon), new(models.Role), new(models.Users),new(models.Api))
 	if err != nil {
 		common.Logs.Error("✖ 同步数据库失败，%v", err)
 	} else {
@@ -180,5 +181,7 @@ func ServerInit() {
 	if common.RunModeProd {
 		common.Logs.Info("▶ 当前运行模式为：生产模式")
 	}
+	common.Logs.Info("▶ 开始初始化管理权限")
+	acc.IntiAuth()
 	common.Logs.Info("✔ 初始化完成◕‿◕")
 }

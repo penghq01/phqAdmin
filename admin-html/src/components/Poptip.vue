@@ -40,6 +40,7 @@
             },
             ok(){
                 this.$emit("on-ok");
+                this.visible=false;
             }
         }
     }

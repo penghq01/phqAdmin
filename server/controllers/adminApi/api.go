@@ -5,21 +5,21 @@ import (
 	"server/models"
 )
 
-type Auth struct {
+type Api struct {
 	AdminBase
 }
 
-func (this *Auth) Prepare() {
-	this.ActionModel = new(models.Auth)
+func (this *Api) Prepare() {
+	this.ActionModel = new(models.Api)
 	this.AdminBase.Prepare()
 }
 
-func (this *Auth) Add() {
-	model:=new(models.Auth)
+func (this *Api) Add() {
+	model:=new(models.Api)
 	this.AnalyseJson(model)
 	res := model.Add()
 	if res.Err == nil {
-		acc.RouterList[model.Id]=*model
+		acc.DateAPIList[model.Id]=*model
 		this.ServeSuccess(res.Msg, model)
 	} else {
 		this.ServeError(res.Msg, "")
@@ -27,24 +27,24 @@ func (this *Auth) Add() {
 }
 
 //删除
-func (this *Auth) Del() {
-	model:=new(models.Auth)
+func (this *Api) Del() {
+	model:=new(models.Api)
 	this.AnalyseJson(model)
 	res := model.Delete()
 	if res.Err == nil {
-		delete(acc.RouterList,model.Id)
+		delete(acc.DateAPIList,model.Id)
 		this.ServeSuccess(res.Msg, "")
 	}
 	this.ServeError(res.Msg, "")
 }
 
 //修改
-func (this *Auth) Edit() {
-	model:=new(models.Auth)
+func (this *Api) Edit() {
+	model:=new(models.Api)
 	this.AnalyseJson(model)
 	res :=model.Edit()
 	if res.Err == nil {
-		acc.RouterList[model.Id]=*model
+		acc.DateAPIList[model.Id]=*model
 		this.ServeSuccess(res.Msg,model)
 	}
 	this.ServeError(res.Msg, "")

@@ -5,17 +5,17 @@ export default {
             {
                 path: '/',
                 component: Home,
-                nickname:"后台",
+                nickname:"后台主页",
                 children:[
-                    {
-                        path: "/",
-                        redirect:"/index"
-                    },
                     {
                         path: '/index',
                         name: 'index',
                         nickname:"首页",
                         component: () => import('../views/Index.vue')
+                    },
+                    {
+                        path: "/",
+                        redirect:"/index"
                     },
                 ]
             },

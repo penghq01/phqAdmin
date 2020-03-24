@@ -10,12 +10,14 @@ import (
 	"os"
 	"path"
 	"path/filepath"
+	"server/acc"
 	"server/common"
 	"server/models"
 	"strconv"
 	"strings"
 	"time"
 )
+
 
 type Base struct {
 	beego.Controller
@@ -26,27 +28,46 @@ type Base struct {
 	Paginate  common.Paginate        //分页数据
 }
 
-var (
-	//不需要签名的路由
-	noSignRouter map[string]bool = map[string]bool{
-		"/admin-api/files/upload/img": true,
-	}
-)
-
 func (this *Base) Prepare() {
 	this.Uri = this.Ctx.Request.RequestURI
 	this.AuthToken = this.Ctx.Input.Header("auth-token")
 	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &this.Params); err != nil {
 		common.Logs.Error("参数解析错误=>%v", err)
 	}
-	if !noSignRouter[this.Uri] {
-		ok := common.CheckParams(this.Ctx.Input.Header("sign"), this.Ctx.Input.RequestBody)
+	this.CheckSign() //判断数据签名是否正确
+}
+//判断数据签名是否正确
+func (this *Base) CheckSign(){
+	if this.UriIsSign(){
+		ok:= common.CheckParams(this.Ctx.Input.Header("sign"), this.Ctx.Input.RequestBody)
 		if !ok {
-			this.ServeError("非法数据", "")
+			this.ServeError("非法数据：数据签名不正确！", "")
 		}
 	}
 }
-
+//判断当前Uri是否需要签名
+func (this *Base)UriIsSign()bool{
+	noSignRouter:=acc.GetNoSignDataApi()
+	_,ok:=noSignRouter[this.Uri]
+	if ok {
+		return false
+	}else{
+		uri:=this.UriReplacePage(this.Uri)
+		_,ok=noSignRouter[uri]
+		return !ok
+	}
+}
+//拆分访问URL包后两位替换未/:page_size/:page
+func (this *Base) UriReplacePage(uri string)string{
+	uriArr:=strings.Split(uri,"/")
+	arrLen:=len(uriArr)
+	if arrLen<3{
+		return uri
+	}
+	uriArr[arrLen-1]=":page"
+	uriArr[arrLen-2]=":page_size"
+	return strings.Join(uriArr,"/")
+}
 //解析数据
 func (this *Base) AnalyseJson(obj interface{}) {
 	err := json.Unmarshal(this.Ctx.Input.RequestBody, obj)

@@ -2,15 +2,14 @@
     <div class="sql">
         <div class="action" style="padding-bottom: 10px;">
             <Poptip
-                    v-if="menuAuth.delete"
                     transfer
                     confirm
                     title="确定要备份数据吗?"
                     @on-ok="exprotSql">
-                <el-button v-if="menuAuth.add" type="primary" size="mini">备份数据</el-button>
+                <el-button type="primary" size="mini">备份数据</el-button>
             </Poptip>
         </div>
-        <div class="table" v-if="menuAuth.select">
+        <div class="table">
             <el-table  v-loading="loading" :data="dataList" border size="mini">
                 <el-table-column label="文件名" prop="file_name"></el-table-column>
                 <el-table-column label="大小" width="100">
@@ -21,7 +20,6 @@
                 <el-table-column label="操作" align="center" width="160">
                     <template slot-scope="scope">
                         <Poptip
-                                v-if="menuAuth.delete"
                                 transfer
                                 confirm
                                 title="确定删除吗?"
@@ -30,7 +28,6 @@
                         </Poptip>
                         <span class="interval-span"></span>
                         <Poptip
-                                v-if="menuAuth.edit"
                                 transfer
                                 confirm
                                 title="确定要恢复备份吗?"
@@ -53,13 +50,11 @@
         name: "System",
         data(){
             return{
-                menuAuth:{},
                 loading:false,
                 dataList:[]
             }
         },
         mounted(){
-            this.menuAuth=logic.getMenuAuth(this);
             this.getSqlList();
         },
         methods:{
