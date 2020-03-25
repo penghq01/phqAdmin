@@ -15,14 +15,28 @@ export default {
     return MenuAuthMap[path];
   },
   //动态加载路由
-  addRoutes(router){
-    let routerArr=defaultRouter.getDefaultRouterList();
-    //console.log(routerArr);
-    let MenuAuthMap=storage.menuAuthMap.get();
-    let router_list= routerList.routerList();
-    router_list.forEach(route=>{
-      routerArr[0].children.push(route);
-    });
-    router.$addRoutes(routerArr);
+  addRoutes(self,router=[],isDefault=false){
+    let routerArr=defaultRouter;
+    if(isDefault){
+      router.forEach(item=>{
+        routerArr[0].children.push(item);
+      });
+    }else{
+      let router_list=new Map();
+      routerList.forEach(item=>{
+        router_list[item.path]=item;
+      });
+      router.forEach(item=>{
+        if(item.auth_type===0 && !utils.empty(item.router)){
+          let r=router_list[item.router];
+          if(!utils.empty(r)){
+            routerArr[0].children.push(r);
+          }
+        }
+      });
+    }
+    routerArr[0].children.push({path: "/", redirect:"/index"});
+    self.$addRoutes(routerArr);
+    routerArr[0].children=[];
   }
 }

@@ -17,6 +17,7 @@ type Api struct {
 	Sign           int8   `json:"sign" xorm:"tinyint(1) notnull default(1)"`    //是否需要签名 0不用，1需要
 	Struct         string `json:"struct" xorm:"varchar(128)"`                   //结构体名称
 	MappingMethods string `json:"mapping_methods" xorm:"varchar(55)"`           //映射的方法
+	IsShow   int8 `json:"is_show" xorm:"tinyint(1) notnull default(1)"`   //是否显示
 }
 
 func (this *Api) TableName() string {
@@ -134,7 +135,7 @@ func (this *Api) List() (interface{}, CurdResult) {
 	auth := make([]Api, 0)
 	err := Find(this, func(db *xorm.Session) error {
 		db.Desc("id")
-		db.Where("visit = 2")
+		db.Where("visit = 2 AND is_show = 1")
 		return db.Find(&auth)
 	})
 	return auth, err
@@ -161,9 +162,9 @@ type Auth struct {
 	Router string `json:"router" xorm:"varchar(255)"`                   //前端路由
 	//Auth     string `json:"auth" xorm:"text"`                               //权限
 	Visit    int8 `json:"visit" xorm:"tinyint(1) notnull default(0)"`     //访问权限 0公开，1登录，2权限，3,系统管理员
-	AuthType int8 `json:"auth_type" xorm:"tinyint(1) notnull default(0)"` //路由类型 0菜单 1分类
+	AuthType int8 `json:"auth_type" xorm:"tinyint(1) notnull default(0)"` //路由类型 0导航，1页面
 	IsShow   int8 `json:"is_show" xorm:"tinyint(1) notnull default(0)"`   //是否显示
-	Sort     int  `json:"sort" xorm:"int(11) notnull default(0)"`         //排序
+	Sort     int  `json:"sort" xorm:"int(11) notnull default(1)"`         //排序
 }
 
 func (this *Auth) TableName() string {
@@ -176,7 +177,7 @@ type AuthValid struct {
 	Title    bool //标题
 	Icon     bool //图标
 	Visit    bool //访问权限 0公开，1登录，2权限，3,系统管理员
-	AuthType bool //路由类型 0菜单，1分类
+	AuthType bool //路由类型 0导航，1页面
 	IsShow   bool //是否显示
 }
 
@@ -298,12 +299,4 @@ func (this *Auth) List() (interface{}, CurdResult) {
 		return db.Find(&auth)
 	})
 	return auth, err
-}
-
-func (this *Auth) GetList() ([]Auth, error) {
-	list := make([]Auth, 0)
-	db := common.DbEngine.Asc("sort").Asc("id")
-	db.Where("auth_type = 0 AND is_show=1")
-	err := db.Find(&list)
-	return list, err
 }

@@ -1,6 +1,7 @@
 package adminApi
 
 import (
+	"server/acc"
 	"server/common"
 	"server/models"
 	"strconv"
@@ -37,5 +38,6 @@ func (this *Login) Login() {
 	this.LoginUser = user
 	this.ServeSuccess("登录成功", map[string]interface{}{
 		"token":     token,
+		"public_router":acc.GetNoLoginAdminRoute(),
 	})
 }

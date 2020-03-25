@@ -41,7 +41,8 @@ html,body,#app{
 }
 /*滚动条整体样式*/
 ::-webkit-scrollbar {
-   width: 2px;     /*高宽分别对应横竖滚动条的尺寸*/
+   width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+  height:15px;
 }
 /*滚动条里面小方块*/
 ::-webkit-scrollbar-thumb {
@@ -58,7 +59,7 @@ html,body,#app{
 }
 .input-div{
   padding:8px 0;
-  &>span:first-child{
+  & .title-name{
     display: inline-block;
     width:100px;
     text-align:right;
@@ -133,7 +134,6 @@ html,body,#app{
       background-color:#FFFFFF;
       border-radius:4px;
       &-title{
-        height:40px;
         background-color:$primary-color;
         border-top-left-radius:4px;
         border-top-right-radius:4px;
@@ -157,6 +157,7 @@ html,body,#app{
         height:calc(100% - 40px);
         padding:10px;
         overflow-y:auto;
+        background-color:#FFFFFF;
       }
     }
   }
@@ -216,4 +217,8 @@ div.cell{
 }
 .el-tree__empty-block{
   height:auto;
+}
+
+.el-table__empty-block{
+  height:auto!important;
 }

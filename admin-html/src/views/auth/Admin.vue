@@ -1,9 +1,9 @@
 <template>
     <div class="admin">
         <div class="action">
-            <el-button  type="primary" size="mini" @click="opened=true">添加管理员</el-button>
+            <el-button v-if="$store.state.uiAuth._admin_api_admin_add"  type="primary" size="mini" @click="opened=true">添加管理员</el-button>
         </div>
-        <div class="table">
+        <div class="table" v-if="$store.state.uiAuth._admin_api_admin_list">
             <el-table v-loading="loading" :data="adminList" border size="mini">
                 <el-table-column label="ID" prop="admin_id"></el-table-column>
                 <el-table-column label="账号" prop="username"></el-table-column>
@@ -19,14 +19,14 @@
                 <el-table-column label="操作" align="center" width="120">
                     <template slot-scope="scope">
                         <Poptip
+                                v-if="$store.state.uiAuth._admin_api_admin_del"
                                 title="确定删除吗?"
                                 @on-ok="del(scope.row)">
                             <el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
                         </Poptip>
 
                         <span class="interval-span"></span>
-                        <el-button type="primary" size="mini" @click="showEdit(scope.row)"
-                                   icon="el-icon-edit-outline"></el-button>
+                        <el-button v-if="$store.state.uiAuth._admin_api_admin_edit" type="primary" size="mini" @click="showEdit(scope.row)" icon="el-icon-edit-outline"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -78,6 +78,9 @@
         },
         methods: {
             GetAdminList() {
+                if(!this.$store.state.uiAuth._admin_api_admin_list){
+                    return;
+                }
                 http.post("admin/list").then(data => {
                     this.adminList = data;
                     this.adminList.forEach(item => {

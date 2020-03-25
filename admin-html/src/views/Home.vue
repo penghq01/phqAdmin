@@ -18,8 +18,8 @@
             <div class="user">
                 <i class="fa fa-user" aria-hidden="true"></i> 欢迎：{{userInfo.username}}
                 <div class="user-info">
-                    <div @click="opened=true">修改密码</div>
-                    <div>个人信息</div>
+                    <div v-if="uiAuth._admin_api_admin_edit_pass" @click="opened=true">修改密码</div>
+                    <div v-if="uiAuth._admin_api_admin_info">个人信息</div>
                     <div @click="outLogin">退出登录</div>
                 </div>
             </div>
@@ -52,6 +52,9 @@
     import WinTitle from "../components/WinTitle/WinTitle";
     import config from "../config";
     import myDialog from "../components/myDialog";
+    import publicPath from "../lib/publicPath";
+    import logic from "../lib/logic";
+    import {mapState,mapMutations} from "vuex";
     export default {
         name: 'home',
         components:{Menu,WinTitle,myDialog},
@@ -71,6 +74,7 @@
             }
         },
         computed:{
+            ...mapState(["uiAuth"]),
             leftAndHeaderTop(){
                 if(this.platform.isWeb){
                     return "top:0";
@@ -88,12 +92,14 @@
         },
         mounted() {
             this.platform=config.platform;
-            this.getAuthList();
             this.activeMenu=this.$router.history.current.path;
-            //this.routerHistory=storage.routerHistory.get();
-            this.getUserInfo();
+            this.getUiAutlList(()=>{
+                this.getAuthList();
+                this.getUserInfo();
+            });
         },
         methods: {
+            ...mapMutations(["UpdateUiAuth"]),
             //点击菜单时触发
             triggerSelect(key) {
                 let router=this.$router.history.current;
@@ -226,9 +232,27 @@
                 });
                 return list;
             },
+            //获取UI权限列表
+            getUiAutlList(_success=()=>{}){
+                http.post("admin/ui_auth").then(data => {
+                    this.UpdateUiAuth(data);
+                    _success();
+                }).catch(err => {});
+            },
+            //获取菜单列表
             getAuthList() {
+                if(!this.uiAuth._admin_api_admin_auth){
+                    return;
+                }
                 http.post("admin/auth").then(data => {
                     this.menuList=data;
+                    logic.addRoutes(this.$router,data);
+                    publicPath.splice(0);
+                    data.forEach(item=>{
+                        if(item.visit===0){
+                            publicPath.push(item.router);
+                        }
+                    });
                     this.menuTreeList=this.listTotree(data);
                     if(!this.isPush){
                         this.triggerSelect(this.$router.history.current.path);

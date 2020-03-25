@@ -7,9 +7,9 @@
 			 :append-to-body="true"
             :close-on-click-modal="false"
     :close-on-press-escape="false">
-            <span>
+            <div>
               <slot></slot>
-            </span>
+            </div>
         <span slot="footer" class="dialog-footer">
            <el-button v-if="!one" @click="showBox=false">{{closeTitle}}</el-button>
            <el-button v-if="!isSee" type="primary" @click="okClick">{{okTitle}}</el-button>

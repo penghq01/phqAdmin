@@ -1,6 +1,6 @@
 <template>
   <div class="users">
-     <div style="padding-bottom:10px;">
+     <div style="padding-bottom:10px;" v-if="$store.state.uiAuth._admin_api_user_list_paginate">
         <el-input style="width:150px;" type="text" size="mini" v-model="search.nickname" placeholder="请输入昵称"/>
          <span class="interval-span"></span>
          <el-input style="width:150px;" type="text" size="mini" v-model="search.mobile" placeholder="请输入手机号"/>
@@ -86,6 +86,7 @@
             return utils.UnixToDateTime(val);
         },
         getUserList(){
+            if(!this.$store.state.uiAuth._admin_api_user_list_paginate){return;}
             http.post(`user/list/${this.pageData.page_size}/${this.pageData.page}`,this.search).then(data=>{
                 this.userList=data.data;
                 this.pageData=data.paginate;

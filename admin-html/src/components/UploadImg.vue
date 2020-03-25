@@ -1,6 +1,6 @@
 <template>
     <div class="upload-img">
-        <div>
+        <div v-if="$store.state.uiAuth._admin_api_files_upload_img">
             <el-upload
                     class="upload-demo"
                     action="#"
@@ -34,9 +34,9 @@
                                   <i class="el-icon-more"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item :command="{'action':'add','data':data}" icon="el-icon-plus">添加</el-dropdown-item>
-                                    <el-dropdown-item v-if="data.id>0" :command="{'action':'edit','data':data}" icon="el-icon-edit-outline">修改</el-dropdown-item>
-                                    <el-dropdown-item v-if="data.id>0" :command="{'action':'delete','data':data,'node':node}" icon="el-icon-delete">删除</el-dropdown-item>
+                                    <el-dropdown-item v-if="$store.state.uiAuth._admin_api_files_add_class" :command="{'action':'add','data':data}" icon="el-icon-plus">添加</el-dropdown-item>
+                                    <el-dropdown-item v-if="data.id>0 && $store.state.uiAuth._admin_api_files_edit_class" :command="{'action':'edit','data':data}" icon="el-icon-edit-outline">修改</el-dropdown-item>
+                                    <el-dropdown-item v-if="data.id>0 && $store.state.uiAuth._admin_api_files_del_class" :command="{'action':'delete','data':data,'node':node}" icon="el-icon-delete">删除</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </span>
@@ -48,7 +48,7 @@
                     <div class="img-list" v-for="(img,index) in imgList" :key="img.id">
                         <div v-if="isSelect" class="img-action img-action-see" @click="selectImg(img)">选择图片</div>
                         <img @click="previewImg=img.src" :src="imgHost+img.src"/>
-                        <div class="img-action img-action-del" @click="delImg(img)">删除</div>
+                        <div v-if="$store.state.uiAuth._admin_api_files_del" class="img-action img-action-del" @click="delImg(img)">删除</div>
                     </div>
                 </transition-group>
 
@@ -126,6 +126,9 @@
             },
             //获取分类列表
             getFileClassList() {
+                if(!this.$store.state.uiAuth._admin_api_files_list_class){
+                    return;
+                }
                 message.loading.show("加载数据");
                 http.post("files/list/class").then(data => {
                     this.$set(this.classList[0], "children", this.classListToTree(0, data));
@@ -134,6 +137,9 @@
             },
             //获取图片列表
             getImageList() {
+                if(!this.$store.state.uiAuth._admin_api_files_list_paginate){
+                    return;
+                }
                 http.post(`files/list/${this.pageData.page_size}/${this.pageData.page}`, {"class_id": this.selectFileClassId}).then(list => {
                     this.imgList=list.data;
                     this.pageData = list.paginate;

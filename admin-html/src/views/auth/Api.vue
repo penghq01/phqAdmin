@@ -1,7 +1,7 @@
 <template>
     <div class="api">
         <div style="padding-bottom: 10px;">
-            <el-button type="primary" size="mini" @click="showAdd">添加</el-button>
+            <el-button v-if="$store.state.uiAuth._admin_api_api_add" type="primary" size="mini" @click="showAdd">添加</el-button>
         </div>
         <el-table v-loading="loading" :data="dataList" border size="mini">
             <el-table-column label="标题" prop="title" width="200"></el-table-column>
@@ -20,15 +20,22 @@
                     <el-tag effect="dark" v-if="scope.row.visit==3" type="danger" size="mini">系统管理员</el-tag>
                 </template>
             </el-table-column>
+            <el-table-column label="显示" width="60">
+                <template slot-scope="scope">
+                    <el-tag effect="dark" v-if="scope.row.is_show==0" type="info" size="mini">隐藏</el-tag>
+                    <el-tag effect="dark" v-if="scope.row.is_show==1" size="mini">显示</el-tag>
+                </template>
+            </el-table-column>
             <el-table-column label="接口" prop="router" width="300"></el-table-column>
             <el-table-column label="结构体" prop="struct" width="200"></el-table-column>
             <el-table-column label="方法" prop="mapping_methods" width="160"></el-table-column>
             <el-table-column fixed="right" label="操作" width="120">
                 <template slot-scope="scope">
-                    <el-button type="warning" @click="showEdit(scope.row)" icon="el-icon-edit-outline"
+                    <el-button v-if="$store.state.uiAuth._admin_api_api_edit" type="warning" @click="showEdit(scope.row)" icon="el-icon-edit-outline"
                                size="mini"></el-button>
                     <span class="interval-span"></span>
                     <Poptip
+                            v-if="$store.state.uiAuth._admin_api_api_del"
                             transfer
                             confirm
                             title="确定删除吗?"
@@ -49,35 +56,40 @@
                 :ok-title="isEdit?'修改':'添加'"
         >
             <div class="input-div">
-                <span>标题：</span>
+                <span class="title-name">标题：</span>
                 <el-input style="width:220px;" type="text" v-model="params.title" placeholder="请输入"/>
             </div>
             <div class="input-div">
-                <span>接口：</span>
+                <span  class="title-name">接口：</span>
                 <el-input style="width:220px;" type="text" v-model="params.router" placeholder="请输入"/>
             </div>
             <div class="input-div">
-                <span>名称：</span>
+                <span  class="title-name">名称：</span>
                 <el-input style="width:220px;" type="text" @focus="routerFocus" v-model="params.name" placeholder="请输入"/>
             </div>
             <div class="input-div">
-                <span>是否签名：</span>
+                <span  class="title-name">是否签名：</span>
                 <el-radio v-model="params.sign" :label="0">否</el-radio>
                 <el-radio v-model="params.sign" :label="1">是</el-radio>
             </div>
             <div class="input-div">
-                <span>访问类型：</span>
+                <span  class="title-name">访问类型：</span>
                 <el-radio v-model="params.visit" :label="0">公开</el-radio>
                 <el-radio v-model="params.visit" :label="1">登录</el-radio>
                 <el-radio v-model="params.visit" :label="2">权限</el-radio>
                 <el-radio v-model="params.visit" :label="3">系统管理员</el-radio>
             </div>
             <div class="input-div">
-                 <span>结构体：</span>
+                <span  class="title-name">是否显示：</span>
+                <el-radio v-model="params.is_show" :label="0">隐藏</el-radio>
+                <el-radio v-model="params.is_show" :label="1">显示</el-radio>
+            </div>
+            <div class="input-div">
+                 <span  class="title-name">结构体：</span>
                 <el-input style="width:220px;" type="text" v-model="params.struct" placeholder="请输入"/>
             </div>
             <div class="input-div">
-                 <span>方法：</span>
+                 <span  class="title-name">方法：</span>
                 <el-input style="width:220px;" type="text" v-model="params.mapping_methods" placeholder="请输入"/>
             </div>
             <div class="input-div">
@@ -119,6 +131,9 @@
         },
         methods: {
             getDataList() {
+                if(!this.$store.state.uiAuth._admin_api_api_list_paginate){
+                    return;
+                }
                 this.loading = true;
                 http.post(`api/list/${this.paginate.page_size}/${this.paginate.page}`).then(data => {
                     this.paginate = data.paginate;
@@ -131,6 +146,7 @@
                     "title":"",
                     "sign":1,
                     "visit":0,
+                    "is_show":1,
                     "name":"admin_api_",
                     "router":"/admin/api/",
                     "struct":"",
@@ -146,6 +162,7 @@
                     "name":row.name,
                     "sign":row.sign,
                     "visit":row.visit,
+                    "is_show":row.is_show,
                     "router":row.router,
                     "struct":row.struct,
                     "mapping_methods":row.mapping_methods,

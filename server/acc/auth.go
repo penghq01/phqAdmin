@@ -34,8 +34,9 @@ func InitRoleList() {
 //初始化前端菜单路由列表
 func InitRouteList() {
 	RouterList = make(map[int]models.Auth)
-	model := models.Auth{}
-	list, err := model.GetList()
+	list := make([]models.Auth, 0)
+	db := common.DbEngine.Asc("sort").Asc("id")
+	err := db.Find(&list)
 	if err == nil {
 		for _, auth := range list {
 			RouterList[auth.Id] = auth
@@ -67,28 +68,40 @@ func GetLoginAdminRoute(admin *models.Admin) []models.Auth {
 			auth = append(auth, a)
 		}
 	} else {
-		list := make(map[int]models.Auth)
-		for _, a := range admin.Role {
-			for _, r := range RoleList[a].AuthList {
-				list[r] = RouterList[r]
-			}
-		}
+		//登录可访问，和公开的
 		for _, a := range RouterList {
 			if a.Visit < 2 {
 				auth = append(auth, a)
 			}
 		}
-		for _, a := range list {
-			if a.Visit < 3 {
-				auth = append(auth, a)
+		//指定权限
+		for _, a := range admin.Role {
+			for _, rid := range RoleList[a].AuthList {
+				//list[rid] = RouterList[rid]
+				r:= RouterList[rid]
+				if r.Visit < 3{
+					auth = append(auth, r)
+				}
 			}
 		}
 	}
+	//排序
 	for i := 0; i < len(auth); i++ {
 		for y := i; y < len(auth); y++ {
 			if auth[i].Sort > auth[y].Sort {
 				auth[i], auth[y] = auth[y], auth[i]
 			}
+		}
+	}
+	return auth
+}
+
+//获取公开的前端菜单
+func GetNoLoginAdminRoute() []models.Auth {
+	auth := make([]models.Auth, 0)
+	for _, a := range RouterList {
+		if a.Visit==0{
+			auth = append(auth, a)
 		}
 	}
 	return auth
@@ -103,7 +116,7 @@ func GetLoginAdminDataApi(admin *models.Admin) map[string]string {
 		}
 	} else {
 		for _, d := range DateAPIList {
-			if d.Visit == 1 {
+			if d.Visit < 2 {
 				dataApiMap[d.Router] = d.Name
 			}
 		}
@@ -116,7 +129,7 @@ func GetLoginAdminDataApi(admin *models.Admin) map[string]string {
 	return dataApiMap
 }
 
-//获取不需要登录即可访问的数据接口(控制前端显示)
+//获取不需要登录即可访问的数据接口
 func GetNoLoginAdminDataApi() map[string]string {
 	dataApiMap := make(map[string]string)
 	for _, d := range DateAPIList {
@@ -127,22 +140,22 @@ func GetNoLoginAdminDataApi() map[string]string {
 	return dataApiMap
 }
 
-//获取当前登录管理员可访问的数据接口(控制前端显示)
-func GetLoginAdminUIDataApi(admin *models.Admin) map[string]string {
-	dataApiMap := make(map[string]string)
+//获取当前登录管理员可访问的数据接口（控制UI显示隐藏）
+func GetLoginAdminUIDataApi(admin *models.Admin) map[string]bool {
+	dataApiMap := make(map[string]bool)
 	if admin.AdminId == 1 {
 		for _, d := range DateAPIList {
-			dataApiMap[d.Name] = d.Router
+			dataApiMap[d.Name] = true
 		}
 	} else {
 		for _, d := range DateAPIList {
 			if d.Visit < 2 {
-				dataApiMap[d.Name] = d.Router
+				dataApiMap[d.Name] = true
 			}
 		}
 		for _, a := range admin.Role {
 			for _, r := range RoleList[a].AuthData {
-				dataApiMap[DateAPIList[r].Name] = DateAPIList[r].Router
+				dataApiMap[DateAPIList[r].Name] = true
 			}
 		}
 	}

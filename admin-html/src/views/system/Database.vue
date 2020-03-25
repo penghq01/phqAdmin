@@ -2,6 +2,7 @@
     <div class="sql">
         <div class="action" style="padding-bottom: 10px;">
             <Poptip
+                    v-if="$store.state.uiAuth._admin_api_sql_exprot"
                     transfer
                     confirm
                     title="确定要备份数据吗?"
@@ -20,6 +21,7 @@
                 <el-table-column label="操作" align="center" width="160">
                     <template slot-scope="scope">
                         <Poptip
+                                v-if="$store.state.uiAuth._admin_api_sql_del"
                                 transfer
                                 confirm
                                 title="确定删除吗?"
@@ -28,6 +30,7 @@
                         </Poptip>
                         <span class="interval-span"></span>
                         <Poptip
+                                v-if="$store.state.uiAuth._admin_api_sql_improt"
                                 transfer
                                 confirm
                                 title="确定要恢复备份吗?"
@@ -59,6 +62,7 @@
         },
         methods:{
            getSqlList(){
+               if(!this.$store.state.uiAuth._admin_api_sql_list){return;}
                http.post("sql/list").then(data=>{
                    this.dataList=data;
                }).catch(err=>{});

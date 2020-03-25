@@ -1,7 +1,7 @@
 <template>
     <div>
         <div style="padding-bottom: 10px;">
-            <el-button type="primary" size="mini" @click="showAdd(0)">添加</el-button>
+            <el-button v-if="$store.state.uiAuth._admin_api_auth_add" type="primary" size="mini" @click="showAdd(0)">添加</el-button>
         </div>
         <div>
             <el-table v-loading="loading" :data="treeAuthList" border size="mini"  row-key="id">
@@ -26,8 +26,8 @@
                 </el-table-column>
                 <el-table-column label="类型" :width="70">
                     <template slot-scope="scope">
-                        <el-tag effect="dark" v-if="scope.row.auth_type==0" size="mini" >菜单</el-tag>
-                        <el-tag effect="dark" v-if="scope.row.auth_type==1" type="info" size="mini" >分类</el-tag>
+                        <el-tag effect="dark" v-if="scope.row.auth_type==0" size="mini" >导航</el-tag>
+                        <el-tag effect="dark" v-if="scope.row.auth_type==1" type="info" size="mini" >页面</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column label="显示" :width="70">
@@ -39,10 +39,11 @@
                 <el-table-column label="排序" width="50" prop="sort"></el-table-column>
                 <el-table-column label="操作" width="180">
                     <template slot-scope="scope">
-                        <el-button type="primary" @click="showAdd(scope.row.id,scope.row)" icon="el-icon-plus" size="mini"></el-button>
-                        <el-button type="warning" @click="showEdit(scope.row)" icon="el-icon-edit-outline" size="mini"></el-button>
+                        <el-button v-if="$store.state.uiAuth._admin_api_auth_add" type="primary" @click="showAdd(scope.row.id,scope.row)" icon="el-icon-plus" size="mini"></el-button>
+                        <el-button v-if="$store.state.uiAuth._admin_api_auth_edit" type="warning" @click="showEdit(scope.row)" icon="el-icon-edit-outline" size="mini"></el-button>
                         <span class="interval-span"></span>
                         <Poptip
+                                v-if="$store.state.uiAuth._admin_api_auth_del"
                                 transfer
                                 confirm
                                 title="确定删除吗?"
@@ -67,7 +68,7 @@
                             style="font-size:30px;margin-right: 10px;"></span>
                 <el-button type="primary" size="mini" @click="showIcon">选择图标</el-button>
             </div>
-            <div class="input-div" v-if="postAuth.auth_type===0">前端界面：
+            <div class="input-div">前端界面：
                 <el-select style="width:80%;" v-model="postAuth.router" @change="selectUiRouter" clearable placeholder="请选择前端界面">
                     <el-option v-for="(item,index) in uiRouterList" :value="item.path" :label="item.name" :key="index">
                         {{item.name}}<span class="select-tip">{{item.path}}</span>
@@ -76,8 +77,8 @@
             </div>
 
             <div class="input-div">权限类型：
-                <el-radio v-model="postAuth.auth_type" :label="0">菜单</el-radio>
-                <el-radio v-model="postAuth.auth_type" :label="1">分类</el-radio>
+                <el-radio v-model="postAuth.auth_type" :label="0">导航</el-radio>
+                <el-radio v-model="postAuth.auth_type" :label="1">页面</el-radio>
             </div>
             <div class="input-div">访问类型：
                 <el-radio v-model="postAuth.visit" :label="0">公开</el-radio>
@@ -88,6 +89,7 @@
             <div class="input-div">是否显示：
                 <el-radio v-model="postAuth.is_show" :label="1">显示</el-radio>
                 <el-radio v-model="postAuth.is_show" :label="0">隐藏</el-radio>
+                <span style="font-size:12px">是否显示，只对导航有效</span>
             </div>
             <div class="input-div">排序数值：<el-input type="text" style="width:80px;" v-model="postAuth.sort" placeholder="排序"/></div>
         </Dialog>
@@ -103,7 +105,6 @@
     import utils from "../../lib/utils";
     import http from "../../lib/http";
     import message from "../../lib/message";
-    import logic from "../../lib/logic";
     import defaultRouter from "../../router/defaultRouter";
     import routerList from "../../router/routerList";
     export default {
@@ -127,12 +128,10 @@
         },
         mounted() {
             this.getAuthList();
-            let routes=defaultRouter.getDefaultRouterList();
-            let router_list=routerList.routerList();
-            router_list.forEach(item=>{
-                routes[0].children.push(item);
-            });
+            let routes=defaultRouter;
+            let router_list=routerList;
             this.routersToArror(routes);
+            this.routersToArror(router_list);
         },
         methods: {
             listTotree(data,pid=0){
@@ -188,6 +187,9 @@
                 });
             },
             getAuthList() {
+                if(!this.$store.state.uiAuth._admin_api_auth_list){
+                    return;
+                }
                 http.post("auth/list").then(data => {
                     this.treeAuthList=this.listTotree(data);
                     this.loading = false;

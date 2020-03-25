@@ -1,13 +1,13 @@
 <template>
     <div class="icon">
 
-        <div class="add-icon" v-if="!isSelect">
+        <div class="add-icon" v-if="!isSelect && $store.state.uiAuth._admin_api_icon_add">
             <el-button type="primary" size="mini"  @click="opened=true">添加</el-button>
         </div>
 
-        <div class="icon-list" >
+        <div class="icon-list">
             <span :class="item.icon" v-for="(item,index) in iconList" :key="index">
-                 <span class="del" v-if="!isSelect">
+                 <span class="del" v-if="!isSelect && $store.state.uiAuth._admin_api_icon_del">
                       <Poptip
                               transfer
                               confirm
@@ -71,6 +71,9 @@
         },
         methods: {
             getIconList() {
+                if(!this.$store.state.uiAuth._admin_api_icon_list_paginate){
+                    return;
+                }
                 message.loading.show();
                 http.post(`icon/list/${this.pageData.page_size}/${this.pageData.page}`).then(data => {
                     this.iconList = data.data;
@@ -112,10 +115,6 @@
 </script>
 
 <style scoped lang="scss">
-    .add-icon {
-
-    }
-
     .icon-list{
         display:flex;
         justify-content:flex-start;
@@ -133,13 +132,10 @@
             background-color: #F1F1F1;
             margin: 5px;
             position: relative;
-
             & > span {
                 display: none;
                 position: absolute;
-               top:0;
             }
-
             &:hover {
                 & > span {
                     display: block;

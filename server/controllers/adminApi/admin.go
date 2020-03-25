@@ -47,6 +47,12 @@ func (this *Admin) EditPass() {
 func (this *Admin) AuthList() {
 	this.ServeSuccess("", acc.GetLoginAdminRoute(this.LoginUser))
 }
+
+//获取可操作的权限列表（控制UI显示隐藏）
+func (this *Admin) ActionAuthList() {
+	this.ServeSuccess("", acc.GetLoginAdminUIDataApi(this.LoginUser))
+}
+
 //获取备份文件列表
 func (this *Admin) ListSql() {
 	list := make([]map[string]interface{}, 0)
