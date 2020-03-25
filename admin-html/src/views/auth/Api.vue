@@ -1,51 +1,53 @@
 <template>
     <div class="api">
         <div style="padding-bottom: 10px;">
-            <el-button v-if="$store.state.uiAuth._admin_api_api_add" type="primary" size="mini" @click="showAdd">添加</el-button>
+            <el-button v-if="uiAuth._admin_api_api_add" type="primary" size="mini" @click="showAdd">添加</el-button>
         </div>
-        <el-table v-loading="loading" :data="dataList" border size="mini">
-            <el-table-column label="标题" prop="title" width="200"></el-table-column>
-            <el-table-column label="名称" prop="name" width="260"></el-table-column>
-            <el-table-column label="签名" width="50">
-                <template slot-scope="scope">
-                    <el-tag effect="dark" v-if="scope.row.sign==0" type="info" size="mini">否</el-tag>
-                    <el-tag effect="dark" v-if="scope.row.sign==1" size="mini">是</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column label="访问" width="100">
-                <template slot-scope="scope">
-                    <el-tag effect="dark" v-if="scope.row.visit==0" type="info" size="mini">公开</el-tag>
-                    <el-tag effect="dark" v-if="scope.row.visit==1" type="success" size="mini">登录</el-tag>
-                    <el-tag effect="dark" v-if="scope.row.visit==2" type="warning" size="mini">权限</el-tag>
-                    <el-tag effect="dark" v-if="scope.row.visit==3" type="danger" size="mini">系统管理员</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column label="显示" width="60">
-                <template slot-scope="scope">
-                    <el-tag effect="dark" v-if="scope.row.is_show==0" type="info" size="mini">隐藏</el-tag>
-                    <el-tag effect="dark" v-if="scope.row.is_show==1" size="mini">显示</el-tag>
-                </template>
-            </el-table-column>
-            <el-table-column label="接口" prop="router" width="300"></el-table-column>
-            <el-table-column label="结构体" prop="struct" width="200"></el-table-column>
-            <el-table-column label="方法" prop="mapping_methods" width="160"></el-table-column>
-            <el-table-column fixed="right" label="操作" width="120">
-                <template slot-scope="scope">
-                    <el-button v-if="$store.state.uiAuth._admin_api_api_edit" type="warning" @click="showEdit(scope.row)" icon="el-icon-edit-outline"
-                               size="mini"></el-button>
-                    <span class="interval-span"></span>
-                    <Poptip
-                            v-if="$store.state.uiAuth._admin_api_api_del"
-                            transfer
-                            confirm
-                            title="确定删除吗?"
-                            @on-ok="del(scope.row)">
-                        <el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
-                    </Poptip>
-                </template>
-            </el-table-column>
-        </el-table>
-        <Paging v-model="paginate" @change="getDataList"></Paging>
+        <div v-if="uiAuth._admin_api_api_list_paginate">
+            <el-table v-loading="loading" :data="dataList" border size="mini">
+                <el-table-column label="标题" prop="title" width="200"></el-table-column>
+                <el-table-column label="名称" prop="name" width="260"></el-table-column>
+                <el-table-column label="签名" width="50">
+                    <template slot-scope="scope">
+                        <el-tag effect="dark" v-if="scope.row.sign==0" type="info" size="mini">否</el-tag>
+                        <el-tag effect="dark" v-if="scope.row.sign==1" size="mini">是</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column label="访问" width="100">
+                    <template slot-scope="scope">
+                        <el-tag effect="dark" v-if="scope.row.visit==0" type="info" size="mini">公开</el-tag>
+                        <el-tag effect="dark" v-if="scope.row.visit==1" type="success" size="mini">登录</el-tag>
+                        <el-tag effect="dark" v-if="scope.row.visit==2" type="warning" size="mini">权限</el-tag>
+                        <el-tag effect="dark" v-if="scope.row.visit==3" type="danger" size="mini">系统管理员</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column label="显示" width="60">
+                    <template slot-scope="scope">
+                        <el-tag effect="dark" v-if="scope.row.is_show==0" type="info" size="mini">隐藏</el-tag>
+                        <el-tag effect="dark" v-if="scope.row.is_show==1" size="mini">显示</el-tag>
+                    </template>
+                </el-table-column>
+                <el-table-column label="接口" prop="router" width="300"></el-table-column>
+                <el-table-column label="结构体" prop="struct" width="200"></el-table-column>
+                <el-table-column label="方法" prop="mapping_methods" width="160"></el-table-column>
+                <el-table-column fixed="right" label="操作" width="120">
+                    <template slot-scope="scope">
+                        <el-button v-if="uiAuth._admin_api_api_edit" type="warning" @click="showEdit(scope.row)" icon="el-icon-edit-outline"
+                                   size="mini"></el-button>
+                        <span class="interval-span"></span>
+                        <Poptip
+                                v-if="uiAuth._admin_api_api_del"
+                                transfer
+                                confirm
+                                title="确定删除吗?"
+                                @on-ok="del(scope.row)">
+                            <el-button type="danger" size="mini" icon="el-icon-delete"></el-button>
+                        </Poptip>
+                    </template>
+                </el-table-column>
+            </el-table>
+            <Paging v-model="paginate" @change="getDataList"></Paging>
+        </div>
         <Dialog
                 :title="`${isEdit?'修改':'添加'}数据接口`"
                 :is-show="opened"
@@ -108,7 +110,8 @@
 
 <script>
     import http from "../../lib/http";
-   import utils from "../../lib/utils";
+    import utils from "../../lib/utils";
+    import {mapState} from "vuex";
     export default {
         name: "Api",
         data() {
@@ -126,14 +129,12 @@
                 params: {}
             }
         },
+        computed:{...mapState(["uiAuth"])},
         mounted() {
             this.getDataList();
         },
         methods: {
             getDataList() {
-                if(!this.$store.state.uiAuth._admin_api_api_list_paginate){
-                    return;
-                }
                 this.loading = true;
                 http.post(`api/list/${this.paginate.page_size}/${this.paginate.page}`).then(data => {
                     this.paginate = data.paginate;

@@ -1,13 +1,13 @@
 <template>
     <div class="icon">
 
-        <div class="add-icon" v-if="!isSelect && $store.state.uiAuth._admin_api_icon_add">
+        <div class="add-icon" v-if="!isSelect && uiAuth._admin_api_icon_add">
             <el-button type="primary" size="mini"  @click="opened=true">添加</el-button>
         </div>
-
-        <div class="icon-list">
+        <div v-if="uiAuth._admin_api_icon_add">
+            <div class="icon-list">
             <span :class="item.icon" v-for="(item,index) in iconList" :key="index">
-                 <span class="del" v-if="!isSelect && $store.state.uiAuth._admin_api_icon_del">
+                 <span class="del" v-if="!isSelect && uiAuth._admin_api_icon_del">
                       <Poptip
                               transfer
                               confirm
@@ -20,8 +20,9 @@
                      <el-button type="primary" size="mini" @click="iconSelect(item.icon)">选择</el-button>
                  </span>
             </span>
+            </div>
+            <Paging v-model="pageData" @change="pageChange"></Paging>
         </div>
-        <Paging v-model="pageData" @change="pageChange"></Paging>
         <Dialog
                 title="添加图标"
                 :is-show="opened"
@@ -44,8 +45,7 @@
     import http from "../lib/http";
     import utils from "../lib/utils";
     import message from "../lib/message";
-    import logic from "../lib/logic";
-
+    import {mapState} from "vuex";
     export default {
         name: "MyIcon",
         props: {
@@ -66,12 +66,13 @@
                 }
             }
         },
+        computed:{...mapState(["uiAuth"])},
         mounted() {
             this.getIconList();
         },
         methods: {
             getIconList() {
-                if(!this.$store.state.uiAuth._admin_api_icon_list_paginate){
+                if(!this.uiAuth._admin_api_icon_list_paginate){
                     return;
                 }
                 message.loading.show();

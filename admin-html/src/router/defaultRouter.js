@@ -19,7 +19,7 @@ export default [
         component: () => import( '../views/NotFindPage.vue')
     },
     {
-        path: "/*",
+        path: "*",
         redirect:"/not-find"
     }
 ];

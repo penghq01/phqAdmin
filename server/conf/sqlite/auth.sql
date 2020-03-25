@@ -7,10 +7,10 @@ INSERT INTO "auth" VALUES (8, 4, '角色管理', 'fa fa-address-book', '/role', 
 INSERT INTO "auth" VALUES (9, 4, '权限管理', 'fa fa-gears', '', 3, 0, 1, 2);
 INSERT INTO "auth" VALUES (10, 5, '图标管理', 'fa fa-info-circle', '/icon', 2, 0, 1, 1);
 INSERT INTO "auth" VALUES (11, 6, '会员列表', 'fa fa-users', '/user', 2, 0, 1, 0);
-INSERT INTO "auth" VALUES (16, 0, '后台登录', 'fa fa-sign-in', '/login', 0, 0, 0, 1);
 INSERT INTO "auth" VALUES (17, 5, '图片管理', 'fa fa-file-image-o', '/images', 2, 0, 1, 0);
 INSERT INTO "auth" VALUES (18, 4, '数据备份恢复', 'fa fa-server', '/sql', 2, 0, 1, 3);
-INSERT INTO "auth" VALUES (19, 0, '后台主页', '', '/', 1, 0, 0, 2);
-INSERT INTO "auth" VALUES (21, 0, '404错误页面', '', '/404', 0, 0, 0, 0);
 INSERT INTO "auth" VALUES (24, 9, '路由权限管理', 'fa fa-chain-broken', '/auth', 3, 0, 1, 0);
 INSERT INTO "auth" VALUES (25, 9, '数据权限管理', 'fa fa-link', '/api', 3, 0, 1, 1);
+INSERT INTO "auth" VALUES (26, 0, '找不到页面', '', '/not-find', 0, 1, 1, 0);
+INSERT INTO "auth" VALUES (27, 0, '后台登录', '', '/login', 0, 1, 1, 1);
+INSERT INTO "auth" VALUES (28, 0, '后台主页', '', '/', 1, 1, 1, 2);

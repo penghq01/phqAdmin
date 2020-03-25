@@ -13,12 +13,13 @@ const RouterInfo = new Router({
     routes: defaultRouter
 });
 const isLoginPath = (path) => {
-    let index = publicPath.findIndex(item => item === path);
-    if (index >= 0) {
-        return false
-    } else {
-        return true
-    }
+   let isTrue=true;
+   publicPath.forEach(item =>{
+       if(item===path){
+           isTrue=false;
+       }
+   });
+   return isTrue;
 };
 RouterInfo.beforeEach((to, from, next) => {
     if (isLoginPath(to.path) && !logic.isLogin()) {
@@ -29,7 +30,7 @@ RouterInfo.beforeEach((to, from, next) => {
             }
         });
     } else {
-            next();
+        next();
     }
 });
 RouterInfo.$addRoutes = (params) => {

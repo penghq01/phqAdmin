@@ -19,7 +19,7 @@
                 <i class="fa fa-user" aria-hidden="true"></i> 欢迎：{{userInfo.username}}
                 <div class="user-info">
                     <div v-if="uiAuth._admin_api_admin_edit_pass" @click="opened=true">修改密码</div>
-                    <div v-if="uiAuth._admin_api_admin_info">个人信息</div>
+                    <!--<div v-if="uiAuth._admin_api_admin_info">个人信息</div>-->
                     <div @click="outLogin">退出登录</div>
                 </div>
             </div>
@@ -33,8 +33,7 @@
                 :close="close"
                 close-title="取 消"
                 :ok-click="editPassword"
-                ok-title="保存修改"
-        >
+                ok-title="保存修改">
             <div class="input-div"><el-input type="password" v-model="editUser.oldpass" placeholder="请输入旧的密码"/></div>
             <div class="input-div"><el-input type="password" v-model="editUser.newpass" placeholder="请输入新密码"/></div>
             <div class="input-div"><el-input type="password" v-model="editUser.okpass" placeholder="请再次输入密码"/></div>
@@ -46,15 +45,13 @@
     import http from "../lib/http";
     import storage from "../lib/storage";
     import utils from "../lib/utils";
-    import md5 from "js-md5"
-    import Menu from "../components/Menu/Menu"
+    import md5 from "js-md5";
+    import Menu from "../components/Menu/Menu";
     import message from "../lib/message";
     import WinTitle from "../components/WinTitle/WinTitle";
     import config from "../config";
     import myDialog from "../components/myDialog";
-    import publicPath from "../lib/publicPath";
-    import logic from "../lib/logic";
-    import {mapState,mapMutations} from "vuex";
+    import {mapState,mapActions} from "vuex";
     export default {
         name: 'home',
         components:{Menu,WinTitle,myDialog},
@@ -62,11 +59,8 @@
             return {
                 editUser: {},
                 opened: false,
-                userInfo: {},
                 activeMenu:"/index",
                 routerHistory:[],
-                menuList:[],
-                menuTreeList:[],
                 isPush:false,
                 routerHistoryWidth:0,
                 routerHistoryLeft:0,
@@ -74,7 +68,7 @@
             }
         },
         computed:{
-            ...mapState(["uiAuth"]),
+            ...mapState(["uiAuth","userInfo","routerList","menuTreeList"]),
             leftAndHeaderTop(){
                 if(this.platform.isWeb){
                     return "top:0";
@@ -90,39 +84,48 @@
                 }
             }
         },
+        watch:{
+            routerList(){
+                this.setTriggerSelect();
+            }
+        },
         mounted() {
             this.platform=config.platform;
             this.activeMenu=this.$router.history.current.path;
-            this.getUiAutlList(()=>{
-                this.getAuthList();
-                this.getUserInfo();
-            });
+            this.updateUIAuth();
+            this.updateRouterList(this.$router);
+            this.updateUserInfo();
         },
         methods: {
-            ...mapMutations(["UpdateUiAuth"]),
+            ...mapActions(["updateUIAuth","updateUserInfo","updateRouterList"]),
+            setTriggerSelect(){
+                if(!this.isPush){
+                    this.triggerSelect(this.$router.history.current.path);
+                    this.isPush=true;
+                }
+            },
             //点击菜单时触发
             triggerSelect(key) {
                 let router=this.$router.history.current;
-                let index=this.routerHistory.findIndex(r=>r.key==key);
+                let index=this.routerHistory.findIndex(r=>r.key===key);
                 this.routerHistory.forEach(r=>r.active=false);
                 if(index<0){
-                    let i=this.menuList.findIndex(i=>i.router==key);
+                    let i=this.routerList.findIndex(i=>i.router===key);
                     let title="";
                     let id=this.routerHistory.length+1;
                     if(i>=0){
-                        title=this.menuList[i].title;
-                        id=this.menuList[i].id;
+                        title=this.routerList[i].title;
+                        id=this.routerList[i].id;
                     }
                     this.routerHistory.push({"key":key,"active":true,cache:true,"title":title,"id":id});
                 }else{
                     this.routerHistory[index].active=true;
                 }
-                if(router.path!=key){
+                if(router.path!==key){
                     this.activeMenu=key;
                     this.$router.push({'path': key});
                 }
                 this.calcRouterHistoryWidth();
-                //storage.routerHistory.set(this.routerHistory);
             },
             //点击菜单时触发计算打开菜单历史移动方式
             calcRouterHistoryWidth(){
@@ -210,62 +213,6 @@
                     }
                 }
             },
-            //菜单权限，转菜单树
-            listTotree(data,pid=0){
-                let list=[];
-                data.forEach((item,key)=>{
-                    if(item.auth_type==0 && item.is_show==1){
-                        if(item.pid==pid){
-                            let tem={"title":item.title,"key":item.router,"icon":item.icon};
-                            let cd=this.listTotree(data,item.id);
-                            if(cd.length>0){
-                                tem.key=item.pid+"-"+item.id;
-                                this.$set(tem,"children",cd);
-                            }
-                            if(!utils.empty(tem.auth)){
-                                tem.auth=JSON.parse(tem.auth);
-                            }
-                            list.push(tem);
-                            //data.splice(key,1);
-                        }
-                    }
-                });
-                return list;
-            },
-            //获取UI权限列表
-            getUiAutlList(_success=()=>{}){
-                http.post("admin/ui_auth").then(data => {
-                    this.UpdateUiAuth(data);
-                    _success();
-                }).catch(err => {});
-            },
-            //获取菜单列表
-            getAuthList() {
-                if(!this.uiAuth._admin_api_admin_auth){
-                    return;
-                }
-                http.post("admin/auth").then(data => {
-                    this.menuList=data;
-                    logic.addRoutes(this.$router,data);
-                    publicPath.splice(0);
-                    data.forEach(item=>{
-                        if(item.visit===0){
-                            publicPath.push(item.router);
-                        }
-                    });
-                    this.menuTreeList=this.listTotree(data);
-                    if(!this.isPush){
-                        this.triggerSelect(this.$router.history.current.path);
-                        this.isPush=true;
-                    }
-                }).catch(err => {});
-            },
-            getUserInfo() {
-                http.post("admin/info").then(data => {
-                    this.userInfo = data;
-                }).catch(err => {
-                });
-            },
             outLogin() {
                 message.confirm("确定要退出登录吗?", {
                     okName: "确定退出", okFunction: () => {
@@ -312,7 +259,9 @@
         font-size:22px;
     }
     .user {
-        width:120px;
+        margin-right:10px;
+        border-right:1px $border-color2 solid;
+        width:200px;
         color: #327AA3;
         position: relative;
         height: 100%;
@@ -323,32 +272,33 @@
         &>i{
             margin-right:5px;
         }
-        & > div {
+        & .user-info {
             display: none;
+            position: absolute;
+            z-index: 99;
+            top: 100%;
+            right:0;
+            background-color: #fff;
+            box-shadow: 0 0 5px #A7A7A7;
+            color: #363636;
             width:100%;
+            &>div{
+                width:100%;
+                padding: 8px 0;
+                text-align: center;
+            }
         }
 
         &:hover {
             background-color: $primary-color;
             color: #fff;
             cursor: pointer;
-            & > div {
+            & .user-info {
                 display: block;
-                position: absolute;
-                width:100%;
-                z-index: 9999;
-                background-color: #fff;
-                box-shadow: 0 0 5px #A7A7A7;
-                left: 0;
-                top: 100%;
-                padding: 10px;
-                color: #363636;
                 & > div {
-                    width: 100%;
-                    padding: 5px;
-                    text-align: center;
                     &:hover {
-                        color: #0C7BBB;
+                        color: #ffffff;
+                        background-color: $primary-color;
                     }
                 }
             }
@@ -356,11 +306,8 @@
     }
     .router{
         height:100%;
-        width:calc(100% - 160px);
+        width:calc(100% - 240px);
         background-color:$text-gray3-color;
-       // box-shadow:inset 0 0 5px $box-gray0-color;
-        //border:1px $border-color1 solid;
-        //border-radius:3px;
         overflow: hidden;
         min-width:300px;
         &>div{

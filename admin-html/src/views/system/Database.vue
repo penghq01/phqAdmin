@@ -2,7 +2,7 @@
     <div class="sql">
         <div class="action" style="padding-bottom: 10px;">
             <Poptip
-                    v-if="$store.state.uiAuth._admin_api_sql_exprot"
+                    v-if="uiAuth._admin_api_sql_exprot"
                     transfer
                     confirm
                     title="确定要备份数据吗?"
@@ -10,7 +10,7 @@
                 <el-button type="primary" size="mini">备份数据</el-button>
             </Poptip>
         </div>
-        <div class="table">
+        <div class="table" v-if="uiAuth._admin_api_sql_list">
             <el-table  v-loading="loading" :data="dataList" border size="mini">
                 <el-table-column label="文件名" prop="file_name"></el-table-column>
                 <el-table-column label="大小" width="100">
@@ -21,7 +21,7 @@
                 <el-table-column label="操作" align="center" width="160">
                     <template slot-scope="scope">
                         <Poptip
-                                v-if="$store.state.uiAuth._admin_api_sql_del"
+                                v-if="uiAuth._admin_api_sql_del"
                                 transfer
                                 confirm
                                 title="确定删除吗?"
@@ -30,7 +30,7 @@
                         </Poptip>
                         <span class="interval-span"></span>
                         <Poptip
-                                v-if="$store.state.uiAuth._admin_api_sql_improt"
+                                v-if="uiAuth._admin_api_sql_improt"
                                 transfer
                                 confirm
                                 title="确定要恢复备份吗?"
@@ -45,10 +45,9 @@
 </template>
 
 <script>
-    import logic from "../../lib/logic";
     import http from "../../lib/http";
     import message from "../../lib/message";
-
+    import {mapState} from "vuex";
     export default {
         name: "System",
         data(){
@@ -57,12 +56,12 @@
                 dataList:[]
             }
         },
+        computed:{...mapState(["uiAuth"])},
         mounted(){
             this.getSqlList();
         },
         methods:{
            getSqlList(){
-               if(!this.$store.state.uiAuth._admin_api_sql_list){return;}
                http.post("sql/list").then(data=>{
                    this.dataList=data;
                }).catch(err=>{});

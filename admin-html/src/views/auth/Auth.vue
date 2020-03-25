@@ -1,9 +1,9 @@
 <template>
     <div>
         <div style="padding-bottom: 10px;">
-            <el-button v-if="$store.state.uiAuth._admin_api_auth_add" type="primary" size="mini" @click="showAdd(0)">添加</el-button>
+            <el-button v-if="uiAuth._admin_api_auth_add" type="primary" size="mini" @click="showAdd(0)">添加</el-button>
         </div>
-        <div>
+        <div v-if="uiAuth._admin_api_auth_list">
             <el-table v-loading="loading" :data="treeAuthList" border size="mini"  row-key="id">
                 <el-table-column label="标题" prop="title"></el-table-column>
                 <el-table-column label="图标" width="70">
@@ -39,11 +39,11 @@
                 <el-table-column label="排序" width="50" prop="sort"></el-table-column>
                 <el-table-column label="操作" width="180">
                     <template slot-scope="scope">
-                        <el-button v-if="$store.state.uiAuth._admin_api_auth_add" type="primary" @click="showAdd(scope.row.id,scope.row)" icon="el-icon-plus" size="mini"></el-button>
-                        <el-button v-if="$store.state.uiAuth._admin_api_auth_edit" type="warning" @click="showEdit(scope.row)" icon="el-icon-edit-outline" size="mini"></el-button>
+                        <el-button v-if="uiAuth._admin_api_auth_add" type="primary" @click="showAdd(scope.row.id,scope.row)" icon="el-icon-plus" size="mini"></el-button>
+                        <el-button v-if="uiAuth._admin_api_auth_edit" type="warning" @click="showEdit(scope.row)" icon="el-icon-edit-outline" size="mini"></el-button>
                         <span class="interval-span"></span>
                         <Poptip
-                                v-if="$store.state.uiAuth._admin_api_auth_del"
+                                v-if="uiAuth._admin_api_auth_del"
                                 transfer
                                 confirm
                                 title="确定删除吗?"
@@ -107,6 +107,7 @@
     import message from "../../lib/message";
     import defaultRouter from "../../router/defaultRouter";
     import routerList from "../../router/routerList";
+    import {mapState,mapActions} from "vuex";
     export default {
         name: 'RouteAuth',
         data() {
@@ -126,6 +127,7 @@
                     sort:0}
             }
         },
+        computed:{...mapState(["uiAuth"])},
         mounted() {
             this.getAuthList();
             let routes=defaultRouter;
@@ -134,6 +136,7 @@
             this.routersToArror(router_list);
         },
         methods: {
+            ...mapActions(["updateRouterList"]),
             listTotree(data,pid=0){
                let list=[];
                data.forEach((item,key)=>{
@@ -187,9 +190,6 @@
                 });
             },
             getAuthList() {
-                if(!this.$store.state.uiAuth._admin_api_auth_list){
-                    return;
-                }
                 http.post("auth/list").then(data => {
                     this.treeAuthList=this.listTotree(data);
                     this.loading = false;
@@ -215,6 +215,7 @@
                 let postAuth=utils.NewObject(this.postAuth);
                 postAuth.sort=parseInt(postAuth.sort);
                 http.post("auth/add",postAuth).then(data => {
+                       this.updateRouterList(this.$router);
                        if(this.postAuth.pid<=0){
                             this.treeAuthList.push(data);
                        }else{
@@ -240,6 +241,7 @@
                 postAuth.auth=JSON.stringify(postAuth.auth);
                 postAuth.sort=parseInt(postAuth.sort);
                 http.post("auth/edit",postAuth).then(()=> {
+                    this.updateRouterList(this.$router);
                     this.editItem(this.postAuth.id,this.treeAuthList,utils.NewObject(this.postAuth));
                     this.close();
                 }).catch(err => {
@@ -248,6 +250,7 @@
             del(row){
                 message.loading.show("正在删除");
                 http.post("auth/del",{id:row.id}).then(data=>{
+                    this.updateRouterList(this.$router);
                     this.delItem(row.id,this.treeAuthList);
                 }).catch(err=>{});
             },

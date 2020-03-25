@@ -1,13 +1,13 @@
 <template>
   <div class="users">
-     <div style="padding-bottom:10px;" v-if="$store.state.uiAuth._admin_api_user_list_paginate">
+     <div style="padding-bottom:10px;" v-if="uiAuth._admin_api_user_list_paginate">
         <el-input style="width:150px;" type="text" size="mini" v-model="search.nickname" placeholder="请输入昵称"/>
          <span class="interval-span"></span>
          <el-input style="width:150px;" type="text" size="mini" v-model="search.mobile" placeholder="请输入手机号"/>
          <span class="interval-span"></span>
          <el-button icon="h-icon-search" type="primary" size="mini" @click="searchUsers">查找会员</el-button>
      </div>
-      <div>
+      <div v-if="uiAuth._admin_api_user_list_paginate">
           <el-table v-loading="loading" :data="userList" border size="mini">
               <el-table-column
                       label="头像"
@@ -62,6 +62,7 @@
 <script>
   import http from "../../lib/http";
   import utils from "../../lib/utils";
+  import {mapState} from "vuex";
   export default {
     name: 'user',
     data () {
@@ -78,6 +79,7 @@
         }
       }
     },
+      computed:{...mapState(["uiAuth"])},
     mounted () {
         this.getUserList();
     },
@@ -86,7 +88,6 @@
             return utils.UnixToDateTime(val);
         },
         getUserList(){
-            if(!this.$store.state.uiAuth._admin_api_user_list_paginate){return;}
             http.post(`user/list/${this.pageData.page_size}/${this.pageData.page}`,this.search).then(data=>{
                 this.userList=data.data;
                 this.pageData=data.paginate;

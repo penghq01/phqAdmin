@@ -1,9 +1,9 @@
 <template>
     <div class="role">
         <div style="padding-bottom:10px;">
-            <el-button v-if="$store.state.uiAuth._admin_api_role_add" type="primary" size="mini" @click="opened=true">添加角色</el-button>
+            <el-button v-if="uiAuth._admin_api_role_add" type="primary" size="mini" @click="opened=true">添加角色</el-button>
         </div>
-        <div v-if="$store.state.uiAuth._admin_api_role_auth_list">
+        <div v-if="uiAuth._admin_api_role_auth_list">
             <el-table v-loading="loading" :data="roleList" border size="mini">
                 <el-table-column label="ID" prop="id"></el-table-column>
                 <el-table-column label="名称" prop="role_name"></el-table-column>
@@ -11,7 +11,7 @@
                 <el-table-column label="操作" align="center" width="120">
                     <template slot-scope="scope">
                         <Poptip
-                                v-if="$store.state.uiAuth._admin_api_role_del"
+                                v-if="uiAuth._admin_api_role_del"
                                 transfer
                                 confirm
                                 title="确定删除吗?"
@@ -20,7 +20,7 @@
                         </Poptip>
                         <span class="interval-span"></span>
 
-                        <el-button v-if="$store.state.uiAuth._admin_api_role_edit" type="primary" size="mini" @click="showEdit(scope.row)" icon="el-icon-edit-outline"></el-button>
+                        <el-button v-if="uiAuth._admin_api_role_edit" type="primary" size="mini" @click="showEdit(scope.row)" icon="el-icon-edit-outline"></el-button>
                     </template>
                 </el-table-column>
             </el-table>
@@ -70,8 +70,7 @@
     import http from "../../lib/http";
     import utils from "../../lib/utils";
     import message from "../../lib/message";
-    import logic from "../../lib/logic";
-
+    import {mapState,mapActions} from "vuex";
     export default {
         name: 'Role',
         data() {
@@ -89,12 +88,14 @@
                 checkedAuth: [],
             }
         },
+        computed:{...mapState(["uiAuth","userInfo"])},
         mounted() {
             this.getAuthList();
             this.getRoleList();
             this.getApiList();
         },
         methods: {
+            ...mapActions(["updateUIAuth","updateRouterList"]),
             listTotree(data, pid = 0) {
                 let list = [];
                 data.forEach((item, key) => {
@@ -107,7 +108,6 @@
                 return list;
             },
             getApiList() {
-                if(!this.$store.state.uiAuth._admin_api_api_list){return;}
                 http.post("api/list").then(data => {
                     data.forEach(item=>{
                       this.apiList.push({"key":item.id,"label":item.title,"disabled":false});
@@ -116,7 +116,6 @@
                 });
             },
             getAuthList() {
-                if(!this.$store.state.uiAuth._admin_api_role_auth_list){return;}
                 http.post("role/auth-list").then(data => {
                     this.authList = data;
                     this.authTree = this.listTotree(data);
@@ -124,7 +123,6 @@
                 });
             },
             getRoleList() {
-                if(!this.$store.state.uiAuth._admin_api_role_list){return;}
                 this.loading = true;
                 http.post("role/list").then(data => {
                     this.roleList = data;
@@ -182,7 +180,8 @@
                 this.postData.auth_list = [...HalfCheckedKeys, ...CheckedKeys];
                 message.loading.show("修改中");
                 http.post("role/edit", this.postData).then(data => {
-                    let index = this.roleList.findIndex(i => i.id == this.postData.id);
+                    this.getUIAuth(this.postData.id);
+                    let index = this.roleList.findIndex(i => i.id === this.postData.id);
                     if (index >= 0) {
                         this.$set(this.roleList, index, this.postData);
                     }
@@ -194,10 +193,23 @@
             del(row) {
                 message.loading.show("删除中");
                 http.post("role/del", {"id": row.id}).then(data => {
+                    this.getUIAuth(row.id);
                     this.roleList.splice(this.roleList.findIndex(i => i.id == row.id), 1);
                 }).catch(err => {
                 });
-            }
+            },
+            //更新UI权限
+            getUIAuth(id=0){
+                let update=true;
+                this.userInfo.role.forEach(item=>{
+                    if(update && item===id){
+                        console.log("updateRouterList");
+                        this.updateRouterList(this.$router);
+                        this.updateUIAuth();
+                        update=false;
+                    }
+                });
+            },
         }
     }
 </script>

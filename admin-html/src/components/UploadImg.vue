@@ -1,6 +1,6 @@
 <template>
     <div class="upload-img">
-        <div v-if="$store.state.uiAuth._admin_api_files_upload_img">
+        <div v-if="uiAuth._admin_api_files_upload_img">
             <el-upload
                     class="upload-demo"
                     action="#"
@@ -15,7 +15,7 @@
             </el-upload>
         </div>
         <div class="files">
-            <div class="files-class">
+            <div class="files-class" v-if="uiAuth._admin_api_files_list_class">
                 <el-tree :data="classList" @node-drag-start="nodeDragStart" @node-drop="nodeDrop"
                          @node-click="nodeClick" :allow-drag="allowDrag" :allow-drop="allowDrop" draggable node-key="id"
                          highlight-current default-expand-all :expand-on-click-node="false">
@@ -34,21 +34,21 @@
                                   <i class="el-icon-more"></i>
                                 </span>
                                 <el-dropdown-menu slot="dropdown">
-                                    <el-dropdown-item v-if="$store.state.uiAuth._admin_api_files_add_class" :command="{'action':'add','data':data}" icon="el-icon-plus">添加</el-dropdown-item>
-                                    <el-dropdown-item v-if="data.id>0 && $store.state.uiAuth._admin_api_files_edit_class" :command="{'action':'edit','data':data}" icon="el-icon-edit-outline">修改</el-dropdown-item>
-                                    <el-dropdown-item v-if="data.id>0 && $store.state.uiAuth._admin_api_files_del_class" :command="{'action':'delete','data':data,'node':node}" icon="el-icon-delete">删除</el-dropdown-item>
+                                    <el-dropdown-item v-if="uiAuth._admin_api_files_add_class" :command="{'action':'add','data':data}" icon="el-icon-plus">添加</el-dropdown-item>
+                                    <el-dropdown-item v-if="data.id>0 && uiAuth._admin_api_files_edit_class" :command="{'action':'edit','data':data}" icon="el-icon-edit-outline">修改</el-dropdown-item>
+                                    <el-dropdown-item v-if="data.id>0 && uiAuth._admin_api_files_del_class" :command="{'action':'delete','data':data,'node':node}" icon="el-icon-delete">删除</el-dropdown-item>
                                 </el-dropdown-menu>
                             </el-dropdown>
                         </span>
                     </span>
                 </el-tree>
             </div>
-            <div class="file-list">
+            <div class="file-list" v-if="uiAuth._admin_api_files_list_paginate">
                 <transition-group name="list-animate" tag="div">
                     <div class="img-list" v-for="(img,index) in imgList" :key="img.id">
                         <div v-if="isSelect" class="img-action img-action-see" @click="selectImg(img)">选择图片</div>
                         <img @click="previewImg=img.src" :src="imgHost+img.src"/>
-                        <div v-if="$store.state.uiAuth._admin_api_files_del" class="img-action img-action-del" @click="delImg(img)">删除</div>
+                        <div v-if="uiAuth._admin_api_files_del" class="img-action img-action-del" @click="delImg(img)">删除</div>
                     </div>
                 </transition-group>
 
@@ -66,7 +66,7 @@
     import http from "../lib/http";
     import utils from "../lib/utils";
     import config from "../config"
-    import logic from "../lib/logic";
+    import {mapState} from "vuex";
     import PreviewImg from "./PreviewImg";
     export default {
         name: "UploadImg",
@@ -77,6 +77,7 @@
                 default:false
             }
         },
+        computed:{...mapState(["uiAuth"])},
         data() {
             return {
                 imgHost:"",
@@ -126,7 +127,7 @@
             },
             //获取分类列表
             getFileClassList() {
-                if(!this.$store.state.uiAuth._admin_api_files_list_class){
+                if(!this.uiAuth._admin_api_files_list_class){
                     return;
                 }
                 message.loading.show("加载数据");
@@ -137,7 +138,7 @@
             },
             //获取图片列表
             getImageList() {
-                if(!this.$store.state.uiAuth._admin_api_files_list_paginate){
+                if(!this.uiAuth._admin_api_files_list_paginate){
                     return;
                 }
                 http.post(`files/list/${this.pageData.page_size}/${this.pageData.page}`, {"class_id": this.selectFileClassId}).then(list => {
