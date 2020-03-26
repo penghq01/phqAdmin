@@ -40,7 +40,7 @@ func InitRoute() {
 	}
 	//注册后台路由
 	for _, api := range acc.DateAPIList {
-		if api.Struct != "" {
+		if api.Struct != "" && api.MappingMethods!=""{
 			c, ok := controllerMap[api.Struct]
 			if ok {
 				beego.Router(api.Router, c, api.MappingMethods)
