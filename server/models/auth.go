@@ -72,8 +72,6 @@ func (this *Api) Add() CurdResult {
 		Title:          true,
 		Router:         true,
 		Visit:          true,
-		Struct:         true,
-		MappingMethods: true,
 	}
 	if ok, msg := this.Valid(vd); !ok {
 		return CurdResult{
@@ -103,10 +101,7 @@ func (this *Api) Edit() CurdResult {
 		Id:             true,
 		Title:          true,
 		Router:         true,
-		Visit:          true,
-		Struct:         true,
-		MappingMethods: true,
-	}
+		Visit:          true,	}
 	if ok, msg := this.Valid(vd); !ok {
 		return CurdResult{
 			Err: errors.New(msg),
