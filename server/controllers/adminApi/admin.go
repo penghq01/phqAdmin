@@ -133,8 +133,8 @@ func (this *Admin) ImportSqL() {
 
 //备份数据库数据
 func (this *Admin) ExportSqL() {
-	name := fmt.Sprintf("%v-backups.bak", time.Now().Format("2006-01-02-15-04-05"))
 	if common.DbMode == "1" {
+		name := fmt.Sprintf("%v-backups.bak", time.Now().Format("2006-01-02-15-04-05"))
 		filePath := filepath.Join(common.SqlBakPathDir, name)
 		ok, err := common.PathExists(common.SqliteFilePath)
 		if !ok {
@@ -152,6 +152,7 @@ func (this *Admin) ExportSqL() {
 			this.ServeError("创建备份数据文件失败："+err.Error(), "")
 		}
 	} else if common.DbMode == "0" {
+		name := fmt.Sprintf("%v-backups.sql", time.Now().Format("2006-01-02-15-04-05"))
 		ok, err := common.PathExists(common.SqlBakPathDir)
 		if !ok {
 			err = os.MkdirAll(common.SqlBakPathDir, 0666)
