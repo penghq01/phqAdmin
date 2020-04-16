@@ -1,4 +1,5 @@
 /.idea
+/sql-bak
 server.exe
 server.exe~
 *.log
