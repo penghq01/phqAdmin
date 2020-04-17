@@ -31,7 +31,7 @@ module.exports = {
     //静态资源目录
   assetsDir: 'public',
   //编译后访问目录
-  publicPath: '/',
+  publicPath: '/admin',
   //编译输出目录
-  outputDir:"./dist/",
+  outputDir:"./dist/admin",
 };

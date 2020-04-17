@@ -18,8 +18,17 @@
                         {{getSize(scope.row.file_size)}}
                     </template>
                 </el-table-column>
-                <el-table-column label="操作" align="center" width="160">
+                <el-table-column label="操作" align="center" width="260">
                     <template slot-scope="scope">
+                        <Poptip
+                                v-if="uiAuth._admin_api_sql_download"
+                                transfer
+                                confirm
+                                title="确定要下载备份吗?"
+                                @on-ok="downloadSql(scope.row)">
+                            <el-button type="primary" size="mini">下载备份</el-button>
+                        </Poptip>
+                        <span class="interval-span"></span>
                         <Poptip
                                 v-if="uiAuth._admin_api_sql_del"
                                 transfer
@@ -35,7 +44,7 @@
                                 confirm
                                 title="确定要恢复备份吗?"
                                 @on-ok="improtSql(scope.row)">
-                            <el-button type="primary" size="mini">恢复备份</el-button>
+                            <el-button type="warning" size="mini">恢复备份</el-button>
                         </Poptip>
                     </template>
                 </el-table-column>
@@ -48,6 +57,7 @@
     import http from "../../lib/http";
     import message from "../../lib/message";
     import {mapState} from "vuex";
+    import FileSave from "file-saver"
     export default {
         name: "System",
         data(){
@@ -92,6 +102,12 @@
             improtSql(row={"file_name":""}){
                 message.loading.show("数据恢复中，请耐心等待……");
                 http.post("sql/improt",{"file_name":row.file_name}).then(data=>{}).catch(err=>{}).finally(()=>message.loading.hide());
+            },
+            downloadSql(row={"file_name":""}){
+                message.loading.show("下载中，请耐心等待……");
+                http.download("sql/download",{"file_name":row.file_name}).then(data=>{
+                    FileSave.saveAs(data,row.file_name);
+                }).catch(err=>{});
             },
         }
     }

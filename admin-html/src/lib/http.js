@@ -64,11 +64,13 @@ export default {
             axios.post(url,param,config).then(response=>{
                 // 对响应数据做点什么
                 let data = response.data;
+                message.loading.hide()
                 responseHandle(data,{resolve, reject,isToast});
             }).catch(err=>{
+                message.loading.hide()
                 isToast && message.msg.error('网络繁忙，请稍后重试');
                 reject(err);
-            }).finally(()=>message.loading.hide())
+            });
         })
     },
     post(url = '',params={},isToast=true){
@@ -76,11 +78,27 @@ export default {
             axios.post(url,params).then(response=>{
                 // 对响应数据做点什么
                 let data = response.data;
+                message.loading.hide()
                 responseHandle(data,{resolve,reject,isToast});
             }).catch(err=>{
+                message.loading.hide();
                 isToast && message.msg.error('网络繁忙，请稍后重试');
                 reject(err);
-            }).finally(()=>message.loading.hide())
+            });
+        })
+    },
+    download(url = '',params={},isToast=true){
+        return new Promise((resolve, reject) =>{
+            axios.post(url,params,{responseType: 'blob'}).then(response=>{
+                // 对响应数据做点什么
+                let data = response.data;
+                message.loading.hide();
+                resolve(data);
+            }).catch(err=>{
+                message.loading.hide();
+                isToast && message.msg.error('网络繁忙，请稍后重试');
+                reject(err);
+            });
         })
     }
 }

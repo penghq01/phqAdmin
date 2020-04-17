@@ -11,7 +11,7 @@
  Target Server Version : 50717
  File Encoding         : 65001
 
- Date: 16/04/2020 14:52:41
+ Date: 17/04/2020 10:26:32
 */
 
 SET NAMES utf8mb4;
@@ -55,7 +55,7 @@ CREATE TABLE `api`  (
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `UQE_api_id`(`id`) USING BTREE,
   UNIQUE INDEX `UQE_api_router`(`router`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 40 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 41 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of api
@@ -98,6 +98,7 @@ INSERT INTO `api` VALUES (36, '添加API接口', '_admin_api_api_add', '/admin/a
 INSERT INTO `api` VALUES (37, '获取API接口列表（分页）', '_admin_api_api_list_paginate', '/admin/api/api/list/:page_size/:page', 3, 1, 'adminApi.Api', 'post:PageList', 1);
 INSERT INTO `api` VALUES (38, '获取API接口列表', '_admin_api_api_list', '/admin/api/api/list', 2, 1, 'adminApi.Api', 'post:List', 1);
 INSERT INTO `api` VALUES (39, '获取UI权限列表', '_admin_api_admin_ui_auth', '/admin/api/admin/ui_auth', 1, 1, 'adminApi.Admin', 'post:ActionAuthList', 1);
+INSERT INTO `api` VALUES (40, '备份数据库下载', '_admin_api_sql_download', '/admin/api/sql/download', 2, 1, 'adminApi.Admin', 'post:DownloadSql', 1);
 
 -- ----------------------------
 -- Table structure for auth
@@ -663,7 +664,7 @@ CREATE TABLE `role`  (
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO `role` VALUES (5, '超级管理员', '[4,7,8,18,5,17,10,6,11]', '[33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,13,12,11,10,9,5,4,3,2,38]', '拥有所有权限');
+INSERT INTO `role` VALUES (5, '超级管理员', '[4,7,8,18,5,17,10,6,11]', '[33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,13,12,11,10,9,5,4,3,2,38,40]', '拥有所有权限');
 INSERT INTO `role` VALUES (7, '管理员', '[5,17,10,6,11]', '[23,22,21,20,19,10,9,12,18,11,24]', '管理员，拥有部分权限');
 
 -- ----------------------------

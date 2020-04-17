@@ -29,10 +29,13 @@ type Base struct {
 }
 
 func (this *Base) Prepare() {
-	this.Uri = this.Ctx.Request.RequestURI
+	this.Uri = this.Ctx.Request.URL.Path
 	this.AuthToken = this.Ctx.Input.Header("auth-token")
-	if err := json.Unmarshal(this.Ctx.Input.RequestBody, &this.Params); err != nil {
-		common.Logs.Error("参数解析错误=>%v", err)
+	RequestBody:=this.Ctx.Input.RequestBody
+	if len(RequestBody)>0{
+		if err := json.Unmarshal(this.Ctx.Input.RequestBody, &this.Params); err != nil {
+			common.Logs.Error("参数解析错误=>%v", err)
+		}
 	}
 	this.CheckSign() //判断数据签名是否正确
 }

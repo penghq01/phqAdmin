@@ -36,3 +36,4 @@ INSERT INTO `api` VALUES (36, '添加API接口', '_admin_api_api_add', '/admin/a
 INSERT INTO `api` VALUES (37, '获取API接口列表（分页）', '_admin_api_api_list_paginate', '/admin/api/api/list/:page_size/:page', 3, 1, 'adminApi.Api', 'post:PageList', 1);
 INSERT INTO `api` VALUES (38, '获取API接口列表', '_admin_api_api_list', '/admin/api/api/list', 2, 1, 'adminApi.Api', 'post:List', 1);
 INSERT INTO `api` VALUES (39, '获取UI权限列表', '_admin_api_admin_ui_auth', '/admin/api/admin/ui_auth', 1, 1, 'adminApi.Admin', 'post:ActionAuthList', 1);
+INSERT INTO `api` VALUES (40, '备份数据库下载', '_admin_api_sql_download', '/admin/api/sql/download', 2, 1, 'adminApi.Admin', 'post:DownloadSql', 1);

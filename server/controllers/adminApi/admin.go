@@ -213,3 +213,14 @@ func (this *Admin) DelSqL() {
 	}
 	this.ServeError("删除失败", "")
 }
+
+//备份下载
+func (this *Admin) DownloadSql(){
+	name := common.ToString(this.Input("file_name"))
+	dbFilePath := filepath.Join(common.SqlBakPathDir, name)
+	ok, _:= common.PathExists(dbFilePath)
+	if !ok {
+		this.ServeError("备份下载失败,备份文件不存在", "")
+	}
+	this.Ctx.Output.Download(dbFilePath,name)
+}

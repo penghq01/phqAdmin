@@ -1,7 +1,7 @@
 <template>
     <div class="home" :style="homePaddingTop">
         <div class="index-left" :style="leftAndHeaderTop">
-            <div class="sys-name">PHQ后台管理系统</div>
+            <div class="sys-name">后台管理</div>
             <Menu :list="menuTreeList" :active-menu="activeMenu" @select="triggerSelect"/>
         </div>
         <div class="index-header" :style="leftAndHeaderTop">
