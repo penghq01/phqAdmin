@@ -9,6 +9,7 @@ import (
 	"os/exec"
 	"path"
 	"path/filepath"
+	"runtime"
 	"server/acc"
 	"server/common"
 	"server/models"
@@ -169,7 +170,11 @@ func (this *Admin) ExportSqL() {
 			"--add-drop-table",
 			common.DbIni.String("db"),
 		}
-		cmd := exec.Command(filepath.Join(common.AppRunDir, "conf/tool/mysqldump.exe"), args...)
+		toolPath:="conf/tool/mysqldump.exe"
+		if runtime.GOOS=="linux" {
+			toolPath="conf/tool/mysqldump"
+		}
+		cmd := exec.Command(filepath.Join(common.AppRunDir,toolPath), args...)
 		var out bytes.Buffer
 		cmd.Stdout = &out
 		cmd.Stderr = os.Stderr
