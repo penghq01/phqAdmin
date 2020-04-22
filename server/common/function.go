@@ -156,26 +156,25 @@ func Bytes2Str(b []byte) string {
 	return *(*string)(unsafe.Pointer(&b))
 }
 
-
 //复制文件，dstName要复制到的地方。srcName要复制的文件
 func CopyFile(dstName, srcName string) (written int64, err error) {
-	dstDir:=filepath.Dir(dstName)
+	dstDir := filepath.Dir(dstName)
 	ok, err := PathExists(dstDir)
 	if !ok {
 		err = os.MkdirAll(dstDir, 0666)
 		if err != nil {
-			return 0,errors.New("创建目录失败，"+err.Error())
+			return 0, errors.New("创建目录失败，" + err.Error())
 		}
 	}
 	src, err := os.Open(srcName)
 	if err != nil {
-		return 0,errors.New("打开文件失败,"+err.Error())
+		return 0, errors.New("打开文件失败," + err.Error())
 	}
 	defer src.Close()
 
 	dst, err := os.Create(dstName)
 	if err != nil {
-		return 0,errors.New("创建文件失败,"+err.Error())
+		return 0, errors.New("创建文件失败," + err.Error())
 	}
 	defer dst.Close()
 

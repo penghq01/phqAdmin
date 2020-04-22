@@ -65,12 +65,12 @@ func (this *Admin) ListSql() {
 		files, err := ioutil.ReadDir(common.SqlBakPathDir)
 		if err == nil {
 			for key, file := range files {
-				ext:=path.Ext(file.Name())
-				isAdd:=false
-				if common.DbMode == "0" && ext==".sql"{
-					isAdd=true
-				}else if common.DbMode == "1" && ext==".bak"{
-					isAdd=true
+				ext := path.Ext(file.Name())
+				isAdd := false
+				if common.DbMode == "0" && ext == ".sql" {
+					isAdd = true
+				} else if common.DbMode == "1" && ext == ".bak" {
+					isAdd = true
 				}
 				if isAdd {
 					list = append(list, map[string]interface{}{
@@ -89,13 +89,13 @@ func (this *Admin) ListSql() {
 func (this *Admin) ImportSqL() {
 	name := common.ToString(this.Input("file_name"))
 	dbFilePath := filepath.Join(common.SqlBakPathDir, name)
-	ok, _:= common.PathExists(dbFilePath)
+	ok, _ := common.PathExists(dbFilePath)
 	if !ok {
 		this.ServeError("数据恢复失败,要恢复的备份文件不存在", "")
 	}
-	extStr:=path.Ext(dbFilePath)
+	extStr := path.Ext(dbFilePath)
 	if common.DbMode == "1" {
-		if extStr!=".bak"{
+		if extStr != ".bak" {
 			this.ServeError("数据恢复失败，该文件为mysql数据备份文件，当前使用数据为sqlit3", "")
 		}
 		err := common.DbEngine.Close()
@@ -119,14 +119,14 @@ func (this *Admin) ImportSqL() {
 		} else {
 			this.ServeSuccess("数据恢复失败，请重新启动服务", "")
 		}
-	} else if common.DbMode == "0"{
-		if extStr!=".sql"{
+	} else if common.DbMode == "0" {
+		if extStr != ".sql" {
 			this.ServeError("数据恢复失败，该文件为sqlit3数据备份文件，当前使用数据为mysql", "")
 		}
-		_,err:=common.DbEngine.ImportFile(dbFilePath)
-		if err == nil{
+		_, err := common.DbEngine.ImportFile(dbFilePath)
+		if err == nil {
 			this.ServeSuccess("数据恢复成功", "")
-		}else{
+		} else {
 			this.ServeError("数据恢复失败:"+err.Error(), "")
 		}
 	}
@@ -161,20 +161,20 @@ func (this *Admin) ExportSqL() {
 				this.ServeError("创建备份目录失败，"+err.Error(), "")
 			}
 		}
-		filePath := filepath.Join( common.SqlBakPathDir, name)
+		filePath := filepath.Join(common.SqlBakPathDir, name)
 		args := []string{
-			fmt.Sprintf("-h%v",common.DbIni.String("host")),
-			fmt.Sprintf("-u%v",common.DbIni.String("user")),
-			fmt.Sprintf("-P%v",common.DbIni.String("port")),
-			fmt.Sprintf("-p%v",common.DbIni.String("pass")),
+			fmt.Sprintf("-h%v", common.DbIni.String("host")),
+			fmt.Sprintf("-u%v", common.DbIni.String("user")),
+			fmt.Sprintf("-P%v", common.DbIni.String("port")),
+			fmt.Sprintf("-p%v", common.DbIni.String("pass")),
 			"--add-drop-table",
 			common.DbIni.String("db"),
 		}
-		toolPath:="conf/tool/mysqldump.exe"
-		if runtime.GOOS=="linux" {
-			toolPath="conf/tool/mysqldump"
+		toolPath := "conf/tool/mysqldump.exe"
+		if runtime.GOOS == "linux" {
+			toolPath = "conf/tool/mysqldump"
 		}
-		cmd := exec.Command(filepath.Join(common.AppRunDir,toolPath), args...)
+		cmd := exec.Command(filepath.Join(common.AppRunDir, toolPath), args...)
 		var out bytes.Buffer
 		cmd.Stdout = &out
 		cmd.Stderr = os.Stderr
@@ -220,12 +220,12 @@ func (this *Admin) DelSqL() {
 }
 
 //备份下载
-func (this *Admin) DownloadSql(){
+func (this *Admin) DownloadSql() {
 	name := common.ToString(this.Input("file_name"))
 	dbFilePath := filepath.Join(common.SqlBakPathDir, name)
-	ok, _:= common.PathExists(dbFilePath)
+	ok, _ := common.PathExists(dbFilePath)
 	if !ok {
 		this.ServeError("备份下载失败,备份文件不存在", "")
 	}
-	this.Ctx.Output.Download(dbFilePath,name)
+	this.Ctx.Output.Download(dbFilePath, name)
 }

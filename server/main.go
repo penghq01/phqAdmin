@@ -18,7 +18,6 @@ func main() {
 		if common.RunModeProd {
 			common.Logs.Flush() // 将日志从缓冲区读出，写入到文件
 		}
-
 		common.Logs.Close()
 	}()
 	routers.InitRoute()

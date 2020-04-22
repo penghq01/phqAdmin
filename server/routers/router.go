@@ -40,12 +40,12 @@ func InitRoute() {
 	}
 	//注册后台路由
 	for _, api := range acc.DateAPIList {
-		if api.Struct != "" && api.MappingMethods!=""{
+		if api.Struct != "" && api.MappingMethods != "" {
 			c, ok := controllerMap[api.Struct]
 			if ok {
 				beego.Router(api.Router, c, api.MappingMethods)
-			}else{
-				common.Logs.Info("✖ 路由 [ %v ],注册失败，没有找到对应的struct",api.Router)
+			} else {
+				common.Logs.Info("✖ 路由 [ %v ],注册失败，没有找到对应的struct", api.Router)
 			}
 		}
 	}
@@ -55,6 +55,7 @@ func InitRoute() {
 	}
 	common.Logs.Info("▶ 路由注册完成")
 }
+
 //获取前端APi接口路由
 func GetApiRouterList() []RouterInfo {
 	//var ApiRootPath string = "/api" //api接口路由root

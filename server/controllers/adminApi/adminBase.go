@@ -34,9 +34,9 @@ func (this *AdminBase) CheckDateApiAuth(dataApi map[string]string) {
 	if !ok {
 		_, ok = dataApi[this.UriReplacePage(this.Uri)]
 		if !ok {
-			if this.isUserLogin{
+			if this.isUserLogin {
 				this.ServeNOAUTH("您没有权限访问该数据接口 [ "+this.Uri+" ]", "")
-			}else{
+			} else {
 				this.ServeRELOGIN("您还没有登录或者登录状态已过期，请登录后访问", "")
 			}
 		}

@@ -37,7 +37,7 @@ func (this *Login) Login() {
 	updateAdmin.IdUpdate(user.AdminId)
 	this.LoginUser = user
 	this.ServeSuccess("登录成功", map[string]interface{}{
-		"token":     token,
-		"public_router":acc.GetNoLoginAdminRoute(),
+		"token":         token,
+		"public_router": acc.GetNoLoginAdminRoute(),
 	})
 }

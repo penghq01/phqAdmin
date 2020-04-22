@@ -15,11 +15,11 @@ func (this *Auth) Prepare() {
 }
 
 func (this *Auth) Add() {
-	model:=new(models.Auth)
+	model := new(models.Auth)
 	this.AnalyseJson(model)
 	res := model.Add()
 	if res.Err == nil {
-		acc.RouterList[model.Id]=*model
+		acc.RouterList[model.Id] = *model
 		this.ServeSuccess(res.Msg, model)
 	} else {
 		this.ServeError(res.Msg, "")
@@ -28,11 +28,11 @@ func (this *Auth) Add() {
 
 //删除
 func (this *Auth) Del() {
-	model:=new(models.Auth)
+	model := new(models.Auth)
 	this.AnalyseJson(model)
 	res := model.Delete()
 	if res.Err == nil {
-		delete(acc.RouterList,model.Id)
+		delete(acc.RouterList, model.Id)
 		this.ServeSuccess(res.Msg, "")
 	}
 	this.ServeError(res.Msg, "")
@@ -40,12 +40,12 @@ func (this *Auth) Del() {
 
 //修改
 func (this *Auth) Edit() {
-	model:=new(models.Auth)
+	model := new(models.Auth)
 	this.AnalyseJson(model)
-	res :=model.Edit()
+	res := model.Edit()
 	if res.Err == nil {
-		acc.RouterList[model.Id]=*model
-		this.ServeSuccess(res.Msg,model)
+		acc.RouterList[model.Id] = *model
+		this.ServeSuccess(res.Msg, model)
 	}
 	this.ServeError(res.Msg, "")
 }

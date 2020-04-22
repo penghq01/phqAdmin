@@ -78,8 +78,8 @@ func GetLoginAdminRoute(admin *models.Admin) []models.Auth {
 		for _, a := range admin.Role {
 			for _, rid := range RoleList[a].AuthList {
 				//list[rid] = RouterList[rid]
-				r:= RouterList[rid]
-				if r.Visit < 3{
+				r := RouterList[rid]
+				if r.Visit < 3 {
 					auth = append(auth, r)
 				}
 			}
@@ -100,7 +100,7 @@ func GetLoginAdminRoute(admin *models.Admin) []models.Auth {
 func GetNoLoginAdminRoute() []models.Auth {
 	auth := make([]models.Auth, 0)
 	for _, a := range RouterList {
-		if a.Visit==0{
+		if a.Visit == 0 {
 			auth = append(auth, a)
 		}
 	}
@@ -133,7 +133,7 @@ func GetLoginAdminDataApi(admin *models.Admin) map[string]string {
 func GetNoLoginAdminDataApi() map[string]string {
 	dataApiMap := make(map[string]string)
 	for _, d := range DateAPIList {
-		if d.Visit ==0 {
+		if d.Visit == 0 {
 			dataApiMap[d.Router] = d.Name
 		}
 	}

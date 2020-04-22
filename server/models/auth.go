@@ -17,7 +17,7 @@ type Api struct {
 	Sign           int8   `json:"sign" xorm:"tinyint(1) notnull default(1)"`    //是否需要签名 0不用，1需要
 	Struct         string `json:"struct" xorm:"varchar(128)"`                   //结构体名称
 	MappingMethods string `json:"mapping_methods" xorm:"varchar(55)"`           //映射的方法
-	IsShow   int8 `json:"is_show" xorm:"tinyint(1) notnull default(1)"`   //是否显示
+	IsShow         int8   `json:"is_show" xorm:"tinyint(1) notnull default(1)"` //是否显示
 }
 
 func (this *Api) TableName() string {
@@ -69,9 +69,9 @@ func (this *Api) Valid(obj ApiValid) (bool, string) {
 
 func (this *Api) Add() CurdResult {
 	vd := ApiValid{
-		Title:          true,
-		Router:         true,
-		Visit:          true,
+		Title:  true,
+		Router: true,
+		Visit:  true,
 	}
 	if ok, msg := this.Valid(vd); !ok {
 		return CurdResult{
@@ -98,10 +98,10 @@ func (this *Api) Add() CurdResult {
 }
 func (this *Api) Edit() CurdResult {
 	vd := ApiValid{
-		Id:             true,
-		Title:          true,
-		Router:         true,
-		Visit:          true,	}
+		Id:     true,
+		Title:  true,
+		Router: true,
+		Visit:  true}
 	if ok, msg := this.Valid(vd); !ok {
 		return CurdResult{
 			Err: errors.New(msg),

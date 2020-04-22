@@ -18,7 +18,6 @@ import (
 	"time"
 )
 
-
 type Base struct {
 	beego.Controller
 	Sign      string                 //前端传来的参数签名
@@ -31,46 +30,50 @@ type Base struct {
 func (this *Base) Prepare() {
 	this.Uri = this.Ctx.Request.URL.Path
 	this.AuthToken = this.Ctx.Input.Header("auth-token")
-	RequestBody:=this.Ctx.Input.RequestBody
-	if len(RequestBody)>0{
+	RequestBody := this.Ctx.Input.RequestBody
+	if len(RequestBody) > 0 {
 		if err := json.Unmarshal(this.Ctx.Input.RequestBody, &this.Params); err != nil {
 			common.Logs.Error("参数解析错误=>%v", err)
 		}
 	}
 	this.CheckSign() //判断数据签名是否正确
 }
+
 //判断数据签名是否正确
-func (this *Base) CheckSign(){
-	if this.UriIsSign(){
-		ok:= common.CheckParams(this.Ctx.Input.Header("sign"), this.Ctx.Input.RequestBody)
+func (this *Base) CheckSign() {
+	if this.UriIsSign() {
+		ok := common.CheckParams(this.Ctx.Input.Header("sign"), this.Ctx.Input.RequestBody)
 		if !ok {
 			this.ServeError("非法数据：数据签名不正确！", "")
 		}
 	}
 }
+
 //判断当前Uri是否需要签名
-func (this *Base)UriIsSign()bool{
-	noSignRouter:=acc.GetNoSignDataApi()
-	_,ok:=noSignRouter[this.Uri]
+func (this *Base) UriIsSign() bool {
+	noSignRouter := acc.GetNoSignDataApi()
+	_, ok := noSignRouter[this.Uri]
 	if ok {
 		return false
-	}else{
-		uri:=this.UriReplacePage(this.Uri)
-		_,ok=noSignRouter[uri]
+	} else {
+		uri := this.UriReplacePage(this.Uri)
+		_, ok = noSignRouter[uri]
 		return !ok
 	}
 }
+
 //拆分访问URL包后两位替换未/:page_size/:page
-func (this *Base) UriReplacePage(uri string)string{
-	uriArr:=strings.Split(uri,"/")
-	arrLen:=len(uriArr)
-	if arrLen<3{
+func (this *Base) UriReplacePage(uri string) string {
+	uriArr := strings.Split(uri, "/")
+	arrLen := len(uriArr)
+	if arrLen < 3 {
 		return uri
 	}
-	uriArr[arrLen-1]=":page"
-	uriArr[arrLen-2]=":page_size"
-	return strings.Join(uriArr,"/")
+	uriArr[arrLen-1] = ":page"
+	uriArr[arrLen-2] = ":page_size"
+	return strings.Join(uriArr, "/")
 }
+
 //解析数据
 func (this *Base) AnalyseJson(obj interface{}) {
 	err := json.Unmarshal(this.Ctx.Input.RequestBody, obj)

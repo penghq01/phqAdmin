@@ -25,13 +25,12 @@ func (this *Role) AuthList() {
 	this.ServeSuccess("", auth)
 }
 
-
 func (this *Role) Add() {
-	model:=new(models.Role)
+	model := new(models.Role)
 	this.AnalyseJson(model)
 	res := model.Add()
 	if res.Err == nil {
-		acc.RoleList[model.Id]=*model
+		acc.RoleList[model.Id] = *model
 		this.ServeSuccess(res.Msg, model)
 	} else {
 		this.ServeError(res.Msg, "")
@@ -40,11 +39,11 @@ func (this *Role) Add() {
 
 //删除
 func (this *Role) Del() {
-	model:=new(models.Role)
+	model := new(models.Role)
 	this.AnalyseJson(model)
 	res := model.Delete()
 	if res.Err == nil {
-        delete(acc.RoleList,model.Id)
+		delete(acc.RoleList, model.Id)
 		this.ServeSuccess(res.Msg, "")
 	}
 	this.ServeError(res.Msg, "")
@@ -52,12 +51,12 @@ func (this *Role) Del() {
 
 //修改
 func (this *Role) Edit() {
-	model:=new(models.Role)
+	model := new(models.Role)
 	this.AnalyseJson(model)
-	res :=model.Edit()
+	res := model.Edit()
 	if res.Err == nil {
-		acc.RoleList[model.Id]=*model
-		this.ServeSuccess(res.Msg,model)
+		acc.RoleList[model.Id] = *model
+		this.ServeSuccess(res.Msg, model)
 	}
 	this.ServeError(res.Msg, "")
 }

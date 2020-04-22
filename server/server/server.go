@@ -29,7 +29,7 @@ func getCurrentDirectory() string {
 	}
 	return dir
 }
-func logsInit() {
+func LogsInit() {
 	//✖ ▶ ✔
 	common.Logs = logs.NewLogger(10000) // 创建一个日志记录器，参数为缓冲区的大小
 	runmode := beego.AppConfig.String("runmode")
@@ -45,29 +45,28 @@ func logsInit() {
 		if err != nil {
 			common.Logs.Error("✖ 设置日志记录方式：【控制台记录】，设置失败，%v", err)
 		}
-		common.Logs.SetLevel(logs.LevelDebug) // 设置日志写入缓冲区的等级：Debug级别（最低级别，所以所有log都会输入到缓冲区）
-		common.Logs.EnableFuncCallDepth(true) // 输出log时能显示输出文件名和行号（非必须）
 		common.Logs.Info("▶ 当前日志模式为：控制台记录")
 	} else {
 		//生产模式
 		// 设置配置文件
-		jsonConfig := `{"filename" : "ServerRunLogs.log","maxlines" : 5000,"maxsize"  : 20480}`
+		jsonConfig := `{"filename" : "./logs/ServiceRunLogs.log","maxlines" : 5000,"maxsize"  : 20480}`
 		err := common.Logs.SetLogger("file", jsonConfig) // 设置日志记录方式：本地文件记录
 		if err != nil {
 			common.Logs.Error("✖ 设置日志记录方式：【本地文件记录】，设置失败，%v", err)
 		}
-		common.Logs.SetLevel(logs.LevelDebug) // 设置日志写入缓冲区的等级
-		common.Logs.EnableFuncCallDepth(true) // 输出log时能显示输出文件名和行号（非必须）
 		common.Logs.Info("▶ 当前日志模式为：本地文件记录")
 	}
+	common.Logs.SetLevel(logs.LevelDebug) // 设置日志写入缓冲区的等级
+	common.Logs.EnableFuncCallDepth(true) // 输出log时能显示输出文件名和行号（非必须）
+	common.Logs.Async() //为了提升性能, 可以设置异步输出
 	common.AppRunDir = getCurrentDirectory()
-	rand.Seed(time.Now().UnixNano()) //初始化随机数种子
 	common.Logs.Info("▶ 当前运行目录：%v", common.AppRunDir)
 }
 func ServerInit() {
-	logsInit()
+	LogsInit()
 	//✖ ▶ ✔
 	common.Logs.Info("▶ 初始化中……")
+	rand.Seed(time.Now().UnixNano()) //初始化随机数种子
 	//获取文件上传目录
 	common.FileUploadDir = beego.AppConfig.String("file_upload_dir")
 	if common.FileUploadDir == "" {
@@ -136,7 +135,7 @@ func ServerInit() {
 	}
 
 	common.Logs.Info("▶ 同步数据库……")
-	err = common.DbEngine.Sync2(new(models.Admin), new(models.Auth), new(models.FilesClass), new(models.Files), new(models.Icon), new(models.Role), new(models.Users),new(models.Api))
+	err = common.DbEngine.Sync2(new(models.Admin), new(models.Auth), new(models.FilesClass), new(models.Files), new(models.Icon), new(models.Role), new(models.Users), new(models.Api))
 	if err != nil {
 		common.Logs.Error("✖ 同步数据库失败，%v", err)
 	} else {
