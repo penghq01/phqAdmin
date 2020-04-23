@@ -193,9 +193,8 @@ func (this *Base) UploadFile(saveDateBases bool, fileType string, key string, al
 }
 
 func (this *Base) jsonReturn(code int, msg interface{}, data interface{}) {
-	this.Data["json"] = map[string]interface{}{"code": code, "msg": msg, "data": data}
-	this.ServeJSON(true)
-	this.StopRun()
+	Data:=map[string]interface{}{"code": code, "msg": msg, "data": data}
+	this.ResultJson(Data)
 }
 func (this *Base) ServeSuccess(msg interface{}, data interface{}) {
 	this.jsonReturn(common.HTTP_SUCCESS, msg, data)
@@ -211,4 +210,15 @@ func (this *Base) ServeRELOGIN(msg interface{}, data interface{}) {
 }
 func (this *Base) ServeNOAUTH(msg interface{}, data interface{}) {
 	this.jsonReturn(common.HTTP_NOAUTH, msg, data)
+}
+func  (this *Base)ResultJson(data interface{}){
+	this.Data["json"] = data
+	this.ServeJSON(true)
+	this.StopRun()
+}
+
+func  (this *Base)ResultXml(data interface{}){
+	this.Data["xml"] = data
+	this.ServeXML()
+	this.StopRun()
 }
