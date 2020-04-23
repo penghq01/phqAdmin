@@ -172,3 +172,15 @@ func GetNoSignDataApi() map[string]string {
 	}
 	return dataApiMap
 }
+
+//通过URI获取数据接口名称
+func UriGetDateAPIName(uri string)string{
+	name:=""
+	for _,v:=range DateAPIList{
+        if v.Router==uri{
+        	name=v.Title
+        	break
+		}
+	}
+	return name
+}

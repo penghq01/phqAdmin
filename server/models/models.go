@@ -114,9 +114,8 @@ func Find(model IModels, find func(db *xorm.Session) error) CurdResult {
 }
 func PageFind(model IModels, pageData *common.PaginateData, where func(db *xorm.Session), find func(db *xorm.Session) error) CurdResult {
 	db := common.DbEngine.Table(model.TableName())
-	defer db.Close()
 	where(db)
-	rows, err := db.Count(model)
+	rows, err := db.Count()
 	if err != nil {
 		common.Logs.Error("✖ 查询(分页)总条数失败，%v", err)
 		return CurdResult{

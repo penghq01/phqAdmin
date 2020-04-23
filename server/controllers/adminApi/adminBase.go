@@ -32,10 +32,15 @@ func (this *AdminBase) Prepare() {
 func (this *AdminBase) CheckDateApiAuth(dataApi map[string]string) {
 	_, ok := dataApi[this.Uri]
 	if !ok {
-		_, ok = dataApi[this.UriReplacePage(this.Uri)]
+		NewUri:=this.UriReplacePage(this.Uri)
+		_, ok = dataApi[NewUri]
 		if !ok {
+			UriName:=acc.UriGetDateAPIName(this.Uri)
+			if UriName==""{
+				UriName=acc.UriGetDateAPIName(NewUri)
+			}
 			if this.isUserLogin {
-				this.ServeNOAUTH("您没有权限访问该数据接口 [ "+this.Uri+" ]", "")
+				this.ServeNOAUTH("您没有权限访问该数据接口 [ "+UriName+" ]=>[ "+this.Uri+" ]", "")
 			} else {
 				this.ServeRELOGIN("您还没有登录或者登录状态已过期，请登录后访问", "")
 			}
