@@ -1,4 +1,5 @@
 export default {
+	version:"1.0.0",
   host:CONFIG.host,
   platform:{
     isWeb:process.env.VUE_APP_PLATFORM.trim()==="web",

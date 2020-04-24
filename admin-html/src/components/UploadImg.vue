@@ -21,7 +21,7 @@
                          highlight-current default-expand-all :expand-on-click-node="false">
                     <span class="custom-tree-node" slot-scope="{ node, data }">
                         <span class="tree-title">
-                            <span class="tree-add" v-if="data.edit">
+                            <span class="tree-add" v-if="(uiAuth._admin_api_files_add_class || uiAuth._admin_api_files_edit_class) && data.edit">
                                 <i class="el-icon-error" @click="closeEdit(node,data)"></i>
                                 <input v-model="data.label" placeholder="请输入分类名称"/>
                                <i class="el-icon-success" @click="editFileClass(node,data)"></i>
@@ -204,17 +204,13 @@
                     return
                 }
                 if (data.id > 0) {
-                    if( this.menuAuth.edit){
                         message.loading.show("修改中");
                         http.post("files/edit/class", {"id": data.id, "pid": data.pid, "label": data.label}).then(res => {
                             data.edit = false;
                         }).catch(err => {
                             data.edit = false;
                         });
-                    }
-
                 } else {
-                    if( this.menuAuth.add) {
                         message.loading.show("添加中");
                         http.post("files/add/class", {"label": data.label, "pid": data.pid}).then(res => {
                             //console.log(res);
@@ -224,7 +220,6 @@
                         }).catch(err => {
                             this.removeTree(node, data)
                         });
-                    }
                 }
             },
             //启用用节点编辑

@@ -3,15 +3,15 @@
 
  Source Server         : 本地
  Source Server Type    : MySQL
- Source Server Version : 50717
+ Source Server Version : 50728
  Source Host           : localhost:3306
  Source Schema         : phqadmin
 
  Target Server Type    : MySQL
- Target Server Version : 50717
+ Target Server Version : 50728
  File Encoding         : 65001
 
- Date: 17/04/2020 10:26:32
+ Date: 24/04/2020 12:51:16
 */
 
 SET NAMES utf8mb4;

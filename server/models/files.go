@@ -57,7 +57,10 @@ func (this *Files) Add() CurdResult {
 }
 func (this *Files) PageList(pageData *common.PaginateData) CurdResult {
 	return PageFind(this, pageData, func(db *xorm.Session) {
-		db.Desc("add_time").Where("class_id=?", this.ClassId)
+		db.Desc("add_time")
+		if this.ClassId>0{
+			db.Where("class_id=?", this.ClassId)
+		}
 	}, func(db *xorm.Session) error {
 		files := make([]Files, 0)
 		err := db.Find(&files)
