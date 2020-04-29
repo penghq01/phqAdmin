@@ -123,12 +123,38 @@ func (this *Admin) ImportSqL() {
 		if extStr != ".sql" {
 			this.ServeError("数据恢复失败，该文件为sqlit3数据备份文件，当前使用数据为mysql", "")
 		}
-		_, err := common.DbEngine.ImportFile(dbFilePath)
-		if err == nil {
+
+		sqlFile,err:=os.Open(dbFilePath)
+		if err!=nil{
+			this.ServeError("数据恢复失败，读取数据库备份文件失败"+err.Error(), "")
+		}
+		defer func() {
+			_=sqlFile.Close()
+		}()
+		args := []string{
+			fmt.Sprintf("-h%v",common.DbIni.String("host")),
+			fmt.Sprintf("-u%v",common.DbIni.String("user")),
+			fmt.Sprintf("-P%v",common.DbIni.String("port")),
+			fmt.Sprintf("-p%v",common.DbIni.String("pass")),
+			common.DbIni.String("db"),
+		}
+		toolPath := "conf/tool/mysqldump.exe"
+		if runtime.GOOS == "linux" {
+			toolPath = "conf/tool/mysqldump"
+		}
+		cmd := exec.Command(filepath.Join(common.AppRunDir, toolPath), args...)
+		var out bytes.Buffer
+		cmd.Stdin=sqlFile
+		cmd.Stdout =&out
+		cmd.Stderr = os.Stderr
+		err = cmd.Run()
+		if err == nil{
 			this.ServeSuccess("数据恢复成功", "")
-		} else {
+		}else{
 			this.ServeError("数据恢复失败:"+err.Error(), "")
 		}
+
+
 	}
 }
 
@@ -162,6 +188,13 @@ func (this *Admin) ExportSqL() {
 			}
 		}
 		filePath := filepath.Join(common.SqlBakPathDir, name)
+		sqlFile, err := os.Create(filePath)
+		if err != nil {
+			this.ServeError("创建备份文件失败，"+err.Error(), "")
+		}
+		defer func() {
+			_ = sqlFile.Close()
+		}()
 		args := []string{
 			fmt.Sprintf("-h%v", common.DbIni.String("host")),
 			fmt.Sprintf("-u%v", common.DbIni.String("user")),
@@ -170,38 +203,32 @@ func (this *Admin) ExportSqL() {
 			"--add-drop-table",
 			common.DbIni.String("db"),
 		}
+
 		toolPath := "conf/tool/mysqldump.exe"
 		if runtime.GOOS == "linux" {
 			toolPath = "conf/tool/mysqldump"
 		}
+
 		cmd := exec.Command(filepath.Join(common.AppRunDir, toolPath), args...)
-		var out bytes.Buffer
-		cmd.Stdout = &out
+		cmd.Stdout = sqlFile
 		cmd.Stderr = os.Stderr
-		err = cmd.Start()
+		err = cmd.Run()
 		if err != nil {
-			this.ServeError("[0100]备份失败，"+err.Error(), "")
+			this.ServeError("数据备份失败，"+err.Error(), "")
 		}
-		err = cmd.Wait()
-		if err != nil {
-			this.ServeError("[0101]备份失败，"+err.Error(), "")
+
+		fileInfo, err := os.Stat(filePath)
+		var fileSize int64=0
+		if err == nil {
+			fileSize=fileInfo.Size()
 		}
-		f, err := os.Create(filePath)
-		if err != nil {
-			this.ServeError("创建备份文件失败，"+err.Error(), "")
-		}
-		defer func() {
-			_ = f.Close()
-		}()
-		num, err := f.Write(out.Bytes())
-		if err != nil {
-			this.ServeError("写入备份内容失败，"+err.Error(), "")
-		}
+
 		res := map[string]interface{}{
 			"key":       time.Now().UnixNano(),
 			"file_name": name,
-			"file_size": num,
+			"file_size": fileSize,
 		}
+
 		this.ServeSuccess("数据备份成功", res)
 	}
 }

@@ -4,6 +4,7 @@
             :visible.sync="showBox"
             :width="width"
             @closed="close"
+            :show-close="showClose"
 			 :append-to-body="true"
             :close-on-click-modal="false"
     :close-on-press-escape="false">
@@ -21,6 +22,10 @@
     export default {
         name: "myDialog",
         props: {
+            showClose:{
+                type:Boolean,
+                default:true,
+            },
             one:{
                 type:Boolean,
                 default:false,

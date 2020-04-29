@@ -13,7 +13,7 @@
         <div class="table" v-if="uiAuth._admin_api_sql_list">
             <el-table  v-loading="loading" :data="dataList" border size="mini">
                 <el-table-column label="文件名" prop="file_name"></el-table-column>
-                <el-table-column label="大小" width="100">
+                <el-table-column label="大小" width="200">
                     <template slot-scope="scope">
                         {{getSize(scope.row.file_size)}}
                     </template>
@@ -50,6 +50,16 @@
                 </el-table-column>
             </el-table>
         </div>
+        <Dialog
+                title="文件下载中，请耐心等待"
+                :is-show="downLoadShow"
+                :close="()=>{}"
+                :is-see="true"
+                :one="true"
+                :show-close="false"
+        >
+            <el-progress :text-inside="true" :stroke-width="26" :percentage="downloadPercentage"></el-progress>
+        </Dialog>
     </div>
 </template>
 
@@ -63,7 +73,9 @@
         data(){
             return{
                 loading:false,
-                dataList:[]
+                dataList:[],
+                downloadPercentage:0,
+                downLoadShow:false
             }
         },
         computed:{...mapState(["uiAuth"])},
@@ -104,8 +116,11 @@
                 http.post("sql/improt",{"file_name":row.file_name}).then(data=>{}).catch(err=>{}).finally(()=>message.loading.hide());
             },
             downloadSql(row={"file_name":""}){
-                message.loading.show("下载中，请耐心等待……");
-                http.download("sql/download",{"file_name":row.file_name}).then(data=>{
+                this.downLoadShow=true;
+                http.download("sql/download",{"file_name":row.file_name},(progress,percentage)=>{
+                    this.downloadPercentage=percentage;
+                }).then(data=>{
+                    this.downLoadShow=false;
                     FileSave.saveAs(data,row.file_name);
                 }).catch(err=>{});
             },

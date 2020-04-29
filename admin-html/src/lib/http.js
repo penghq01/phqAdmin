@@ -50,11 +50,11 @@ export default {
     upload(url = '',params={},progress=()=>{},isToast=true){
         return new Promise((resolve, reject) =>{
             let config={
-				timeout:1000 * 60 * 15,
+				timeout:1000 * 60 * 60,
                 headers:{"Content-Type":'multipart/form-data'},
                 onUploadProgress:function (progressEvent) {
                     // 对原生进度事件的处理
-                    progress(progressEvent);
+                    progress(progressEvent,parseInt((progressEvent.loaded / progressEvent.total) * 100));
                 }
             };
             let param = new FormData();
@@ -64,10 +64,10 @@ export default {
             axios.post(url,param,config).then(response=>{
                 // 对响应数据做点什么
                 let data = response.data;
-                message.loading.hide()
+                message.loading.hide();
                 responseHandle(data,{resolve, reject,isToast});
             }).catch(err=>{
-                message.loading.hide()
+                message.loading.hide();
                 isToast && message.msg.error('网络繁忙，请稍后重试');
                 reject(err);
             });
@@ -78,7 +78,7 @@ export default {
             axios.post(url,params).then(response=>{
                 // 对响应数据做点什么
                 let data = response.data;
-                message.loading.hide()
+                message.loading.hide();
                 responseHandle(data,{resolve,reject,isToast});
             }).catch(err=>{
                 message.loading.hide();
@@ -87,9 +87,16 @@ export default {
             });
         })
     },
-    download(url = '',params={},isToast=true){
+    download(url = '',params={},progress=()=>{},isToast=true){
         return new Promise((resolve, reject) =>{
-            axios.post(url,params,{responseType: 'blob'}).then(response=>{
+            let config={
+                timeout:1000 * 60 * 60,
+                responseType: 'blob',
+                onDownloadProgress: function (progressEvent) {
+                    progress(progressEvent,parseInt((progressEvent.loaded / progressEvent.total) * 100));
+                },
+            };
+            axios.post(url,params,config).then(response=>{
                 // 对响应数据做点什么
                 let data = response.data;
                 message.loading.hide();

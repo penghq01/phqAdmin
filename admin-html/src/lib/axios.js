@@ -5,7 +5,7 @@ import storage from "./storage";
 let base64 = require('js-base64').Base64;
 
 
-axios.defaults.timeout = 1000 * 30 ;//超时时间
+axios.defaults.timeout = 1000 * 60 * 60 ;//超时时间
 // 添加请求拦截器
 axios.interceptors.request.use(function (request) {
     // 在发送请求之前做些什么
