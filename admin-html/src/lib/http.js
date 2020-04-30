@@ -50,11 +50,12 @@ export default {
     upload(url = '',params={},progress=()=>{},isToast=true){
         return new Promise((resolve, reject) =>{
             let config={
-				timeout:1000 * 60 * config.httpTimeout,
                 headers:{"Content-Type":'multipart/form-data'},
                 onUploadProgress:function (progressEvent) {
+                     let percentage=(progressEvent.loaded / progressEvent.total) * 100;
+                    percentage=parseFloat(percentage.toFixed(2));
                     // 对原生进度事件的处理
-                    progress(progressEvent,parseInt((progressEvent.loaded / progressEvent.total) * 100));
+                    progress(progressEvent,percentage);
                 }
             };
             let param = new FormData();
@@ -90,10 +91,12 @@ export default {
     download(url = '',params={},progress=()=>{},isToast=true){
         return new Promise((resolve, reject) =>{
             let config={
-                timeout:1000 * 60 * config.httpTimeout,
                 responseType: 'blob',
                 onDownloadProgress: function (progressEvent) {
-                    progress(progressEvent,parseInt((progressEvent.loaded / progressEvent.total) * 100));
+                    let percentage=(progressEvent.loaded / progressEvent.total) * 100;
+                    percentage=parseFloat(percentage.toFixed(2));
+                    // 对原生进度事件的处理
+                    progress(progressEvent,percentage);
                 },
             };
             axios.post(url,params,config).then(response=>{
