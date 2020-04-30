@@ -50,7 +50,7 @@ export default {
     upload(url = '',params={},progress=()=>{},isToast=true){
         return new Promise((resolve, reject) =>{
             let config={
-				timeout:1000 * 60 * 60,
+				timeout:1000 * 60 * config.httpTimeout,
                 headers:{"Content-Type":'multipart/form-data'},
                 onUploadProgress:function (progressEvent) {
                     // 对原生进度事件的处理
@@ -90,7 +90,7 @@ export default {
     download(url = '',params={},progress=()=>{},isToast=true){
         return new Promise((resolve, reject) =>{
             let config={
-                timeout:1000 * 60 * 60,
+                timeout:1000 * 60 * config.httpTimeout,
                 responseType: 'blob',
                 onDownloadProgress: function (progressEvent) {
                     progress(progressEvent,parseInt((progressEvent.loaded / progressEvent.total) * 100));

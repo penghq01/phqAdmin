@@ -9,4 +9,5 @@ export default {
   homePage:CONFIG.homePagePath,
   imgHost:process.env.NODE_ENV==='production'? CONFIG.img_host:'http://localhost:8181',
   apiPath:CONFIG.api_path,
+  httpTimeout:CONFIG.httpTimeout,
 }

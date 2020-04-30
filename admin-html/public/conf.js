@@ -9,4 +9,6 @@ const CONFIG = {
     loginHref:"/#/login",
     //主页路由
     homePagePath:"/",
+    //http超时时间分钟
+    httpTimeout:60,
 };

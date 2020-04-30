@@ -50,7 +50,7 @@
                 </el-table-column>
             </el-table>
         </div>
-        <Dialog
+        <myDialog
                 title="文件下载中，请耐心等待"
                 :is-show="downLoadShow"
                 :close="()=>{}"
@@ -59,7 +59,7 @@
                 :show-close="false"
         >
             <el-progress :text-inside="true" :stroke-width="26" :percentage="downloadPercentage"></el-progress>
-        </Dialog>
+        </myDialog>
     </div>
 </template>
 
