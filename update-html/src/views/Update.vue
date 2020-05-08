@@ -68,8 +68,10 @@
                     <el-table-column label="文件名称" prop="file_name">
                         <template slot-scope="scope">
                           <span class="update-table-td">
-                              <i :class="scope.row.is_dir?'fa fa-folder-open':'el-icon-document'"
-                                 :style="`color:${scope.row.is_dir?'#D9AF15':'#000000'}`"></i>
+                              <div class="update-table-td-ico">
+                                  <i v-if="scope.row.is_dir" class="fa fa-folder-open" style="color:#D9AF15"></i>
+                              <img v-else :src="extGetPng(scope.row.file_name)" />
+                              </div>
                               <div @click="openDir(scope.row.is_dir,scope.row.file_name)">{{scope.row.file_name}}</div>
                           </span>
                         </template>
@@ -146,6 +148,7 @@
     import FileSave from "file-saver"
     import storage from "../lib/storage";
     import utils from "../lib/utils";
+    import fileIco from "../lib/fileIco";
 
     export default {
         name: "System",
@@ -219,6 +222,21 @@
                     }
                 })
             },
+            //获取图片
+            extGetPng(name=""){
+                let ext=this.getFileNameExp(name);
+                if (ext=="7z"){
+                    ext="z7";
+                }
+                if(utils.empty(ext)){
+                    ext="other";
+                }
+                let ico=fileIco[ext];
+                if(utils.empty(ico)){
+                    return fileIco["other"];
+                }
+                return ico;
+             },
             //设置默认目录
             setDefaultDir(key) {
                 this.SelectDirPath = this.serveDir[key];
@@ -486,15 +504,28 @@
             &-td {
                 display: flex;
                 align-items: center;
-
-                & > i {
-                    margin-right: 5px;
-                }
-
                 & > div {
                     &:hover {
                         color: $primary-color;
                         cursor: pointer;
+                    }
+                }
+                &-ico{
+                    height:50px;
+                    width:50px;
+                    //margin-left:5px;
+                    margin-right:10px;
+                    display:flex;
+                    justify-content:flex-end;
+                    align-items: center;
+                    & > i {
+                        margin-right: 5px;
+                        font-size:45px;
+                    }
+                    &>img{
+                        max-height:50px;
+                        max-width:50px;
+                        margin-right:5px;
                     }
                 }
             }

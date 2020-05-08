@@ -3,6 +3,8 @@ package controllers
 import (
 	"archive/zip"
 	"bytes"
+	"golang.org/x/text/encoding/simplifiedchinese"
+	"golang.org/x/text/transform"
 	"io"
 	"io/ioutil"
 	"os"
@@ -134,7 +136,13 @@ func (this *Update) DeCompress() {
 					this.ServeError("打开文件失败，错误："+err.Error(), "")
 				}
 				defer rc.Close()
-				filename := filepath.Join(this.SelectDir,file.Name)
+				i:= bytes.NewReader([]byte(file.Name));
+				decoder := transform.NewReader(i, simplifiedchinese.GB18030.NewDecoder())
+				name,err:= ioutil.ReadAll(decoder)
+				if err!=nil{
+					this.ServeError("获取文件名称，错误："+err.Error(), "")
+				}
+				filename := filepath.Join(this.SelectDir,string(name))
 				err = os.MkdirAll(filepath.Dir(filename), 0755)
 				if err != nil {
 					this.ServeError("创建目录失败，错误："+err.Error(), "")
