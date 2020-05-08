@@ -1,0 +1,6 @@
+/.idea
+/upload
+server.exe
+server.exe~
+*.log
+

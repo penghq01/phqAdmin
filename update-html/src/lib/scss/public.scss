@@ -1,0 +1,63 @@
+html,body,#app{
+  font-size:$font-size;
+  margin:0;
+  padding:0;
+}
+/*滚动条整体样式*/
+::-webkit-scrollbar {
+   width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
+  height:15px;
+}
+/*滚动条里面小方块*/
+::-webkit-scrollbar-thumb {
+  background: $primary-color;
+}
+/*滚动条里面轨道*/
+::-webkit-scrollbar-track {
+  background: $primary-gray;
+}
+
+.interval-span{
+   display: inline-block;
+   width:10px;
+}
+.input-div{
+  padding:8px 0;
+  & .title-name{
+    display: inline-block;
+    width:100px;
+    text-align:right;
+  }
+}
+
+.el-table__empty-block{
+  height:auto!important;
+}
+.el-table__body tr.current-row > td{
+  background-color:#757575!important;
+  color:#ffffff!important;
+}
+.button-group{
+  display:flex;
+  align-items:center;
+}
+.button-group button{
+   padding:5px;
+   border-radius:0;
+   margin-left:0;
+   margin-right:1px;
+}
+.button-group .el-button + .el-button{
+  margin-left:0;
+}
+.input-from{
+  display:flex;
+  align-items: center;
+  padding-bottom:15px;
+  &>span{
+    &:first-child{
+      text-align:right;
+      width:90px;
+    }
+  }
+}
