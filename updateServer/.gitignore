@@ -2,5 +2,6 @@
 /upload
 server.exe
 server.exe~
+phqUpdateServer.exe
 *.log
 

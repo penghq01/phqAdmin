@@ -360,6 +360,7 @@
             //上传文件
             httpRequest(file) {
                 this.loadTxt = "上传";
+                this.loadPercentage=0;
                 this.loadShow = true;
                 http.upload("/file/upload", {
                     "file_name": file.file,
@@ -376,6 +377,7 @@
             //下载文件
             downloadFile() {
                 this.loadTxt = "下载";
+                this.loadPercentage=0;
                 this.loadShow = true;
                 http.download("/file/download", {
                     "file_name": this.currentRow.file_name,
