@@ -1,13 +1,11 @@
 <template>
     <div class="update">
         <div class="update-top">
-            <div>PHQ程序更新系统</div>
-            <div @click="outLogin">退出登录</div>
-        </div>
-        <div class="update-body">
-
-
-            <div class="action" style="padding-bottom: 10px;">
+            <div class="update-head">
+                <div>PHQ程序更新系统</div>
+                <div @click="outLogin">退出登录</div>
+            </div>
+            <div class="update-action">
                 <div class="button-group">
                     <el-button type="info" @click="getFileList">刷新</el-button>
                     <el-upload
@@ -44,8 +42,6 @@
                     </Poptip>
                     <el-button type="danger" v-show="ShowRunCommand" @click="ShowRunArgsDialog">执行文件</el-button>
                 </div>
-            </div>
-            <div class="update-table">
                 <div class="update-dir">
                     <div>
                         <div class="button-group">
@@ -63,6 +59,11 @@
                         </div>
                     </div>
                 </div>
+            </div>
+        </div>
+
+        <div class="update-body">
+            <div class="update-table">
                 <el-table v-loading="loading" :data="dataList" border stripe size="mini"
                           @current-change="handleCurrentChange" highlight-current-row>
                     <el-table-column label="文件名称" prop="file_name">
@@ -83,8 +84,6 @@
                     </el-table-column>
                 </el-table>
             </div>
-
-
         </div>
 
         <myDialog
@@ -415,7 +414,19 @@
 
 <style scoped lang="scss">
     .update {
-        &-top {
+        padding-top:145px;
+        padding-bottom:15px;
+        &-top{
+            left:0;
+            top:0;
+            position:fixed;
+            z-index:9;
+            width:100%;
+            background-color:#ffffff;
+            border-bottom:1px $border-color2 solid;
+            box-shadow:0 0 10px $text-gray-color;
+        }
+        &-head {
             padding: 10px 15px;
             background-color: $primary-color;
             display: flex;
@@ -437,13 +448,11 @@
                 }
             }
         }
-
         &-body {
-            padding: 10px;
+            padding: 0 10px;
         }
-
         &-dir {
-            padding: 0 0 10px 0;
+            padding: 10px 0 0 0;
             display: flex;
             align-items: center;
 
@@ -499,7 +508,6 @@
                 }
             }
         }
-
         &-table {
             &-td {
                 display: flex;
@@ -529,6 +537,9 @@
                     }
                 }
             }
+        }
+        &-action{
+            padding:10px;
         }
     }
 
