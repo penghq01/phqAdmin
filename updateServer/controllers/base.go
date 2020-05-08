@@ -3,12 +3,11 @@ package controllers
 import (
 	"encoding/json"
 	"errors"
-	"fmt"
 	"github.com/astaxie/beego"
 	"os"
 	"path/filepath"
-	"updateServer/common"
 	"strings"
+	"updateServer/common"
 )
 
 type Base struct {
@@ -26,7 +25,7 @@ func (this *Base) Prepare() {
 	RequestBody := this.Ctx.Input.RequestBody
 	if len(RequestBody) > 0 {
 		if err := json.Unmarshal(this.Ctx.Input.RequestBody, &this.Params); err != nil {
-			fmt.Printf("参数解析错误=>%v\n", err)
+			common.Logs.Error("参数解析错误=>%v\n", err)
 		}
 	}
 	if this.Uri!="/update/api/login"{
