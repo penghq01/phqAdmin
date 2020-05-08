@@ -21,10 +21,9 @@ func (this *Excel) Import() error {
 	if this.TotalNum <= 0 {
 		return errors.New(fmt.Sprintf("没有获取到数据，%v", err))
 	}
-	db := common.DbEngine.NewSession()
-	defer db.Close()
 	for index, row := range rows {
 		if index > 0 {
+			db:=common.DbEngine.Table(this.ExcelTemplate.TableName)
 			params := make(map[string]interface{})
 			for _, item := range this.ExcelTemplate.FieldDesc {
 				switch {
@@ -47,21 +46,28 @@ func (this *Excel) Import() error {
 					}
 					break
 				default:
-					params[item.FieldName] = strings.TrimSpace(row[item.CellIndex])
+					rowVal:=strings.TrimSpace(row[item.CellIndex])
+					if item.FiledType=="int8" || item.FiledType=="int" || item.FiledType=="int64" || item.FiledType=="float32" || item.FiledType=="float64"{
+						if rowVal!=""{
+							params[item.FieldName] = rowVal
+						}
+					}else{
+						params[item.FieldName] = rowVal
+					}
 					break
 				}
 				if item.Unique {
-					db.Where("? = ?", item.FieldName, params[item.FieldName])
+					db.Where(fmt.Sprintf("%v = ?",item.FieldName), params[item.FieldName])
 				}
 			}
-			ok, err := db.Table(this.ExcelTemplate.TableName).Exist()
+			ok, err := db.Exist()
 			if err != nil {
-				return errors.New("判断是否存在重数据失败，" + err.Error())
+				return errors.New("判断是否存在重复数据失败，" + err.Error())
 			}
 			if ok {
 				this.SkipNum++
 			} else {
-				row, err := db.Table(this.ExcelTemplate.TableName).Insert(params)
+				row, err := common.DbEngine.Table(this.ExcelTemplate.TableName).Insert(params)
 				if err != nil {
 					return errors.New("导入数据失败，" + err.Error())
 				}

@@ -45,88 +45,101 @@
       "filed_type": "string"
     },
     {
+      "file_nick_name": "产业",
+      "field_name": "industry",
+      "cell_index": 7,
+      "filed_type": "string"
+    },
+    {
       "file_nick_name": "务工区域",
       "field_name": "work_to",
-      "cell_index": 7,
+      "cell_index": 8,
       "filed_type": "string"
     },
     {
       "file_nick_name": "就业地点",
       "field_name": "workplace",
-      "cell_index": 8,
+      "cell_index": 9,
       "filed_type": "string"
     },
     {
       "file_nick_name": "务工单位",
       "field_name": "work_type",
-      "cell_index": 9,
+      "cell_index": 10,
       "filed_type": "string"
     },
     {
       "file_nick_name": "务工时间",
       "field_name": "work_time",
-      "cell_index": 10,
+      "cell_index": 11,
       "filed_type": "string"
     },
     {
       "file_nick_name": "务工月收入",
       "field_name": "wages",
-      "cell_index": 11,
+      "cell_index": 12,
       "filed_type": "float32"
     },
     {
       "file_nick_name": "迁出乡镇（街道）",
       "field_name": "out_township",
-      "cell_index": 12,
+      "cell_index": 13,
       "filed_type": "string"
     },
     {
       "file_nick_name": "迁出行政村",
       "field_name": "out_village",
-      "cell_index": 13,
+      "cell_index": 14,
       "filed_type": "string"
     },
     {
       "file_nick_name": "迁出村民小组",
       "field_name": "out_group",
-      "cell_index": 14,
+      "cell_index": 15,
       "filed_type": "string"
     },
     {
       "file_nick_name": "迁入街道",
       "field_name": "in_street",
-      "cell_index": 15,
+      "cell_index": 16,
       "filed_type": "string"
     },
     {
       "file_nick_name": "迁入社区",
       "field_name": "in_community",
-      "cell_index": 16,
+      "cell_index": 17,
       "filed_type": "string"
     },
     {
       "file_nick_name": "迁入区名",
       "field_name": "in_zone_name",
-      "cell_index": 17,
+      "cell_index": 18,
       "filed_type": "string"
     },
     {
       "file_nick_name": "迁入楼栋",
       "field_name": "in_floor",
-      "cell_index": 18,
+      "cell_index": 19,
       "filed_type": "string"
     },
     {
       "file_nick_name": "迁入单元号",
       "field_name": "in_unit",
-      "cell_index": 19,
+      "cell_index": 20,
       "filed_type": "string"
     },
     {
       "file_nick_name": "迁入房号",
       "field_name": "in_room",
-      "cell_index": 20,
+      "cell_index": 21,
       "filed_type": "string"
+    },
+    {
+      "file_nick_name": "添加时间",
+      "field_name": "add_time",
+      "cell_index": 22,
+      "filed_type": "int64",
+      "date_time_layout": "2006-01-02 15:04"
     }
   ]
 }
