@@ -3,7 +3,7 @@
         <div class="login">
             <el-card class="box-card">
                 <div slot="header" class="clearfix">
-                    <span>更新系统</span>
+                    <span>服务更新系统</span>
                     <el-button style="float: right; padding: 3px 0" type="text">没有账号？请联系管理员</el-button>
                 </div>
                 <div class="login-info">
@@ -21,11 +21,18 @@
     import http from "../lib/http";
     import storage from "../lib/storage";
     import md5 from "js-md5";
+    import config from "../config";
+    import logic from "../lib/logic";
     export default {
         name: 'login',
         data() {
             return {
                 postData: {}
+            }
+        },
+        mounted(){
+            if(logic.isLogin()){
+                this.$router.push(config.homePage);
             }
         },
         methods: {
@@ -43,9 +50,8 @@
                 param.password=md5(param.password);
                 http.post('/login', param).then(data => {
                     storage.token.set(data.token);
-                    this.$router.push("/");
+                    this.$router.push(config.homePage);
                 }).catch(()=> {});
-
             }
         }
     }

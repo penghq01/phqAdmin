@@ -2,7 +2,7 @@ import Update from "../views/Update";
 import Login from "../views/Login";
 export default [
     {
-        path: '/',
+        path: '/update',
         name: 'Update',
         nickname:"后台主页",
         component: Update,
@@ -15,6 +15,6 @@ export default [
     },
     {
         path: "/*",
-        redirect:"/"
+        redirect:"/login"
     }
 ];

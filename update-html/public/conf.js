@@ -8,7 +8,7 @@ const CONFIG = {
     //登录页面地址
     loginHref:"/update/#/login",
     //主页路由
-    homePagePath:"/",
+    homePagePath:"/update",
     //http超时时间分钟
     httpTimeout:60,
 };

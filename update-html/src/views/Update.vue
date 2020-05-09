@@ -2,7 +2,7 @@
     <div class="update">
         <div class="update-top">
             <div class="update-head">
-                <div>PHQ程序更新系统</div>
+                <div>服务更新系统</div>
                 <div @click="outLogin">退出登录</div>
             </div>
             <div class="update-action">
@@ -77,7 +77,8 @@
                           </span>
                         </template>
                     </el-table-column>
-                    <el-table-column label="大小" width="200">
+                    <el-table-column label="修改时间" prop="mod_time" width="120"/>
+                    <el-table-column label="大小" width="150">
                         <template slot-scope="scope">
                             <div v-show="!scope.row.is_dir">{{getSize(scope.row.file_size)}}</div>
                         </template>
@@ -311,10 +312,13 @@
             getSize(val = 0) {
                 let kb = parseFloat(val) / 1024;
                 let mb = kb / 1024;
+                let GB = mb / 1024;
                 if (kb < 1024.000) {
-                    return kb.toFixed(3) + " KB";
-                } else {
-                    return mb.toFixed(3) + " MB"
+                    return kb.toFixed(2) + " KB";
+                } else if (mb < 1024){
+                    return mb.toFixed(2) + " MB"
+                }else if (GB < 1024){
+                    return mb.toFixed(2) + " GB"
                 }
             },
             //删除文件

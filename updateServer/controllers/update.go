@@ -44,14 +44,17 @@ func (this *Update) Upload() {
 	filePath:=filepath.Join(this.SelectDir,fileName)
 	fileInfo, err := os.Stat(filePath)
 	var fileSize int64=0
+	mod_time:=time.Now().Format("2006-01-02 15:04:05")
 	if err == nil {
 		fileSize=fileInfo.Size()
+		mod_time=fileInfo.ModTime().Format("2006-01-02 15:04:05")
 	}
 	this.ServeSuccess("", map[string]interface{}{
 		"key":       time.Now().Unix(),
 		"is_dir":false,
 		"file_name": fileName,
 		"file_size": fileSize,
+		"mod_time":mod_time,
 	})
 }
 //获取列表
@@ -71,6 +74,7 @@ func (this *Update) List() {
 						"is_dir":file.IsDir(),
 						"file_name": file.Name(),
 						"file_size": file.Size(),
+						"mod_time":file.ModTime().Format("2006-01-02 15:04:05"),
 					}
 					dirSortArr=append(dirSortArr,file.Name())
 				}else{
@@ -79,6 +83,7 @@ func (this *Update) List() {
 						"is_dir":file.IsDir(),
 						"file_name": file.Name(),
 						"file_size": file.Size(),
+						"mod_time":file.ModTime().Format("2006-01-02 15:04:05"),
 					}
 					fileSortArr=append(fileSortArr,file.Name())
 				}
