@@ -1,10 +1,25 @@
 module.exports = {
+  productionSourceMap: false,//是否生成map文件
   lintOnSave: false,
   css: {
     loaderOptions: {
       sass: {
         data: `@import "src/lib/scss/element-color.scss";`
       }
+    }
+  },
+  configureWebpack: {
+    externals: {
+      'vue': 'Vue',
+      'vuex': 'Vuex',
+      'vue-router': 'VueRouter',
+      'vant':'vant',
+      'axios': 'axios',
+      'moment':'moment',
+      'element-ui': 'ELEMENT',
+      "file-saver":"FileSaver",
+      "js-md5":"md5",
+      "js-base64":"base64"
     }
   },
   devServer: {

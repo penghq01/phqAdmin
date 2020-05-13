@@ -3,8 +3,6 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import routerList from "./router/routerList";
-import "./assets/lib/font-awesome/css/font-awesome.css"
-
 import ElementUI from 'element-ui'
 import "./lib/scss/element-variables.scss"
 

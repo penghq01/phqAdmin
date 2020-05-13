@@ -2,5 +2,6 @@
 /sql-bak
 server.exe
 server.exe~
+phqAdminServer.exe
 *.log
 
