@@ -20,7 +20,6 @@ module.exports = {
       "file-saver":"FileSaver",
       "js-md5":"md5",
       "base64":"base64",
-      "jquery":"$",
       "xlxs":"xlxs"
     }
   },

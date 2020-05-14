@@ -1,10 +1,15 @@
 <template>
-    <div class="home" :style="homePaddingTop">
-        <div class="index-left" :style="leftAndHeaderTop">
-            <div class="sys-name">后台管理</div>
-            <Menu :list="menuTreeList" :active-menu="activeMenu" @select="triggerSelect"/>
+    <div class="home" :style="`padding-left:${isCollapse?64:240}px;${homePaddingTop}`">
+        <div class="index-left" :style="`width:${isCollapse?64:240}px;${leftAndHeaderTop}`">
+            <div class="sys-name">
+                <span v-show="!isCollapse"> {{sysName}}</span>
+                <el-tooltip effect="dark" content="收起展开菜单" placement="right">
+                    <i @click="isCollapse=!isCollapse" :class="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'"></i>
+                </el-tooltip>
+            </div>
+            <MyMenu :is-collapse="isCollapse" :list="menuTreeList" :active-menu="activeMenu" @select="triggerSelect"/>
         </div>
-        <div class="index-header" :style="leftAndHeaderTop">
+        <div class="index-header" :style="`left:${isCollapse?64:240}px;width:calc(100% - ${isCollapse?64:200}px);${leftAndHeaderTop}`">
             <div class="routerLeft" @click="leftMove"><i class="el-icon-caret-left"></i></div>
             <div class="router" ref="routerHistory">
                 <transition-group ref="routerHistoryBox" name="list-complete" tag="div" :style="{width:routerHistoryWidth+'px',left:routerHistoryLeft+'px'}">
@@ -46,7 +51,7 @@
     import storage from "../lib/storage";
     import utils from "../lib/utils";
     import md5 from "js-md5";
-    import Menu from "../components/Menu/Menu";
+    import MyMenu from "../components/Menu/MyMenu";
     import message from "../lib/message";
     import WinTitle from "../components/WinTitle/WinTitle";
     import config from "../config";
@@ -54,9 +59,11 @@
     import {mapState,mapActions} from "vuex";
     export default {
         name: 'home',
-        components:{Menu,WinTitle,myDialog},
+        components:{MyMenu,WinTitle,myDialog},
         data() {
             return {
+                isCollapse:false,
+                sysName:config.sysName,
                 editUser: {},
                 opened: false,
                 activeMenu:"/index",
@@ -250,13 +257,22 @@
     }
 </script>
 <style scoped lang="scss">
-    .sys-name{
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        padding:20px 0;
-        color:$primary-gray;
-        font-size:22px;
+    .sys-name {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 10px;
+        color:$sys-name-color;
+
+        & > span {
+            font-size: 20px;
+            margin-right: 10px;
+        }
+
+        & > i {
+            font-size: 27px;
+            cursor:pointer;
+        }
     }
     .user {
         margin-right:10px;

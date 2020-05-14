@@ -1,5 +1,6 @@
 export default {
 	version:"1.0.0",
+  sysName:"管理后台",
   host:CONFIG.host,
   platform:{
     isWeb:process.env.VUE_APP_PLATFORM.trim()==="web",
