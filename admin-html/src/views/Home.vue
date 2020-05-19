@@ -9,24 +9,30 @@
             </div>
             <MyMenu :is-collapse="isCollapse" :list="menuTreeList" :active-menu="activeMenu" @select="triggerSelect"/>
         </div>
-        <div class="index-header" :style="`left:${isCollapse?64:240}px;width:calc(100% - ${isCollapse?64:200}px);${leftAndHeaderTop}`">
-            <div class="routerLeft" @click="leftMove"><i class="el-icon-caret-left"></i></div>
-            <div class="router" ref="routerHistory">
-                <transition-group ref="routerHistoryBox" name="list-complete" tag="div" :style="{width:routerHistoryWidth+'px',left:routerHistoryLeft+'px'}">
-                    <div ref="routerHistoryList" v-for="(item,index) in routerHistory" :key="item.id" :class="item.active?'active':''" @click="triggerSelect(item.key)">
-                        {{item.title}}
-                        <i class="el-icon-error" @click.stop="delRouterHistory(index)"></i>
+        <div class="index-header" :style="`left:${isCollapse?64:240}px;width:calc(100% - ${isCollapse?64:240}px);${leftAndHeaderTop}`">
+            <div class="home-header-info">
+                <div class="user">
+                    <i class="fa fa-user" aria-hidden="true"></i> 欢迎：{{userInfo.username}}
+                    <div class="user-info">
+                        <div v-if="uiAuth._admin_api_admin_edit_pass" @click="opened=true">修改密码</div>
+                        <!--<div v-if="uiAuth._admin_api_admin_info">个人信息</div>-->
+                        <div @click="outLogin">退出登录</div>
                     </div>
-                </transition-group>
-            </div>
-            <div class="routerRight" @click="rightMove"><i class="el-icon-caret-right"></i></div>
-            <div class="user">
-                <i class="fa fa-user" aria-hidden="true"></i> 欢迎：{{userInfo.username}}
-                <div class="user-info">
-                    <div v-if="uiAuth._admin_api_admin_edit_pass" @click="opened=true">修改密码</div>
-                    <!--<div v-if="uiAuth._admin_api_admin_info">个人信息</div>-->
-                    <div @click="outLogin">退出登录</div>
                 </div>
+            </div>
+            <div class="home-header-history">
+                <div class="routerLeft" @click="leftMove"><i class="el-icon-caret-left"></i></div>
+                <div class="router" ref="routerHistory">
+                    <transition-group ref="routerHistoryBox" name="list-complete" tag="div"
+                                      :style="{width:routerHistoryWidth+'px',left:routerHistoryLeft+'px'}">
+                        <div ref="routerHistoryList" v-for="(item,index) in routerHistory" :key="item.id"
+                             :class="item.active?'active':''" @click="triggerSelect(item.key)">
+                            {{item.title}}
+                            <i class="el-icon-close" @click.stop="delRouterHistory(index)"></i>
+                        </div>
+                    </transition-group>
+                </div>
+                <div class="routerRight" @click="rightMove"><i class="el-icon-caret-right"></i></div>
             </div>
         </div>
         <div class="index-right">
@@ -85,9 +91,9 @@
             },
             homePaddingTop(){
                 if(this.platform.isWeb){
-                    return "padding-top:55px";
-                }else if(this.platform.isPC){
                     return "padding-top:95px";
+                }else if(this.platform.isPC){
+                    return "padding-top:145px";
                 }
             }
         },
@@ -274,100 +280,156 @@
             cursor:pointer;
         }
     }
-    .user {
-        margin-right:10px;
-        border-right:1px $border-color2 solid;
-        width:200px;
-        color: #327AA3;
-        position: relative;
-        height: 100%;
-        display:flex;
-        align-items:center;
-        justify-content: center;
-        text-align: center;
-        &>i{
-            margin-right:5px;
-        }
-        & .user-info {
-            display: none;
-            position: absolute;
-            z-index: 99;
-            top: 100%;
-            right:0;
-            background-color: #fff;
-            box-shadow: 0 0 5px #A7A7A7;
-            color: #363636;
-            width:100%;
-            &>div{
-                width:100%;
-                padding: 8px 0;
+
+    .home-header {
+        &-info {
+            position: relative;
+            z-index: 97;
+            height: 45px;
+            box-shadow: 0 0 5px $box-gray0-color;
+            display: flex;
+            justify-content: flex-end;
+            padding-right: 10px;
+            & div {
+                transition: all 0.3s;
+            }
+            & .user {
+                width: 100px;
+                height: 100%;
+                border-right: 1px $border-color2 solid;
+                color: #327AA3;
+                position: relative;
+                display: flex;
+                align-items: center;
                 text-align: center;
+                padding: 0 10px;
+
+                & > i {
+                    margin-right: 5px;
+                }
+
+                & .user-info {
+                    display: none;
+                    position: absolute;
+                    z-index: 99;
+                    top: 100%;
+                    right: 0;
+                    background-color: #fff;
+                    box-shadow: 0 0 5px #A7A7A7;
+                    color: #363636;
+                    width: 100%;
+
+                    & > div {
+                        width: 100%;
+                        padding: 8px 0;
+                        text-align: center;
+                    }
+                }
+
+                &:hover {
+                    background-color: $primary-color;
+                    color: #fff;
+                    cursor: pointer;
+
+                    & .user-info {
+                        display: block;
+
+                        & > div {
+                            &:hover {
+                                color: #ffffff;
+                                background-color: $primary-color;
+                            }
+                        }
+                    }
+                }
             }
         }
-
-        &:hover {
-            background-color: $primary-color;
-            color: #fff;
-            cursor: pointer;
-            & .user-info {
-                display: block;
+        &-history {
+            position: relative;
+            height: 40px;
+            z-index: 96;
+            display: flex;
+            //border-top: 1px $border-color1 solid;
+            // border-bottom: 1px $border-color1 solid;
+            & .router {
+                height: 100%;
+                background-color: $text-gray3-color;
+                overflow: hidden;
+                width: calc(100% - 40px);
+                min-width: 400px;
                 & > div {
-                    &:hover {
+                    height: 100%;
+                    width: 100%;
+                    position: relative;
+                    display: flex;
+                    align-items: center;
+                    & > div {
+                        display: flex;
+                        justify-content: center;
+                        align-items: center;
+                        white-space: nowrap;
+                        transition: all 0.8s ease-out;
+                        background-color: #ffffff;
+                        height: 25px;
+                        padding: 0 4px;
+                        border-radius: 3px;
+                        cursor: pointer;
+                        margin: 0 5px;
+                        //border: 1px $border-color1 solid;
+                        & > i {
+                            margin-left: 8px;
+                            font-size: 16px;
+                            transition: all 0.5s ease-out;
+                            color: $text-gray0-color;
+
+                            &:hover {
+                                //color:$red-color;
+                                transform: scale(1.2) rotateZ(90deg);
+                            }
+                        }
+                        &:hover {
+                            //border: 1px $primary-gray solid;
+                            background-color: $primary-gray;
+                        }
+                    }
+
+                    & > .active {
                         color: #ffffff;
                         background-color: $primary-color;
+
+                        & > i {
+                            color: $text-gray2-color;
+                        }
+
+                        &:hover {
+                            background-color: $primary-color;
+                        }
                     }
                 }
             }
-        }
-    }
-    .router{
-        height:100%;
-        width:calc(100% - 240px);
-        background-color:$text-gray3-color;
-        overflow: hidden;
-        min-width:300px;
-        &>div{
-            height:100%;
-            width:100%;
-            position:relative;
-            display:flex;
-            align-items:center;
-            &>div{
-                display:flex;
-                justify-content:center;
-                align-items:center;
-                white-space: nowrap;
-                transition:all 0.8s ease-out;
-                &>i{
-                    margin-left:8px;
-                    font-size:18px;
-                    transition:all 0.8s ease-out;
-                    &:hover{
-                      //color:$red-color;
-                      transform:scale(1.3) rotateZ(360deg);
-                    }
-                }
-                background-color:#ffffff;
-                height:30px;
-                padding:0 6px;
-                border-radius:5px;
-                cursor:pointer;
-                margin:0 5px;
-                border:1px $border-color1 solid;
-                &:hover{
-                    border:1px $primary-gray solid;
-                    background-color:$primary-gray;
+            & .routerLeft, & .routerRight {
+                font-size: 20px;
+                height: 100%;
+                width: 20px;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                background-color: $text-gray3-color;
+
+                &:hover {
+                    color: $primary-color;
+                    cursor: pointer;
                 }
             }
-            & > .active{
-                color:#ffffff;
-                background-color:$primary-color;
-                &:hover{
-                    background-color:$primary-color;
-                }
+            & .routerLeft {
+                border-right: 1px $border-color1 solid;
+            }
+            & .routerRight {
+                border-left: 1px $border-color1 solid;
             }
         }
     }
+
    .list-complete-enter{
         opacity: 0;
         transform: translateX(80px);

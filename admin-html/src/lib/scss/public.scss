@@ -5,7 +5,7 @@ html,body,#app{
 }
 .home {
   padding-left:250px;
-  padding-top:55px;
+  padding-top:95px;
   .index{
     &-left{
       position:fixed;
@@ -18,20 +18,10 @@ html,body,#app{
     }
     &-header{
       position:fixed;
-      left:240px;
       z-index:98;
       top:0;
-      width:calc(100% - 240px);
-      height:45px;
+      height:90px;
       background:$white-color;
-      box-shadow:0 0 10px $box-gray0-color;
-      display:flex;
-      justify-content:flex-end;
-      align-items:center;
-      padding-right:10px;
-      & div{
-        transition:all 0.3s;
-      }
     }
     &-right{
       font-size:$font-size;
