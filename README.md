@@ -58,7 +58,8 @@
     * 解压缩版（.rar）：<a href="http://www.cgrj.top/phq_admin_pc.rar" target="_blank">下载</a> 
       
     * 安装包版（.exe）：<a href="http://www.cgrj.top/phq_admin_pc.exe" target="_blank">下载</a> 
-3. 账号密码：admin  123456  该账号为测试账号只有部分功能 
+3. 账号密码：admin  123456  该账号为测试账号只有部分功能  
+
 ####图片预览
 
 |WEB端|PC端|
