@@ -23,12 +23,7 @@ const isLoginPath = (path) => {
 };
 RouterInfo.beforeEach((to, from, next) => {
     if (isLoginPath(to.path) && !logic.isLogin()) {
-        message.alert("您还没有登录或者登录状态已过期，请登录后访问", {
-            title: '登录提示', okFunction: () => {
-                storage.clear();
-                next({path: '/login'});
-            }
-        });
+        next({path: '/login'});
     } else {
         next();
     }
