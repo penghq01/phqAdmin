@@ -53,7 +53,7 @@
 
 #### 演示
 0. 服务器带宽低，打开有点慢，请见谅
-1. 演示地址：[http://www.cgrj.top/admin/](http://www.cgrj.top/admin/)
+1. 演示地址：<a href="http://www.cgrj.top/admin" target="_blank">http://www.cgrj.top/admin</a> 
 2. PC客户端演示版下载  
     * 解压缩版（.rar）：<a href="http://www.cgrj.top/phq_admin_pc.rar" target="_blank">下载</a> 
       
