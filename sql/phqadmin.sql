@@ -11,7 +11,7 @@
  Target Server Version : 50728
  File Encoding         : 65001
 
- Date: 24/04/2020 12:51:16
+ Date: 21/05/2020 11:01:17
 */
 
 SET NAMES utf8mb4;
@@ -30,13 +30,14 @@ CREATE TABLE `admin`  (
   `login_ip` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`admin_id`) USING BTREE,
   UNIQUE INDEX `UQE_admin_username`(`username`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 5 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
 
 -- ----------------------------
 -- Records of admin
 -- ----------------------------
-INSERT INTO `admin` VALUES (1, 'root', '1fc01bded8e2c31329b80241457cb47b', '[]', 1587019899, 'localhost:8181');
-INSERT INTO `admin` VALUES (2, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', '[5]', 1585142529, 'localhost:8181');
+INSERT INTO `admin` VALUES (1, 'root', '1fc01bded8e2c31329b80241457cb47b', '[]', 1590028738, 'localhost:8181');
+INSERT INTO `admin` VALUES (2, 'admin', '0b178dfde1b181b81d01ffb628f9c9bd', '[1]', 1590029542, 'localhost:8181');
+INSERT INTO `admin` VALUES (4, 'test001', '0b178dfde1b181b81d01ffb628f9c9bd', '[7]', 0, '');
 
 -- ----------------------------
 -- Table structure for api
@@ -72,7 +73,7 @@ INSERT INTO `api` VALUES (9, '获取图标列表（分页）', '_admin_api_icon_
 INSERT INTO `api` VALUES (10, '添加图标', '_admin_api_icon_add', '/admin/api/icon/add', 2, 1, 'adminApi.Icon', 'post:Add', 1);
 INSERT INTO `api` VALUES (11, '删除图标', '_admin_api_icon_del', '/admin/api/icon/del', 2, 1, 'adminApi.Icon', 'post:Del', 1);
 INSERT INTO `api` VALUES (12, '获取会员列表（分页）', '_admin_api_user_list_paginate', '/admin/api/user/list/:page_size/:page', 2, 1, 'adminApi.User', 'post:List', 1);
-INSERT INTO `api` VALUES (13, '获取导航菜单列表', '_admin_api_auth_list', '/admin/api/auth/list', 3, 1, 'adminApi.Auth', 'post:List', 1);
+INSERT INTO `api` VALUES (13, '获取导航菜单列表', '_admin_api_auth_list', '/admin/api/auth/list', 2, 1, 'adminApi.Auth', 'post:List', 1);
 INSERT INTO `api` VALUES (14, '添加导航菜单', '_admin_api_auth_add', '/admin/api/auth/add', 3, 1, 'adminApi.Auth', 'post:Add', 1);
 INSERT INTO `api` VALUES (15, '修改导航菜单', '_admin_api_auth_edit', '/admin/api/auth/edit', 3, 1, 'adminApi.Auth', 'post:Edit', 1);
 INSERT INTO `api` VALUES (16, '删除导航菜单', '_admin_api_auth_del', '/admin/api/auth/del', 3, 1, 'adminApi.Auth', 'post:Del', 1);
@@ -95,7 +96,7 @@ INSERT INTO `api` VALUES (33, '删除数据库备份', '_admin_api_sql_del', '/a
 INSERT INTO `api` VALUES (34, '删除API接口', '_admin_api_api_del', '/admin/api/api/del', 3, 1, 'adminApi.Api', 'post:Del', 1);
 INSERT INTO `api` VALUES (35, '修改API接口', '_admin_api_api_edit', '/admin/api/api/edit', 3, 1, 'adminApi.Api', 'post:Edit', 1);
 INSERT INTO `api` VALUES (36, '添加API接口', '_admin_api_api_add', '/admin/api/api/add', 3, 1, 'adminApi.Api', 'post:Add', 1);
-INSERT INTO `api` VALUES (37, '获取API接口列表（分页）', '_admin_api_api_list_paginate', '/admin/api/api/list/:page_size/:page', 3, 1, 'adminApi.Api', 'post:PageList', 1);
+INSERT INTO `api` VALUES (37, '获取API接口列表（分页）', '_admin_api_api_list_paginate', '/admin/api/api/list/:page_size/:page', 2, 1, 'adminApi.Api', 'post:PageList', 1);
 INSERT INTO `api` VALUES (38, '获取API接口列表', '_admin_api_api_list', '/admin/api/api/list', 2, 1, 'adminApi.Api', 'post:List', 1);
 INSERT INTO `api` VALUES (39, '获取UI权限列表', '_admin_api_admin_ui_auth', '/admin/api/admin/ui_auth', 1, 1, 'adminApi.Admin', 'post:ActionAuthList', 1);
 INSERT INTO `api` VALUES (40, '备份数据库下载', '_admin_api_sql_download', '/admin/api/sql/download', 2, 1, 'adminApi.Admin', 'post:DownloadSql', 1);
@@ -127,13 +128,13 @@ INSERT INTO `auth` VALUES (5, 0, '附件管理', 'fa fa-folder-open', '', 2, 0, 
 INSERT INTO `auth` VALUES (6, 0, '用户管理', 'fa fa-user', '', 2, 0, 1, 6);
 INSERT INTO `auth` VALUES (7, 4, '管理员管理', 'fa fa-user', '/admin', 2, 0, 1, 0);
 INSERT INTO `auth` VALUES (8, 4, '角色管理', 'fa fa-address-book', '/role', 2, 0, 1, 1);
-INSERT INTO `auth` VALUES (9, 4, '权限管理', 'fa fa-gears', '', 3, 0, 1, 2);
+INSERT INTO `auth` VALUES (9, 4, '权限管理', 'fa fa-gears', '', 2, 0, 1, 2);
 INSERT INTO `auth` VALUES (10, 5, '图标管理', 'fa fa-info-circle', '/icon', 2, 0, 1, 1);
 INSERT INTO `auth` VALUES (11, 6, '会员列表', 'fa fa-users', '/user', 2, 0, 1, 0);
 INSERT INTO `auth` VALUES (17, 5, '图片管理', 'fa fa-file-image-o', '/images', 2, 0, 1, 0);
 INSERT INTO `auth` VALUES (18, 4, '数据备份恢复', 'fa fa-server', '/sql', 2, 0, 1, 3);
-INSERT INTO `auth` VALUES (24, 9, '路由权限管理', 'fa fa-chain-broken', '/auth', 3, 0, 1, 0);
-INSERT INTO `auth` VALUES (25, 9, '数据权限管理', 'fa fa-link', '/api', 3, 0, 1, 1);
+INSERT INTO `auth` VALUES (24, 9, '路由权限管理', 'fa fa-chain-broken', '/auth', 2, 0, 1, 0);
+INSERT INTO `auth` VALUES (25, 9, '数据权限管理', 'fa fa-link', '/api', 2, 0, 1, 1);
 INSERT INTO `auth` VALUES (26, 0, '找不到页面', '', '/not-find', 0, 1, 1, 0);
 INSERT INTO `auth` VALUES (27, 0, '后台登录', '', '/login', 0, 1, 1, 1);
 INSERT INTO `auth` VALUES (28, 0, '后台主页', '', '/', 1, 1, 1, 2);
@@ -151,7 +152,21 @@ CREATE TABLE `files`  (
   `add_time` int(11) NOT NULL DEFAULT 0,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `UQE_files_id`(`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 11 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of files
+-- ----------------------------
+INSERT INTO `files` VALUES (1, 1, 'ee983ced5452141828d23fa968dfbcf5.jpeg', 0, '/static/upload/2020/04/24/77d2825d2b1b7bad3c3b7653920dcb05.jpeg', 1587707395);
+INSERT INTO `files` VALUES (2, 1, '489777a9a7127281819d59b5d2fd6590a47747085ad2-2Up2xb_fw658.jpg', 0, '/static/upload/2020/04/24/2ab806eac8de25645d3f4b0a8f0fb82b.jpg', 1587707402);
+INSERT INTO `files` VALUES (3, 1, 'timg (2).jpg', 0, '/static/upload/2020/04/24/85759abe8bc6eb58ed43bdddc8c40f38.jpg', 1587707411);
+INSERT INTO `files` VALUES (4, 1, 'timg.jpg', 0, '/static/upload/2020/04/24/a7d2be668df76c22d4cdda87113eff05.jpg', 1587707417);
+INSERT INTO `files` VALUES (5, 1, 'u=32092330,1045231425&fm=11&gp=0.jpg', 0, '/static/upload/2020/04/24/e184cc7ec9aff8ec2bcd07f5f0c350ea.jpg', 1587707421);
+INSERT INTO `files` VALUES (6, 2, '1ebf046298c63e0179141c829e6853ac.jpg', 0, '/static/upload/2020/04/24/3a259512b0dccbf10fa2fedea6077ffc.jpg', 1587707468);
+INSERT INTO `files` VALUES (7, 2, '0d126e70df3b899eea00559e74be4f8b.jpeg', 0, '/static/upload/2020/04/24/32394336aa3a2d73fa0e7e333b21e635.jpeg', 1587707474);
+INSERT INTO `files` VALUES (8, 2, '4637a9d92b1b3ec1f4c8988fa6ddccd4.jpeg', 0, '/static/upload/2020/04/24/c3996a54fba46eace9d2e20f47a1a984.jpeg', 1587707478);
+INSERT INTO `files` VALUES (9, 2, 'timg (1).jpg', 0, '/static/upload/2020/04/24/5f9e1e72a4a47aeac78811389f65345b.jpg', 1587707481);
+INSERT INTO `files` VALUES (10, 2, '0d97b98b79d4f50836d2e1bdff691549.jpeg', 0, '/static/upload/2020/04/24/c1a0feea6e18754b40bdefcfb7393349.jpeg', 1587707499);
 
 -- ----------------------------
 -- Table structure for files_class
@@ -163,7 +178,13 @@ CREATE TABLE `files_class`  (
   `label` varchar(255) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,
   UNIQUE INDEX `UQE_files_class_id`(`id`) USING BTREE
-) ENGINE = InnoDB AUTO_INCREMENT = 1 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+) ENGINE = InnoDB AUTO_INCREMENT = 3 CHARACTER SET = utf8mb4 COLLATE = utf8mb4_general_ci ROW_FORMAT = Dynamic;
+
+-- ----------------------------
+-- Records of files_class
+-- ----------------------------
+INSERT INTO `files_class` VALUES (1, 0, '图片');
+INSERT INTO `files_class` VALUES (2, 0, '图片2');
 
 -- ----------------------------
 -- Table structure for icon
@@ -664,8 +685,8 @@ CREATE TABLE `role`  (
 -- ----------------------------
 -- Records of role
 -- ----------------------------
-INSERT INTO `role` VALUES (5, '超级管理员', '[4,7,8,18,5,17,10,6,11]', '[33,32,31,30,29,28,27,26,25,24,23,22,21,20,19,18,13,12,11,10,9,5,4,3,2,38,40]', '拥有所有权限');
-INSERT INTO `role` VALUES (7, '管理员', '[5,17,10,6,11]', '[23,22,21,20,19,10,9,12,18,11,24]', '管理员，拥有部分权限');
+INSERT INTO `role` VALUES (1, '超级管理员', '[4,7,8,9,24,25,18,5,17,10,6,11]', '[33,31,30,29,28,27,26,25,24,23,22,21,20,19,18,13,12,11,10,9,5,4,3,2,38,40,37]', '拥有所有权限');
+INSERT INTO `role` VALUES (7, '管理员', '[4,7,8,18,5,17,10,6,11]', '[30,26,25,23,21,12,9,2]', '管理员，拥有部分权限');
 
 -- ----------------------------
 -- Table structure for users

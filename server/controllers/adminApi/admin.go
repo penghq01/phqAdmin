@@ -24,6 +24,57 @@ func (this *Admin) Prepare() {
 	this.ActionModel = new(models.Admin)
 	this.AdminBase.Prepare()
 }
+//删除
+func (this *Admin) Del() {
+	model := new(models.Admin)
+	this.AnalyseJson(model)
+	if model.AdminId==1 {
+		this.ServeError("您没有权限删除该管理员", "")
+	}
+	if model.AdminId==this.LoginUser.AdminId{
+		this.ServeError("您没有权限删除自己", "")
+	}
+	res := model.Delete()
+	if res.Err == nil {
+		this.ServeSuccess(res.Msg, "")
+	}
+	this.ServeError(res.Msg, "")
+}
+
+//修改
+func (this *Admin) Edit() {
+	model := new(models.Admin)
+	this.AnalyseJson(model)
+	if model.AdminId==1 {
+		this.ServeError("您没有权限修改该管理员", "")
+	}
+	if model.AdminId==this.LoginUser.AdminId{
+		this.ServeError("您没有权限修改自己", "")
+	}
+	res := model.Edit()
+	if res.Err == nil {
+		this.ServeSuccess(res.Msg, model)
+	}
+	this.ServeError(res.Msg, "")
+}
+
+//列表
+func (this *Admin) List() {
+	list := make([]models.Admin, 0)
+	err := models.Find(new(models.Admin), func(db *xorm.Session) error {
+		db.Where("admin_id <> ?",this.LoginUser.AdminId)
+		if this.LoginUser.AdminId == 1{
+			db.Where("admin_id > 1")
+		}else if this.LoginUser.AdminId > 1{
+			db.Where("admin_id > 2")
+		}
+		return db.Omit("password").Find(&list)
+	})
+	if err.Err == nil {
+		this.ServeSuccess("", list)
+	}
+	this.ServeError(err.Msg, "")
+}
 
 func (this *Admin) Info() {
 	user := this.LoginUser

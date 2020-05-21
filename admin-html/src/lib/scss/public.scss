@@ -3,32 +3,207 @@ html,body,#app{
   margin:0;
   padding:0;
 }
+
 .home {
-  padding-left:250px;
   padding-top:95px;
-  .index{
-    &-left{
-      position:fixed;
-      width:240px;
-      background:$menu-background-color;//设置导航背景颜色
-      height:100%;
-      left:0;
-      top:0;
-      z-index:99;
+  &-left{
+    position:fixed;
+    width:auto;
+    background:$menu-background-color;//设置导航背景颜色
+    height:100%;
+    left:0;
+    top:0;
+    z-index:99;
+    &-sysname {
+      position:relative;
+      z-index:100;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      height:45px;
+      color: #171717;
+      border-bottom:1px $box-gray0-color solid;
+      & > span {
+        font-size: 20px;
+        margin-right: 10px;
+      }
+      & > i {
+        font-size: 27px;
+        cursor: pointer;
+      }
     }
-    &-header{
-      position:fixed;
-      z-index:98;
-      top:0;
-      height:90px;
-      background:$white-color;
-    }
-    &-right{
-      font-size:$font-size;
-      padding:10px;
+    &-menu{
+      position:relative;
+      height:calc(100% - 45px);
+      overflow-x:hidden;
+      overflow-y:auto;
     }
   }
+  &-header{
+    position:fixed;
+    z-index:98;
+    top:0;
+    height:90px;
+    background:$white-color;
+    &-info {
+      position: relative;
+      z-index: 97;
+      height: 45px;
+      box-shadow:0 0 5px $box-gray0-color;
+      display: flex;
+      justify-content: flex-end;
+      padding-right: 10px;
+
+      & div {
+        transition: all 0.3s;
+      }
+
+      & .user {
+        width: 100px;
+        height: 100%;
+        border-right: 1px $border-color2 solid;
+        color: #327AA3;
+        position: relative;
+        display: flex;
+        align-items: center;
+        text-align: center;
+        padding: 0 10px;
+
+        & > i {
+          margin-right: 5px;
+        }
+
+        & .user-info {
+          display: none;
+          position: absolute;
+          z-index: 99;
+          top: 100%;
+          right: 0;
+          background-color: #fff;
+          box-shadow: 0 0 5px #A7A7A7;
+          color: #363636;
+          width: 100%;
+
+          & > div {
+            width: 100%;
+            padding: 8px 0;
+            text-align: center;
+          }
+        }
+
+        &:hover {
+          background-color: $primary-color;
+          color: #fff;
+          cursor: pointer;
+
+          & .user-info {
+            display: block;
+
+            & > div {
+              &:hover {
+                color: #ffffff;
+                background-color: $primary-color;
+              }
+            }
+          }
+        }
+      }
+    }
+    &-history {
+      position: relative;
+      height: 45px;
+      z-index: 96;
+      display: flex;
+      //border-top: 1px $border-color1 solid;
+      // border-bottom: 1px $border-color1 solid;
+      & .router {
+        height: 100%;
+        background-color: $text-gray3-color;
+        overflow: hidden;
+        width: calc(100% - 40px);
+        min-width: 400px;
+
+        & > div {
+          height: 100%;
+          width: 100%;
+          position: relative;
+          display: flex;
+          align-items: center;
+          & > div {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            white-space: nowrap;
+            transition: all 0.8s ease-out;
+            background-color: #ffffff;
+            height: 30px;
+            padding: 0 6px;
+            border-radius: 3px;
+            cursor: pointer;
+            margin: 0 5px;
+            //border: 1px $border-color1 solid;
+            & > i {
+              margin-left: 8px;
+              font-size: 16px;
+              transition: all 0.5s ease-out;
+              color: $text-gray0-color;
+
+              &:hover {
+                //color:$red-color;
+                transform: scale(1.2) rotateZ(90deg);
+              }
+            }
+            &:hover {
+              //border: 1px $primary-gray solid;
+              background-color: $primary-gray;
+            }
+          }
+
+          & > .active {
+            color: #ffffff;
+            background-color: $primary-color;
+
+            & > i {
+              color: $text-gray2-color;
+            }
+
+            &:hover {
+              background-color: $primary-color;
+            }
+          }
+        }
+      }
+
+      & .routerLeft, & .routerRight {
+        font-size: 20px;
+        height: 100%;
+        width: 20px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background-color: $text-gray3-color;
+
+        &:hover {
+          color: $primary-color;
+          cursor: pointer;
+        }
+      }
+
+      & .routerLeft {
+        border-right: 1px $border-color1 solid;
+      }
+
+      & .routerRight {
+        border-left: 1px $border-color1 solid;
+      }
+    }
+  }
+  &-content{
+    font-size:$font-size;
+    padding:10px;
+  }
 }
+
 /*滚动条整体样式*/
 ::-webkit-scrollbar {
    width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/

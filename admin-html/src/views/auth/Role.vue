@@ -5,7 +5,6 @@
         </div>
         <div v-if="uiAuth._admin_api_role_auth_list">
             <el-table v-loading="loading" :data="roleList" border size="mini">
-                <el-table-column label="ID" prop="id"></el-table-column>
                 <el-table-column label="名称" prop="role_name"></el-table-column>
                 <el-table-column label="描述" prop="role_desc"></el-table-column>
                 <el-table-column label="操作" align="center" width="120">

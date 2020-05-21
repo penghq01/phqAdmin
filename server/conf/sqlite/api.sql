@@ -10,7 +10,7 @@ INSERT INTO "api" VALUES (9, '获取图标列表（分页）', '_admin_api_icon_
 INSERT INTO "api" VALUES (10, '添加图标', '_admin_api_icon_add', '/admin/api/icon/add', 2, 1, 'adminApi.Icon', 'post:Add', 1);
 INSERT INTO "api" VALUES (11, '删除图标', '_admin_api_icon_del', '/admin/api/icon/del', 2, 1, 'adminApi.Icon', 'post:Del', 1);
 INSERT INTO "api" VALUES (12, '获取会员列表（分页）', '_admin_api_user_list_paginate', '/admin/api/user/list/:page_size/:page', 2, 1, 'adminApi.User', 'post:List', 1);
-INSERT INTO "api" VALUES (13, '获取导航菜单列表', '_admin_api_auth_list', '/admin/api/auth/list', 3, 1, 'adminApi.Auth', 'post:List', 1);
+INSERT INTO "api" VALUES (13, '获取导航菜单列表', '_admin_api_auth_list', '/admin/api/auth/list', 2, 1, 'adminApi.Auth', 'post:List', 1);
 INSERT INTO "api" VALUES (14, '添加导航菜单', '_admin_api_auth_add', '/admin/api/auth/add', 3, 1, 'adminApi.Auth', 'post:Add', 1);
 INSERT INTO "api" VALUES (15, '修改导航菜单', '_admin_api_auth_edit', '/admin/api/auth/edit', 3, 1, 'adminApi.Auth', 'post:Edit', 1);
 INSERT INTO "api" VALUES (16, '删除导航菜单', '_admin_api_auth_del', '/admin/api/auth/del', 3, 1, 'adminApi.Auth', 'post:Del', 1);
@@ -33,7 +33,7 @@ INSERT INTO "api" VALUES (33, '删除数据库备份', '_admin_api_sql_del', '/a
 INSERT INTO "api" VALUES (34, '删除API接口', '_admin_api_api_del', '/admin/api/api/del', 3, 1, 'adminApi.Api', 'post:Del', 1);
 INSERT INTO "api" VALUES (35, '修改API接口', '_admin_api_api_edit', '/admin/api/api/edit', 3, 1, 'adminApi.Api', 'post:Edit', 1);
 INSERT INTO "api" VALUES (36, '添加API接口', '_admin_api_api_add', '/admin/api/api/add', 3, 1, 'adminApi.Api', 'post:Add', 1);
-INSERT INTO "api" VALUES (37, '获取API接口列表（分页）', '_admin_api_api_list_paginate', '/admin/api/api/list/:page_size/:page', 3, 1, 'adminApi.Api', 'post:PageList', 1);
+INSERT INTO "api" VALUES (37, '获取API接口列表（分页）', '_admin_api_api_list_paginate', '/admin/api/api/list/:page_size/:page', 2, 1, 'adminApi.Api', 'post:PageList', 1);
 INSERT INTO "api" VALUES (38, '获取API接口列表', '_admin_api_api_list', '/admin/api/api/list', 2, 1, 'adminApi.Api', 'post:List', 1);
 INSERT INTO "api" VALUES (39, '获取UI权限列表', '_admin_api_admin_ui_auth', '/admin/api/admin/ui_auth', 1, 1, 'adminApi.Admin', 'post:ActionAuthList', 1);
 INSERT INTO "api" VALUES (40, '备份数据库下载', '_admin_api_sql_download', '/admin/api/sql/download', 2, 1, 'adminApi.Admin', 'post:DownloadSql', 1);

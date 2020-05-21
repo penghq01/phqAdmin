@@ -104,6 +104,12 @@ func (this *Admin) Add() CurdResult {
 			Msg: msg,
 		}
 	}
+	if this.Username =="root" || this.Username=="admin"{
+		return CurdResult{
+			Err: errors.New("不能添加该名称的管理员账号"),
+			Msg: "不能添加该名称的管理员账号",
+		}
+	}
 	ok, _ := common.DbEngine.Where("username=?", this.Username).Exist(new(Admin))
 	if ok {
 		return CurdResult{

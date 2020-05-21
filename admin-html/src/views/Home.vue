@@ -1,15 +1,17 @@
 <template>
     <div class="home" :style="`padding-left:${isCollapse?64:240}px;${homePaddingTop}`">
-        <div class="index-left" :style="`width:${isCollapse?64:240}px;${leftAndHeaderTop}`">
-            <div class="sys-name">
+        <div class="home-left" :style="`width:${isCollapse?64:240}px;${leftAndHeaderTop}`">
+            <div class="home-left-sysname">
                 <span v-show="!isCollapse"> {{sysName}}</span>
                 <el-tooltip effect="dark" content="收起展开菜单" placement="right">
                     <i @click="isCollapse=!isCollapse" :class="isCollapse?'el-icon-s-unfold':'el-icon-s-fold'"></i>
                 </el-tooltip>
             </div>
-            <MyMenu :is-collapse="isCollapse" :list="menuTreeList" :active-menu="activeMenu" @select="triggerSelect"/>
+            <div class="home-left-menu">
+              <MyMenu :is-collapse="isCollapse" :list="menuTreeList" :active-menu="activeMenu" @select="triggerSelect"/>
+            </div>
         </div>
-        <div class="index-header" :style="`left:${isCollapse?64:240}px;width:calc(100% - ${isCollapse?64:240}px);${leftAndHeaderTop}`">
+        <div class="home-header" :style="`left:${isCollapse?64:240}px;width:calc(100% - ${isCollapse?64:240}px);${leftAndHeaderTop}`">
             <div class="home-header-info">
                 <div class="user">
                     <i class="fa fa-user" aria-hidden="true"></i> 欢迎：{{userInfo.username}}
@@ -35,7 +37,7 @@
                 <div class="routerRight" @click="rightMove"><i class="el-icon-caret-right"></i></div>
             </div>
         </div>
-        <div class="index-right">
+        <div class="home-content">
             <router-view></router-view>
         </div>
         <Dialog
@@ -91,9 +93,9 @@
             },
             homePaddingTop(){
                 if(this.platform.isWeb){
-                    return "padding-top:95px";
+                    return "padding-top:90px";
                 }else if(this.platform.isPC){
-                    return "padding-top:145px";
+                    return "padding-top:130px";
                 }
             }
         },
@@ -263,173 +265,6 @@
     }
 </script>
 <style scoped lang="scss">
-    .sys-name {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        padding: 10px;
-        color:$sys-name-color;
-
-        & > span {
-            font-size: 20px;
-            margin-right: 10px;
-        }
-
-        & > i {
-            font-size: 27px;
-            cursor:pointer;
-        }
-    }
-
-    .home-header {
-        &-info {
-            position: relative;
-            z-index: 97;
-            height: 45px;
-            box-shadow: 0 0 5px $box-gray0-color;
-            display: flex;
-            justify-content: flex-end;
-            padding-right: 10px;
-            & div {
-                transition: all 0.3s;
-            }
-            & .user {
-                width: 100px;
-                height: 100%;
-                border-right: 1px $border-color2 solid;
-                color: #327AA3;
-                position: relative;
-                display: flex;
-                align-items: center;
-                text-align: center;
-                padding: 0 10px;
-
-                & > i {
-                    margin-right: 5px;
-                }
-
-                & .user-info {
-                    display: none;
-                    position: absolute;
-                    z-index: 99;
-                    top: 100%;
-                    right: 0;
-                    background-color: #fff;
-                    box-shadow: 0 0 5px #A7A7A7;
-                    color: #363636;
-                    width: 100%;
-
-                    & > div {
-                        width: 100%;
-                        padding: 8px 0;
-                        text-align: center;
-                    }
-                }
-
-                &:hover {
-                    background-color: $primary-color;
-                    color: #fff;
-                    cursor: pointer;
-
-                    & .user-info {
-                        display: block;
-
-                        & > div {
-                            &:hover {
-                                color: #ffffff;
-                                background-color: $primary-color;
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        &-history {
-            position: relative;
-            height: 40px;
-            z-index: 96;
-            display: flex;
-            //border-top: 1px $border-color1 solid;
-            // border-bottom: 1px $border-color1 solid;
-            & .router {
-                height: 100%;
-                background-color: $text-gray3-color;
-                overflow: hidden;
-                width: calc(100% - 40px);
-                min-width: 400px;
-                & > div {
-                    height: 100%;
-                    width: 100%;
-                    position: relative;
-                    display: flex;
-                    align-items: center;
-                    & > div {
-                        display: flex;
-                        justify-content: center;
-                        align-items: center;
-                        white-space: nowrap;
-                        transition: all 0.8s ease-out;
-                        background-color: #ffffff;
-                        height: 25px;
-                        padding: 0 4px;
-                        border-radius: 3px;
-                        cursor: pointer;
-                        margin: 0 5px;
-                        //border: 1px $border-color1 solid;
-                        & > i {
-                            margin-left: 8px;
-                            font-size: 16px;
-                            transition: all 0.5s ease-out;
-                            color: $text-gray0-color;
-
-                            &:hover {
-                                //color:$red-color;
-                                transform: scale(1.2) rotateZ(90deg);
-                            }
-                        }
-                        &:hover {
-                            //border: 1px $primary-gray solid;
-                            background-color: $primary-gray;
-                        }
-                    }
-
-                    & > .active {
-                        color: #ffffff;
-                        background-color: $primary-color;
-
-                        & > i {
-                            color: $text-gray2-color;
-                        }
-
-                        &:hover {
-                            background-color: $primary-color;
-                        }
-                    }
-                }
-            }
-            & .routerLeft, & .routerRight {
-                font-size: 20px;
-                height: 100%;
-                width: 20px;
-                display: flex;
-                align-items: center;
-                justify-content: center;
-                background-color: $text-gray3-color;
-
-                &:hover {
-                    color: $primary-color;
-                    cursor: pointer;
-                }
-            }
-            & .routerLeft {
-                border-right: 1px $border-color1 solid;
-            }
-            & .routerRight {
-                border-left: 1px $border-color1 solid;
-            }
-        }
-    }
-
    .list-complete-enter{
         opacity: 0;
         transform: translateX(80px);
@@ -441,21 +276,4 @@
    .list-complete-move{
         transition:all 1s ease-out;
    }
-   .routerLeft,.routerRight{
-        font-size:20px;
-        height:100%;
-        width:20px;
-        display:flex;
-        align-items:center;
-        justify-content:center;
-        border-right:1px $border-color2 solid;
-        &:hover{
-            color:$primary-color;
-            cursor: pointer;
-        }
-    }
-    .routerRight{
-        border-left:1px $border-color2 solid;
-    }
-
 </style>

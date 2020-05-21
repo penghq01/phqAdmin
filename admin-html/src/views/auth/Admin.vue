@@ -5,7 +5,6 @@
         </div>
         <div class="table" v-if="uiAuth._admin_api_admin_list">
             <el-table v-loading="loading" :data="adminList" border size="mini">
-                <el-table-column label="ID" prop="admin_id"></el-table-column>
                 <el-table-column label="账号" prop="username"></el-table-column>
                 <el-table-column label="权限角色">
                     <template slot-scope="scope">
