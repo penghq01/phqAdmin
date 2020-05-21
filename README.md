@@ -1,7 +1,8 @@
 # 后台管理系统
 
 #### 介绍
-使用go语言开发的前后端分离web管理后台，前端采用vue-cli3.x,Element开源UI框架，数据库支持Mysql和sqlite3可以在配置文件设置，可一键编译为Electron应用（PC客户端）
+使用go语言开发的前后端分离web管理后台，前端采用vue-cli3.x脚手架，Element开源UI框架，数据库支持Mysql和sqlite3可以在配置文件设置，可一键编译为Electron应用（PC客户端）
+
 #### 软件框架
 1. 后端数据接口使用的beego MVC开源框架
 2. ORM使用的xorm开源框架
