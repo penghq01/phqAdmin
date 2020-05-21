@@ -31,29 +31,56 @@
 
 #### 演示
 1. 演示地址：[http://www.cgrj.top/admin/](http://www.cgrj.top/admin/)
-2. 账号密码：admin  123456  该账号未测试账号只有部分功能 
+2. 账号密码：admin  123456  该账号为测试账号只有部分功能 
 
 ####WEB版图片预览
 
-![登录](http://www.cgrj.top/admin-img/000.jpg)
+![登录](http://www.cgrj.top/admin-img/web/000.jpg)
 
-![路由权限管理](http://www.cgrj.top/admin-img/001.jpg) |
+![路由权限管理](http://www.cgrj.top/admin-img/web/001.jpg) |
 
-![路由权限修改](http://www.cgrj.top/admin-img/002.jpg) 
+![路由权限修改](http://www.cgrj.top/admin-img/web/002.jpg) 
 
-![选择图标](http://www.cgrj.top/admin-img/003.jpg) 
+![选择图标](http://www.cgrj.top/admin-img/003/web.jpg) 
 
-![数据权限管理](http://www.cgrj.top/admin-img/004.jpg) 
+![数据权限管理](http://www.cgrj.top/admin-img/web/004.jpg) 
 
-![数据权限修改](http://www.cgrj.top/admin-img/005.jpg) 
+![数据权限修改](http://www.cgrj.top/admin-img/web/005.jpg) 
 
-![管理员管理](http://www.cgrj.top/admin-img/006.jpg) 
+![管理员管理](http://www.cgrj.top/admin-img/web/006.jpg) 
 
-![角色修改](http://www.cgrj.top/admin-img/007.jpg) 
+![角色修改](http://www.cgrj.top/admin-img/web/007.jpg) 
 
-![图片管理](http://www.cgrj.top/admin-img/008.jpg) 
+![图片管理](http://www.cgrj.top/admin-img/web/008.jpg) 
 
-![图片预览](http://www.cgrj.top/admin-img/009.jpg) 
+![图片预览](http://www.cgrj.top/admin-img/web/009.jpg) 
 
-![图标管理](http://www.cgrj.top/admin-img/010.jpg) 
+![图标管理](http://www.cgrj.top/admin-img/web/010.jpg) 
 
+####PC版图片预览
+
+![000](http://www.cgrj.top/admin-img/pc/000.jpg)
+
+![001](http://www.cgrj.top/admin-img/pc/001.jpg)
+
+![002](http://www.cgrj.top/admin-img/pc/002.jpg) 
+
+![003](http://www.cgrj.top/admin-img/pc/003.jpg) 
+
+![004](http://www.cgrj.top/admin-img/pc/004.jpg) 
+
+![005](http://www.cgrj.top/admin-img/pc/005.jpg)
+ 
+![006](http://www.cgrj.top/admin-img/pc/006.jpg) 
+
+![007](http://www.cgrj.top/admin-img/pc/007.jpg) 
+
+![008](http://www.cgrj.top/admin-img/pc/008.jpg)
+ 
+![009](http://www.cgrj.top/admin-img/pc/009.jpg) 
+
+![010](http://www.cgrj.top/admin-img/pc/010.jpg)
+
+![011](http://www.cgrj.top/admin-img/pc/011.jpg)
+
+![012](http://www.cgrj.top/admin-img/pc/012.jpg)
