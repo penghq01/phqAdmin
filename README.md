@@ -28,14 +28,16 @@
 2. 如果使用Mysql数据库，先安装数据库
 3. 安装beego开发工具bee,安装教程[点击这里](https://beego.me/docs/install/bee.md)
 4. 安装Vue开发环境，百度上很多
-#### 效果预览
-预览地址：[http://www.cgrj.top/admin/](http://www.cgrj.top/admin/) 账号密码：admin  123456  该账号未测试账号只有部分功能
 
-#####图片
+#### 演示
+1. 演示地址：[http://www.cgrj.top/admin/](http://www.cgrj.top/admin/)
+2. 账号密码：admin  123456  该账号未测试账号只有部分功能 
 
-![登录](http://www.cgrj.top/admin-img/000.jpg) 
+####WEB版图片预览
 
-![路由权限管理](http://www.cgrj.top/admin-img/001.jpg) 
+![登录](http://www.cgrj.top/admin-img/000.jpg)
+
+![路由权限管理](http://www.cgrj.top/admin-img/001.jpg) |
 
 ![路由权限修改](http://www.cgrj.top/admin-img/002.jpg) 
 

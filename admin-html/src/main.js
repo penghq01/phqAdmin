@@ -4,6 +4,7 @@ import router from './router'
 import store from './store'
 import routerList from "./router/routerList";
 import ElementUI from 'element-ui'
+import "./assets/font-awesome/css/font-awesome.min.css"
 import "./lib/scss/element-variables.scss"
 
 import "./lib/scss/public.scss"
