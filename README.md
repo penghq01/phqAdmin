@@ -24,15 +24,15 @@
 #### 安装教程
 1. 安装Vue开发环境，安装教程百度上面有很多，这里就不给出连接啦。
 2. 安装golang开发环境，同上安装教程百度上面有很多，这里就不给出连接啦。
-3. 下载源码到本地,下载地址：[https://gitee.com/cgrj/phqAdmin](https://gitee.com/cgrj/phqAdmin)
+3. 下载源码到本地,下载地址：<a href="https://gitee.com/cgrj/phqAdmin" target="_blank">https://gitee.com/cgrj/phqAdmin</a>
 4. 如果使用Mysql数据库，请安装Mysql数据库
-5. 安装beego协助快速开发工具bee，安装教程：[点击这里](https://beego.me/docs/install/bee.md)
+5. 安装beego协助快速开发工具bee，安装教程：<a href="https://beego.me/docs/install/bee.md" target="_blank">点击这里</a>
 
 #### 后端打包和运行
   1. bee安装好之后打开cmd窗口进入到server目录下
   2. 开发运行 
   ``bee run``
- 3. 打包请参考：[点击这里](https://beego.me/docs/install/bee.md)
+ 3. 打包请参考：<a href="https://beego.me/docs/install/bee.md" target="_blank">点击这里</a>
 #### 前端打包和运行
   1. npm环境安装好之后打开cmd窗口进入到admin-html目录下,执行命令安装依赖
   ``npm install``
@@ -49,17 +49,20 @@
   4. 后端和前端都成功运行之后在浏览器输入http://localhost:8080/admin 即可看到运行效果
   
 #### 部署
- 应用部署可以看这里：[点击查看部署](https://beego.me/docs/deploy/)
+ 应用部署可以看这里： <a href="https://beego.me/docs/deploy/" target="_blank">点击查看部署</a>
+
 #### 演示
 0. 服务器带宽低，打开有点慢，请见谅
 1. 演示地址：[http://www.cgrj.top/admin/](http://www.cgrj.top/admin/)
 2. PC客户端演示版下载  
-    * 解压缩版（.rar）：[下载](http://www.cgrj.top/phq_admin_pc.rar)   
-    * 安装包版（.exe）：[下载](http://www.cgrj.top/phq_admin_pc.exe)
+    * 解压缩版（.rar）：<a href="http://www.cgrj.top/phq_admin_pc.rar" target="_blank">下载</a> 
+      
+    * 安装包版（.exe）：<a href="http://www.cgrj.top/phq_admin_pc.exe" target="_blank">下载</a> 
 3. 账号密码：admin  123456  该账号为测试账号只有部分功能 
 ####图片预览
+
 |WEB端|PC端|
-|---|---|
+|--|--|
 | ![登录](http://www.cgrj.top/admin-img/web/000.jpg)| ![000](http://www.cgrj.top/admin-img/pc/000.jpg) |
 | ![路由权限管理](http://www.cgrj.top/admin-img/web/001.jpg)| ![001](http://www.cgrj.top/admin-img/pc/001.jpg) |
 | ![路由权限修改](http://www.cgrj.top/admin-img/web/002.jpg)| ![002](http://www.cgrj.top/admin-img/pc/002.jpg) |
