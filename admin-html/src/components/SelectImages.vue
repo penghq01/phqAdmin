@@ -108,7 +108,7 @@
             display:flex;
             justify-content: center;
             align-items:center;
-            background-color:$gray1-color;
+            background-color:$text-gray1-color;
             height:100px;
             width:100px;
             margin-right:10px;

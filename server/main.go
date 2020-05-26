@@ -2,13 +2,13 @@ package main
 
 import (
 	"github.com/astaxie/beego"
-	"server/common"
-	"server/routers"
-	"server/server"
+	"server/src/boot"
+	"server/src/common"
+	"server/src/routers"
 )
 
 func main() {
-	server.ServerInit()
+	boot.ServerInit()
 	defer func() {
 		if err := common.DbEngine.Close(); err != nil {
 			common.Logs.Error("关闭数据库连接失败，%v", err)

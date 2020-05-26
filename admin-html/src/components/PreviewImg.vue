@@ -32,7 +32,7 @@
         align-items: center;
         width:100%;
         height:100%;
-        position:absolute;
+        position:flex;
         z-index:999;
         top:0;
         left:0;
