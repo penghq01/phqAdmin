@@ -33,6 +33,9 @@ func (this *Admin) Del() {
 	if model.AdminId == 1 {
 		this.ServeError("您没有权限删除该管理员", "")
 	}
+	if model.AdminId==2{
+		this.ServeError("您没有权限删除该管理员", "")
+	}
 	if model.AdminId == this.LoginUser.AdminId {
 		this.ServeError("您没有权限删除自己", "")
 	}
@@ -48,6 +51,9 @@ func (this *Admin) Edit() {
 	model := new(mDefault.Admin)
 	this.AnalyseJson(model)
 	if model.AdminId == 1 {
+		this.ServeError("您没有权限修改该管理员", "")
+	}
+	if model.AdminId == 2 && this.LoginUser.AdminId>1{
 		this.ServeError("您没有权限修改该管理员", "")
 	}
 	if model.AdminId == this.LoginUser.AdminId {

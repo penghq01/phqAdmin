@@ -58,7 +58,7 @@ func (this *Role) Del() {
 func (this *Role) Edit() {
 	model := new(mDefault.Role)
 	this.AnalyseJson(model)
-	if model.Id == 1 {
+	if model.Id == 1  && this.LoginUser.AdminId>1{
 		this.ServeError("您没有权限修改该角色", "")
 	}
 	res := model.Edit()
