@@ -19,36 +19,55 @@ func (this *ApiBase) Prepare() {
 //添加操作
 func (this *ApiBase) Add() {
 	this.AnalyseJson(this.ActionModel)
-	res := this.ActionModel.Add()
-	if res.Err == nil {
-		this.ServeSuccess(res.Msg, this.ActionModel)
+	err := this.ActionModel.Add()
+	if err == nil {
+		this.ServeSuccess("添加成功", this.ActionModel)
 	} else {
-		this.ServeError(res.Msg, "")
+		this.ServeError("添加失败，"+err.Error(), "")
 	}
 }
-
-//获取单条
-func (this *AdminBase) Get() {
+//删除
+func (this *ApiBase) Del() {
 	this.AnalyseJson(this.ActionModel)
-	res := this.ActionModel.Get()
-	if res.Err == nil {
-		this.ServeSuccess(res.Msg, this.ActionModel)
-	} else {
-		this.ServeError(res.Msg, "")
+	err := this.ActionModel.Delete()
+	if err == nil {
+		this.ServeSuccess("删除成功", "")
+	}else{
+		this.ServeError("删除失败，"+err.Error(), "")
 	}
 }
+//修改
+func (this *ApiBase) Edit() {
+	this.AnalyseJson(this.ActionModel)
+	err := this.ActionModel.Edit()
+	if err == nil {
+		this.ServeSuccess("修改成功" ,this.ActionModel)
+	}else{
+		this.ServeError("修改失败，"+err.Error(), "")
+	}
 
+}
+//获取单条
+func (this *ApiBase) Get() {
+	this.AnalyseJson(this.ActionModel)
+	err := this.ActionModel.Get()
+	if err == nil {
+		this.ServeSuccess("获取数据成功", this.ActionModel)
+	} else {
+		this.ServeError("获取数据失败，"+err.Error(), "")
+	}
+}
 //获取列表
 func (this *ApiBase) List() {
 	this.AnalyseJson(this.ActionModel)
-	list, res := this.ActionModel.List()
-	if res.Err == nil {
-		this.ServeSuccess(res.Msg, list)
+	var list interface{}
+	err:= this.ActionModel.List(&list)
+	if err == nil {
+		this.ServeSuccess("", list)
 	} else {
-		this.ServeError(res.Msg, "")
+		this.ServeError("获取数据失败，"+err.Error(), "")
 	}
 }
-
 //获取带分页的列表
 func (this *ApiBase) PageList() {
 	this.AnalyseJson(this.ActionModel)
@@ -57,30 +76,10 @@ func (this *ApiBase) PageList() {
 		Data:     nil,
 		Paginate: this.Paginate,
 	}
-	res := this.ActionModel.PageList(&pd)
-	if res.Err == nil {
+	err := this.ActionModel.PageList(&pd)
+	if err == nil {
 		this.ServeSuccess("", pd)
 	} else {
-		this.ServeError(res.Msg, "")
+		this.ServeError("获取数据失败，"+err.Error(), "")
 	}
-}
-
-//删除
-func (this *ApiBase) Del() {
-	this.AnalyseJson(this.ActionModel)
-	res := this.ActionModel.Delete()
-	if res.Err == nil {
-		this.ServeSuccess(res.Msg, "")
-	}
-	this.ServeError(res.Msg, "")
-}
-
-//修改
-func (this *ApiBase) Edit() {
-	this.AnalyseJson(this.ActionModel)
-	res := this.ActionModel.Edit()
-	if res.Err == nil {
-		this.ServeSuccess(res.Msg, this.ActionModel)
-	}
-	this.ServeError(res.Msg, "")
 }

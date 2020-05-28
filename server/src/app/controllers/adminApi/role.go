@@ -30,12 +30,12 @@ func (this *Role) AuthList() {
 func (this *Role) Add() {
 	model := new(mDefault.Role)
 	this.AnalyseJson(model)
-	res := model.Add()
-	if res.Err == nil {
+	err := model.Add()
+	if err == nil {
 		auth.RoleList[model.Id] = *model
-		this.ServeSuccess(res.Msg, model)
+		this.ServeSuccess("添加成功", model)
 	} else {
-		this.ServeError(res.Msg, "")
+		this.ServeError("添加失败，"+err.Error(), "")
 	}
 }
 
@@ -46,12 +46,13 @@ func (this *Role) Del() {
 	if model.Id == 1 {
 		this.ServeError("您没有权限删除该角色", "")
 	}
-	res := model.Delete()
-	if res.Err == nil {
+	err := model.Delete()
+	if err == nil {
 		delete(auth.RoleList, model.Id)
-		this.ServeSuccess(res.Msg, "")
+		this.ServeSuccess("删除成功", "")
+	}else{
+		this.ServeError("删除失败，"+err.Error(), "")
 	}
-	this.ServeError(res.Msg, "")
 }
 
 //修改
@@ -61,25 +62,26 @@ func (this *Role) Edit() {
 	if model.Id == 1  && this.LoginUser.AdminId>1{
 		this.ServeError("您没有权限修改该角色", "")
 	}
-	res := model.Edit()
-	if res.Err == nil {
+	err := model.Edit()
+	if err == nil {
 		auth.RoleList[model.Id] = *model
-		this.ServeSuccess(res.Msg, model)
+		this.ServeSuccess("修改成功", model)
+	}else{
+		this.ServeError("修改失败，"+err.Error(), "")
 	}
-	this.ServeError(res.Msg, "")
 }
 
 //列表
 func (this *Role) List() {
-	list := make([]mDefault.Role, 0)
-	err := models.Find(new(mDefault.Role), func(db *xorm.Session) error {
+	 var list interface{}
+	err := models.Find(new(mDefault.Role),&list, func(db *xorm.Session){
 		if this.LoginUser.AdminId > 1 {
 			db.Where("id>1")
 		}
-		return db.Find(&list)
 	})
-	if err.Err == nil {
+	if err == nil {
 		this.ServeSuccess("", list)
+	}else{
+		this.ServeError("获取数据失败，"+err.Error(), "")
 	}
-	this.ServeError(err.Msg, "")
 }

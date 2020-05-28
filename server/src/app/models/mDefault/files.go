@@ -52,38 +52,26 @@ func (this *FilesVaild) Valid(obj *Files) (bool, string) {
 	}
 	return true, ""
 }
-
-func (this *Files) Add() models.CurdResult {
+func (this *Files) Add() error {
 	return models.Insert(this)
 }
-func (this *Files) PageList(pageData *common.PaginateData) models.CurdResult {
+func (this *Files) PageList(pageData *common.PaginateData)error {
 	return models.PageFind(this, pageData, func(db *xorm.Session) {
 		db.Desc("add_time")
 		if this.ClassId > 0 {
 			db.Where("class_id=?", this.ClassId)
 		}
-	}, func(db *xorm.Session) error {
-		files := make([]Files, 0)
-		err := db.Find(&files)
-		pageData.Data = files
-		return err
-	})
+	}, func(db *xorm.Session){})
 }
-func (this *Files) Delete() models.CurdResult {
+func (this *Files) Delete() error {
 	session := common.DbEngine.NewSession()
 	defer session.Close()
 	err := session.Begin()
 	if err != nil {
-		return models.CurdResult{
-			Err: errors.New("删除失败"),
-			Msg: "删除失败",
-		}
+		return errors.New("删除失败")
 	}
 	if ok, err := session.Where("id=?", this.Id).Get(this); !ok || err != nil {
-		return models.CurdResult{
-			Err: errors.New("图片不存在"),
-			Msg: "图片不存在",
-		}
+		return errors.New("图片不存在")
 	}
 	if row, err := session.Where("id=?", this.Id).Delete(this); row > 0 && err == nil {
 		var delOK bool = true
@@ -95,15 +83,9 @@ func (this *Files) Delete() models.CurdResult {
 		}
 		if delOK {
 			_ = session.Commit()
-			return models.CurdResult{
-				Err: nil,
-				Msg: "删除成功",
-			}
+			return nil
 		}
 	}
 	_ = session.Rollback()
-	return models.CurdResult{
-		Err: errors.New("删除失败"),
-		Msg: "删除失败",
-	}
+	return err
 }

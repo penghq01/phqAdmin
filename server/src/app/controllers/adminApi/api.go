@@ -17,12 +17,12 @@ func (this *Api) Prepare() {
 func (this *Api) Add() {
 	model := new(mDefault.Api)
 	this.AnalyseJson(model)
-	res := model.Add()
-	if res.Err == nil {
+	err := model.Add()
+	if err == nil {
 		auth.DateAPIList[model.Id] = *model
-		this.ServeSuccess(res.Msg, model)
+		this.ServeSuccess("添加成功", model)
 	} else {
-		this.ServeError(res.Msg, "")
+		this.ServeError("添加失败，"+err.Error(), "")
 	}
 }
 
@@ -30,22 +30,25 @@ func (this *Api) Add() {
 func (this *Api) Del() {
 	model := new(mDefault.Api)
 	this.AnalyseJson(model)
-	res := model.Delete()
-	if res.Err == nil {
+	err := model.Delete()
+	if err == nil {
 		delete(auth.DateAPIList, model.Id)
-		this.ServeSuccess(res.Msg, "")
+		this.ServeSuccess("删除成功", "")
+	}else{
+		this.ServeError("删除失败，"+err.Error(), "")
 	}
-	this.ServeError(res.Msg, "")
+
 }
 
 //修改
 func (this *Api) Edit() {
 	model := new(mDefault.Api)
 	this.AnalyseJson(model)
-	res := model.Edit()
-	if res.Err == nil {
+	err := model.Edit()
+	if err == nil {
 		auth.DateAPIList[model.Id] = *model
-		this.ServeSuccess(res.Msg, model)
+		this.ServeSuccess("修改成功", model)
+	}else{
+		this.ServeError("修改失败，"+err.Error(), "")
 	}
-	this.ServeError(res.Msg, "")
 }

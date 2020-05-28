@@ -27,7 +27,7 @@ module.exports = {
     // 设置代理
     proxy: {
       '/api': {
-        target: 'http://www.cgrj.top/', // 域名
+        target: 'http://localhost:8181/', // 域名
         ws: true, // 是否启用websockets
         changOrigin: true, //开启代理：在本地会创建一个虚拟服务端，然后发送请求的数据
         pathRequiresRewrite: {

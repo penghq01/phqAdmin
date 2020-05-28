@@ -11,7 +11,7 @@
  Target Server Version : 50728
  File Encoding         : 65001
 
- Date: 21/05/2020 11:01:17
+ Date: 28/05/2020 17:36:52
 */
 
 SET NAMES utf8mb4;
@@ -191,7 +191,7 @@ INSERT INTO `files_class` VALUES (2, 0, '图片2');
 -- ----------------------------
 DROP TABLE IF EXISTS `icon`;
 CREATE TABLE `icon`  (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `id` bigint(20) NOT NULL AUTO_INCREMENT,
   `title` varchar(60) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   `icon` varchar(100) CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NULL DEFAULT NULL,
   PRIMARY KEY (`id`) USING BTREE,

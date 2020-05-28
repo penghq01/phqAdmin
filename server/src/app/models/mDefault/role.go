@@ -49,56 +49,43 @@ func (this *RoleValid) Valid(obj *Role) error {
 	return nil
 }
 
-func (this *Role) Add() models.CurdResult {
+func (this *Role) Add() error {
 	v := RoleValid{
 		RoleName: true,
 		RoleDesc: true,
 	}
 	if err := v.Valid(this); err != nil {
-		return models.CurdResult{
-			Err: err,
-			Msg: err.Error(),
-		}
+		return err
 	}
 	return models.Insert(this)
 }
 
-func (this *Role) Delete() models.CurdResult {
+func (this *Role) Delete() error {
 	v := RoleValid{
 		Id: true,
 	}
 	if err := v.Valid(this); err != nil {
-		return models.CurdResult{
-			Err: err,
-			Msg: err.Error(),
-		}
+		return err
 	}
 	return models.Remove(this, func(db *xorm.Session) {
 		db.Where("id=?", this.Id)
 	})
 }
 
-func (this *Role) Edit() models.CurdResult {
+func (this *Role) Edit()error {
 	v := RoleValid{
 		Id:       true,
 		RoleName: true,
 		RoleDesc: true,
 	}
 	if err := v.Valid(this); err != nil {
-		return models.CurdResult{
-			Err: err,
-			Msg: err.Error(),
-		}
+		return err
 	}
 	return models.Update(this, func(db *xorm.Session) {
 		db.Where("id=?", this.Id)
 	})
 }
 
-func (this *Role) List() (interface{}, models.CurdResult) {
-	list := make([]Role, 0)
-	err := models.Find(this, func(db *xorm.Session) error {
-		return db.Find(&list)
-	})
-	return list, err
+func (this *Role) List(data *interface{}) error {
+	return models.Find(this,data,func(db *xorm.Session){})
 }

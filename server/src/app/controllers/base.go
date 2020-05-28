@@ -180,7 +180,7 @@ func (this *Base) UploadFile(saveDateBases bool, fileType string, key string, al
 	resFile.Src = resPath
 	resFile.Label = fileHeader.Filename
 	if saveDateBases {
-		if err := resFile.Add(); err.Err == nil {
+		if err := resFile.Add(); err == nil {
 			return nil, resFile
 		}
 		if err := os.Remove(fpath); err != nil {

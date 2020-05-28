@@ -9,8 +9,8 @@ import (
 
 //图标管理
 type Icon struct {
-	models.Models `xorm:"-"`
-	Id            int    `json:"id" xorm:"int(11) pk notnull unique autoincr"` //图标id
+	models.Models `xorm:"extends"`
+	//Id            int    `json:"id" xorm:"int(11) pk notnull unique autoincr"` //图标id
 	Title         string `json:"title" xorm:"varchar(60)"`                     //图标名称
 	Icon          string `json:"icon" xorm:"varchar(100)"`                     //图标
 }
@@ -42,40 +42,29 @@ func (this *IconValid) Valid(obj *Icon) (bool, string) {
 	return true, ""
 }
 
-func (this *Icon) Add() models.CurdResult {
+
+func (this *Icon) Add() error {
 	vd := IconValid{
 		Icon: true,
 	}
 	if ok, msg := vd.Valid(this); !ok {
-		return models.CurdResult{
-			Err: errors.New(msg),
-			Msg: msg,
-		}
+		return errors.New(msg)
 	}
 	return models.Insert(this)
 }
-
-func (this *Icon) Delete() models.CurdResult {
+func (this *Icon) Delete() error {
 	vd := IconValid{
 		Id: true,
 	}
 	if ok, msg := vd.Valid(this); !ok {
-		return models.CurdResult{
-			Err: errors.New(msg),
-			Msg: msg,
-		}
+		return errors.New(msg)
 	}
 	return models.Remove(this, func(db *xorm.Session) {
 		db.Where("id=?", this.Id)
 	})
 }
-func (this *Icon) PageList(pageData *common.PaginateData) models.CurdResult {
+func (this *Icon) PageList(pageData *common.PaginateData) error {
 	return models.PageFind(this, pageData, func(db *xorm.Session) {
 		db.Desc("id")
-	}, func(db *xorm.Session) error {
-		icon := make([]Icon, 0)
-		err := db.Find(&icon)
-		pageData.Data = icon
-		return err
-	})
+	}, func(db *xorm.Session){})
 }

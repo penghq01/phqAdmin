@@ -49,7 +49,6 @@ func (this *AdminValid) Valid(obj *Admin) (bool, string) {
 	}
 	return true, ""
 }
-
 //通过用户名查找管理员
 func (this *Admin) UserNameGet(username string) bool {
 	ok, err := common.DbEngine.Where("username=?", username).Get(this)
@@ -60,7 +59,6 @@ func (this *Admin) UserNameGet(username string) bool {
 		return true
 	}
 }
-
 //通过id查找管理员
 func (this *Admin) IdNameGet(id int) bool {
 	ok, err := common.DbEngine.Where("admin_id=?", id).Get(this)
@@ -71,7 +69,6 @@ func (this *Admin) IdNameGet(id int) bool {
 		return true
 	}
 }
-
 //通过ID和用户名查找管理员
 func (this *Admin) IdUserNameGet(id int, username string) bool {
 	ok, err := common.DbEngine.Where("admin_id=? AND username=?", id, username).Get(this)
@@ -93,63 +90,45 @@ func (this *Admin) IdUpdate(id int) bool {
 		return false
 	}
 }
-func (this *Admin) Add() models.CurdResult {
+func (this *Admin) Add() error {
 	va := AdminValid{
 		Username: true,
 		Password: true,
 	}
 	isOk, msg := va.Valid(this)
 	if !isOk {
-		return models.CurdResult{
-			Err: errors.New(msg),
-			Msg: msg,
-		}
+		return errors.New(msg)
 	}
 	if this.Username == "root" || this.Username == "admin" {
-		return models.CurdResult{
-			Err: errors.New("不能添加该名称的管理员账号"),
-			Msg: "不能添加该名称的管理员账号",
-		}
+		return errors.New("不能添加该名称的管理员账号")
 	}
 	ok, _ := common.DbEngine.Where("username=?", this.Username).Exist(new(Admin))
 	if ok {
-		return models.CurdResult{
-			Err: errors.New("管理员账号已经存在"),
-			Msg: "管理员账号已经存在",
-		}
+		return errors.New("管理员账号已经存在")
 	}
 	this.Password = common.PassWordEncryption(this.Password)
 	err := models.Insert(this)
 	this.Password = ""
 	return err
 }
-func (this *Admin) Delete() models.CurdResult {
+func (this *Admin) Delete() error {
 	va := AdminValid{
 		AdminId: true,
 	}
 	ok, msg := va.Valid(this)
 	if !ok {
-		return models.CurdResult{
-			Err: errors.New(msg),
-			Msg: msg,
-		}
+		return  errors.New(msg)
 	}
 	if this.AdminId == 1 {
-		return models.CurdResult{
-			Err: errors.New("您没有权限删除该账号"),
-			Msg: "您没有权限删除该账号",
-		}
+		return errors.New("您没有权限删除该账号")
 	}
 	return models.Remove(this, func(db *xorm.Session) {
 		db.Where("admin_id=?", this.AdminId)
 	})
 }
-func (this *Admin) Edit() models.CurdResult {
+func (this *Admin) Edit() error {
 	if this.AdminId == 1 {
-		return models.CurdResult{
-			Err: errors.New("没有权限操作"),
-			Msg: "没有权限操作",
-		}
+		return errors.New("没有权限操作")
 	}
 	va := AdminValid{
 		AdminId:  true,
@@ -157,10 +136,7 @@ func (this *Admin) Edit() models.CurdResult {
 	}
 	ok, msg := va.Valid(this)
 	if !ok {
-		return models.CurdResult{
-			Err: errors.New(msg),
-			Msg: msg,
-		}
+		return errors.New(msg)
 	}
 	if this.Password != "" {
 		this.Password = common.PassWordEncryption(this.Password)
@@ -169,10 +145,8 @@ func (this *Admin) Edit() models.CurdResult {
 		db.Where("admin_id=?", this.AdminId)
 	})
 }
-func (this *Admin) List() (interface{}, models.CurdResult) {
-	list := make([]Admin, 0)
-	err := models.Find(this, func(db *xorm.Session) error {
-		return db.Where("admin_id>?", 1).Omit("password").Find(&list)
+func (this *Admin) List(data *interface{}) error {
+	return models.Find(this, data,func(db *xorm.Session) {
+		db.Where("admin_id>?", 1).Omit("password")
 	})
-	return list, err
 }

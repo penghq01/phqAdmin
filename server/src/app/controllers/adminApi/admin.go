@@ -39,11 +39,13 @@ func (this *Admin) Del() {
 	if model.AdminId == this.LoginUser.AdminId {
 		this.ServeError("您没有权限删除自己", "")
 	}
-	res := model.Delete()
-	if res.Err == nil {
-		this.ServeSuccess(res.Msg, "")
+	err := model.Delete()
+	if err == nil {
+		this.ServeSuccess("删除成功", "")
+	}else{
+		this.ServeError("删除失败，"+err.Error(), "")
 	}
-	this.ServeError(res.Msg, "")
+
 }
 
 //修改
@@ -59,31 +61,34 @@ func (this *Admin) Edit() {
 	if model.AdminId == this.LoginUser.AdminId {
 		this.ServeError("您没有权限修改自己", "")
 	}
-	res := model.Edit()
-	if res.Err == nil {
-		this.ServeSuccess(res.Msg, model)
+	err := model.Edit()
+	if err == nil {
+		this.ServeSuccess("修改成功", model)
+	}else{
+		this.ServeError("修改失败，"+err.Error(), "")
 	}
-	this.ServeError(res.Msg, "")
+
 }
 
 //列表
 func (this *Admin) List() {
-	list := make([]mDefault.Admin, 0)
-	err := models.Find(new(mDefault.Admin), func(db *xorm.Session) error {
+	var list interface{}
+	err:=models.Find(new(mDefault.Admin),&list,func(db *xorm.Session){
 		db.Where("admin_id <> ?", this.LoginUser.AdminId)
 		if this.LoginUser.AdminId == 1 {
 			db.Where("admin_id > 1")
 		} else if this.LoginUser.AdminId > 1 {
 			db.Where("admin_id > 2")
 		}
-		return db.Omit("password").Find(&list)
+		db.Omit("password")
 	})
-	if err.Err == nil {
+	if err == nil {
 		this.ServeSuccess("", list)
+	}else{
+		this.ServeError("获取数据失败，"+err.Error(), "")
 	}
-	this.ServeError(err.Msg, "")
-}
 
+}
 func (this *Admin) Info() {
 	user := this.LoginUser
 	user.Password = ""
@@ -105,7 +110,6 @@ func (this *Admin) EditPass() {
 	}
 	this.ServeError("密码修改失败", "")
 }
-
 //获取前端导航列表
 func (this *Admin) AuthList() {
 	this.ServeSuccess("", auth.GetLoginAdminRoute(this.LoginUser))
