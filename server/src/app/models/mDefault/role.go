@@ -16,10 +16,12 @@ type Role struct {
 	RoleDesc      string `json:"role_desc" xorm:"varchar(512)"`                //角色描述
 }
 
-func (this *Role) TableName() string {
+func (Role) TableName() string {
 	return "role"
 }
-
+func(Role)GetSlice()interface{}{
+	return new([]Role)
+}
 type RoleValid struct {
 	models.BaseVaild
 	Id       bool

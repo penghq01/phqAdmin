@@ -15,10 +15,12 @@ type Icon struct {
 	Icon          string `json:"icon" xorm:"varchar(100)"`                     //图标
 }
 
-func (this *Icon) TableName() string {
+func (Icon) TableName() string {
 	return "icon"
 }
-
+func(Icon)GetSlice()interface{}{
+	return new([]Icon)
+}
 //图标数据校验
 type IconValid struct {
 	models.BaseVaild

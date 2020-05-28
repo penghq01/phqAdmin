@@ -82,8 +82,8 @@ func Update(model IModels, where func(db *xorm.Session)) error {
 func Find(model IModels,data *interface{},find func(db *xorm.Session)) error {
 	db := common.DbEngine.Table(model.TableName())
 	find(db)
-	list:=make([]map[string]interface{},0)
-	err:=db.Find(&list)
+	list:=model.GetSlice()
+	err:=db.Find(list)
 	if err == nil {
 		*data=list
 		return nil
@@ -105,8 +105,8 @@ func PageFind(model IModels, pageData *common.PaginateData, where func(db *xorm.
 	pageData.Paginate.CalcPaginate(rows)
 	db.Limit(pageData.Paginate.Limit, pageData.Paginate.Start)
 	find(db)
-	list:=make([]map[string]interface{},0)
-	err=db.Find(&list)
+	list:=model.GetSlice()
+	err=db.Find(list)
 	if err == nil {
 		pageData.Data=list
 		return nil

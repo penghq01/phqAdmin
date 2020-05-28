@@ -20,10 +20,12 @@ type Files struct {
 	AddTime       int64  `json:"add_time" xorm:"int(11) notnull default(0)"`  //上传时间
 }
 
-func (this *Files) TableName() string {
+func (Files) TableName() string {
 	return "files"
 }
-
+func(Files)GetSlice()interface{}{
+	return new([]Files)
+}
 type FilesVaild struct {
 	models.BaseVaild
 	Id    bool

@@ -15,10 +15,12 @@ type FilesClass struct {
 	Label         string `json:"label" xorm:"varchar(255)"`
 }
 
-func (this *FilesClass) TableName() string {
+func (FilesClass) TableName() string {
 	return "files_class"
 }
-
+func(FilesClass)GetSlice()interface{}{
+	return new([]FilesClass)
+}
 type FilesClassVaild struct {
 	models.BaseVaild
 	Id    bool

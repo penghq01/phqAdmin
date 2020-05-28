@@ -22,10 +22,12 @@ type Auth struct {
 	Sort     int  `json:"sort" xorm:"int(11) notnull default(1)"`         //排序
 }
 
-func (this *Auth) TableName() string {
+func (Auth) TableName() string {
 	return "auth"
 }
-
+func(Auth)GetSlice()interface{}{
+	return new([]Auth)
+}
 type AuthValid struct {
 	models.BaseVaild
 	Id       bool //id

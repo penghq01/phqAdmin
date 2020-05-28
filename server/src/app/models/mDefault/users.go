@@ -25,6 +25,9 @@ type Users struct {
 	LoginRand     string  `json:"login_rand" xorm:"varchar(256)"`                   //登录随机字串
 }
 
-func (this *Users) TableName() string {
+func (Users) TableName() string {
 	return "users"
+}
+func(Users)GetSlice()interface{}{
+	return new([]Users)
 }

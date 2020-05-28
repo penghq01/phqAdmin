@@ -21,10 +21,12 @@ type Api struct {
 	IsShow         int8   `json:"is_show" xorm:"tinyint(1) notnull default(1)"` //是否显示
 }
 
-func (this *Api) TableName() string {
+func (Api) TableName() string {
 	return "api"
 }
-
+func(Api)GetSlice()interface{}{
+	return new([]Api)
+}
 type ApiValid struct {
 	Id             bool
 	Title          bool

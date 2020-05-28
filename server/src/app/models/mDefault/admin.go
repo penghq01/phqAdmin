@@ -19,10 +19,12 @@ type Admin struct {
 	LoginIp       string `json:"login_ip" xorm:"varchar(100)"`                 //上次登录IP
 }
 
-func (this *Admin) TableName() string {
+func (Admin) TableName() string {
 	return "admin"
 }
-
+func(Admin)GetSlice() interface{}{
+	return new([]Admin)
+}
 //管理员数据校验
 type AdminValid struct {
 	models.BaseVaild
