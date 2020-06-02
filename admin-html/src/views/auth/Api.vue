@@ -95,14 +95,15 @@
                 <el-input style="width:220px;" type="text" v-model="params.mapping_methods" placeholder="请输入"/>
             </div>
             <div class="input-div">
-                    <el-button-group>
-                        <el-button type="info" size="mini" @click="setMappingMethods('post:Get')">post:Get</el-button>
-                        <el-button type="success" size="mini" @click="setMappingMethods('post:PageList')">post:PageList</el-button>
-                        <el-button type="success" size="mini" @click="setMappingMethods('post:List')">post:List</el-button>
-                        <el-button type="warning" size="mini" @click="setMappingMethods('post:Edit')">post:Edit</el-button>
-                        <el-button type="danger" size="mini" @click="setMappingMethods('post:Del')">post:Del</el-button>
-                        <el-button type="primary" size="mini" @click="setMappingMethods('post:Add')">post:Add</el-button>
-                    </el-button-group>
+                   <el-button-group>
+                    <el-button type="info" size="mini" @click="setMappingMethods('Get')">post:Get</el-button>
+                    <el-button type="success" size="mini" @click="setMappingMethods('PageList')">post:PageList
+                    </el-button>
+                    <el-button type="success" size="mini" @click="setMappingMethods('List')">post:List</el-button>
+                    <el-button type="warning" size="mini" @click="setMappingMethods('Edit')">post:Edit</el-button>
+                    <el-button type="danger" size="mini" @click="setMappingMethods('Del')">post:Del</el-button>
+                    <el-button type="primary" size="mini" @click="setMappingMethods('Add')">post:Add</el-button>
+                </el-button-group>
             </div>
         </Dialog>
     </div>
@@ -208,8 +209,49 @@
                     this.params.name=r;
                 }
             },
-            setMappingMethods(val){
-                this.params.mapping_methods=val;
+            setMappingMethods(val) {
+                this.params.mapping_methods = `post:${val}`;
+                let structArr=this.params.struct.split(".");
+                let titleArr=this.params.title.split("—");
+                let struct="";
+                if(structArr.length>1){
+                    struct=structArr[structArr.length-1].toLowerCase();
+                }
+                if(titleArr.length>1){
+                    titleArr.splice(1,1);
+                }
+                // "name": "admin_api_",
+                // "router": "/admin/api/",
+                // stock.Unit
+                console.log(struct,this.params.struct);
+                switch (val) {
+                    case "Add":
+                        this.params.router=`/admin/api/${struct}/add`;
+                        titleArr.push("添加");
+                        break;
+                    case "Del":
+                        this.params.router=`/admin/api/${struct}/del`;
+                        titleArr.push("删除");
+                        break;
+                    case "Edit":
+                        this.params.router=`/admin/api/${struct}/edit`;
+                        titleArr.push("修改");
+                        break;
+                    case "List":
+                        this.params.router=`/admin/api/${struct}/list`;
+                        titleArr.push("查询列表");
+                        break;
+                    case "PageList":
+                        this.params.router=`/admin/api/${struct}/list/:page_size/:page`;
+                        titleArr.push("查询列表（分页）");
+                        break;
+                    case "Get":
+                        this.params.router=`/admin/api/${struct}/get`;
+                        titleArr.push("查询");
+                        break;
+                }
+                this.params.title=titleArr.join("—");
+                this.routerFocus();
             }
         }
     }
