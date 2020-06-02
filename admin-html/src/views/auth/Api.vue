@@ -215,7 +215,7 @@
                 let titleArr=this.params.title.split("—");
                 let struct="";
                 if(structArr.length>1){
-                    struct=structArr[structArr.length-1].toLowerCase();
+                    struct=utils.toLine(structArr[structArr.length-1]);
                 }
                 if(titleArr.length>1){
                     titleArr.splice(1,1);

@@ -31,6 +31,16 @@ export default {
   NewObject(object={}){
     return JSON.parse(JSON.stringify(object));
   },
+   // 驼峰转换下划线
+    toLine(name) {
+        let res=name.replace(/([A-Z])/g, "_$1").toLowerCase();
+        if(res.substring(0,1)=="_"){
+            return res.substr(1,res.length-1);
+        }else{
+            return res;
+        }
+
+    },
   //获取 Unix 时间戳 (秒)
   GetDateTimeUnix(){
     return moment().unix();
