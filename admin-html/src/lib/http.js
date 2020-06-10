@@ -101,9 +101,13 @@ export default {
             };
             axios.post(url,params,config).then(response=>{
                 // 对响应数据做点什么
-                let data = response.data;
+                 let data = response.data;
                 message.loading.hide();
-                resolve(data);
+                if(data instanceof Object){
+                    responseHandle(data,{resolve,reject,isToast});
+                }else{
+                    resolve(data);
+                }
             }).catch(err=>{
                 message.loading.hide();
                 isToast && message.msg.error('网络繁忙，请稍后重试');
