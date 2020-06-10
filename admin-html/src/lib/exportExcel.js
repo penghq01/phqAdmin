@@ -20,7 +20,7 @@ function FormatJson(filterVal, jsonData) {
     return jsonData.map(v => filterVal.map(j => v[j]))
 
 }
-
+//formatArr[{fieldName：字段名，name：字段的中文名，handle：处理函数 }]
 export default {
     //fieldName：字段名，name：字段的中文名，handle：处理函数
     field(fieldName, name, handle = val => {
@@ -33,7 +33,7 @@ export default {
         };
     },
     excelHandle(url, formatArr = [], {params = {}, fileName = "WEB导出Excel数据", showIndex = false, indexName = "序号",pageSize=10}={}) {
-        MessageBox.prompt('您要导出几页数据？请输入数量', '提示', {
+        MessageBox.prompt(`您要导出几页数据（每页${pageSize}条）？请输入页数`, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
         }).then(({value}) => {
