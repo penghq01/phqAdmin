@@ -102,6 +102,11 @@
         watch:{
             routerList(){
                 this.setTriggerSelect();
+            },
+			$route(to,from){
+                this.activeMenu = to.path;
+                this.isPush=false;
+                this.setTriggerSelect();
             }
         },
         mounted() {
