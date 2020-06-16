@@ -4,7 +4,7 @@
             unique-opened
             :collapse="isCollapse"
             @select="selectMenu">
-           <MenuSelectItem v-for="(item,index) in list" :key="index" :params="item"/>
+        <MenuSelectItem v-for="(item,index) in list" :key="index" :params="item" :children="0"/>
     </el-menu>
 </template>
 
@@ -35,7 +35,3 @@
         }
     }
 </script>
-
-<style scoped lang="scss">
-
-</style>

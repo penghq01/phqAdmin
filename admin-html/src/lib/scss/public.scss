@@ -21,8 +21,8 @@ html,body,#app{
       align-items: center;
       justify-content: center;
       height:45px;
-      color: #171717;
-      border-bottom:1px $box-gray0-color solid;
+      color: $menu-text-color;
+      border-bottom: 1px $menu-border-color solid;
       & > span {
         font-size: 20px;
         margin-right: 10px;
@@ -207,17 +207,17 @@ html,body,#app{
 /*滚动条整体样式*/
 ::-webkit-scrollbar {
    width: 5px;     /*高宽分别对应横竖滚动条的尺寸*/
-  height:15px;
+  height: 8px;
 }
 /*滚动条里面小方块*/
 ::-webkit-scrollbar-thumb {
-  background: $primary-color;
-}
-/*滚动条里面轨道*/
-::-webkit-scrollbar-track {
-  background: $primary-gray;
+  background:#B6B6B6;
 }
 
+/*滚动条里面轨道*/
+::-webkit-scrollbar-track {
+  background: #E7E7E7;
+}
 .interval-span{
    display: inline-block;
    width:10px;
@@ -233,9 +233,6 @@ html,body,#app{
 .el-tooltip,.el-submenu__title{
   display:flex!important;
   align-items: center;
-}
-.el-menu{
-  background-color:$menu-background-color;
 }
 .phq-menu{
   &-icon{
@@ -258,9 +255,32 @@ html,body,#app{
 .el-upload{
   display:block;
 }
+
+
 .el-menu{
+ background-color:$menu-background-color;
   border-right:none;
 }
+
+.el-menu-children0 .el-menu-item,.el-menu-children0 .el-submenu .el-submenu__title{
+  background-color:$menu-background-color0;
+}
+.el-menu-children1 .el-menu-item,.el-menu-children1 .el-submenu .el-submenu__title{
+  background-color:$menu-background-color1;
+}
+.el-menu-children2 .el-menu-item,.el-menu-children2 .el-submenu .el-submenu__title{
+   background-color:$menu-background-color2;
+ }
+.el-menu-children3 .el-menu-item,.el-menu-children3 .el-submenu .el-submenu__title{
+  background-color:$menu-background-color3;
+}
+.el-menu-children4 .el-menu-item,.el-menu-children4 .el-submenu .el-submenu__title{
+  background-color:$menu-background-color4;
+}
+.el-menu-children5 .el-menu-item,.el-menu-children5 .el-submenu .el-submenu__title{
+  background-color:$menu-background-color5;
+}
+
 .el-menu-item i,.el-submenu__title i{
   color:$text-gray3-color;
 }
@@ -274,13 +294,14 @@ html,body,#app{
    color:$menu-text-color;
 }
 //设置导航hover时图标颜色
-.el-menu-item:hover i, .el-submenu__title:hover i{;
-  color:$menu-hover-text-color;
+.el-menu-item:hover i,.el-submenu .el-submenu__title:hover i {;
+  color: $menu-hover-text-color;
 }
+
 //设置导航hover时背景颜色和字体颜色
-.el-menu-item:hover,.el-submenu__title:hover{
-  background-color:$menu-hover-background-color;
-  color:$menu-hover-text-color;
+.el-menu-item:hover,.el-submenu .el-submenu__title:hover {
+  background-color: $menu-hover-background-color;
+  color: $menu-hover-text-color;
 }
 
 //设置导航激活时图标颜色

@@ -38,10 +38,23 @@ $box-gray0-color: #C1C1C1; //阴影颜色0
 $box-gray1-color: #d3d3d3;//阴影颜色1
 $box-gray2-color: #eeeeee;//阴影颜色2
 
-$sys-name-color:#404040;
-$menu-background-color:#E8E8E8;//左侧导航背景颜色
-$menu-text-color:#404040;//左侧导航字体颜色
-$menu-hover-background-color:$primary-color;//左侧导航hover背景颜色
-$menu-hover-text-color:#f9f9f9;//左侧导航hover字体颜色
-$menu-active-background-color:$primary-color;//左侧导航激活背景颜色
-$menu-active-text-color:#fff;//左侧导航激活字体颜色
+$r: 216;
+$g: 216;
+$b: 216;
+
+@function function-rgb($r, $g, $b,$args) {
+  @return rgb($r - $args, $g - $args, $b - $args);
+}
+$menu-background-color: rgb($r, $g, $b); //左侧导航背景颜色
+$menu-background-color0: function-rgb($r, $g, $b,20); //左侧导航背景颜色0
+$menu-background-color1: function-rgb($r, $g, $b,40); //左侧导航背景颜色1
+$menu-background-color2: function-rgb($r, $g, $b,60); //左侧导航背景颜色2
+$menu-background-color3: function-rgb($r, $g, $b,80); //左侧导航背景颜色3
+$menu-background-color4: function-rgb($r, $g, $b,100); //左侧导航背景颜色4
+$menu-background-color5: function-rgb($r, $g, $b,120); //左侧导航背景颜色5
+$menu-border-color: #EEEEEE; //下划线颜色
+$menu-text-color: #424242; //左侧导航字体颜色
+$menu-hover-background-color: $primary-color; //左侧导航hover背景颜色
+$menu-hover-text-color: #f9f9f9; //左侧导航hover字体颜色
+$menu-active-background-color: $primary-color; //左侧导航激活背景颜色
+$menu-active-text-color: #fff; //左侧导航激活字体颜色
