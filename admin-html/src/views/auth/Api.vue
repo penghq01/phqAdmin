@@ -5,8 +5,8 @@
         </div>
         <div v-if="uiAuth._admin_api_api_list_paginate">
             <el-table v-loading="loading" :data="dataList" border size="mini">
-                <el-table-column label="标题" prop="title" width="200"></el-table-column>
-                <el-table-column label="名称" prop="name" width="260"></el-table-column>
+                <el-table-column label="标题" prop="title" width="320"></el-table-column>
+                <el-table-column label="名称" prop="name" width="320"></el-table-column>
                 <el-table-column label="签名" width="50">
                     <template slot-scope="scope">
                         <el-tag effect="dark" v-if="scope.row.sign==0" type="info" size="mini">否</el-tag>
@@ -27,12 +27,13 @@
                         <el-tag effect="dark" v-if="scope.row.is_show==1" size="mini">显示</el-tag>
                     </template>
                 </el-table-column>
-                <el-table-column label="接口" prop="router" width="300"></el-table-column>
+                <el-table-column label="接口" prop="router" width="380"></el-table-column>
                 <el-table-column label="结构体" prop="struct" width="200"></el-table-column>
-                <el-table-column label="方法" prop="mapping_methods" width="160"></el-table-column>
+                <el-table-column label="方法" prop="mapping_methods" width="180"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="120">
                     <template slot-scope="scope">
-                        <el-button v-if="uiAuth._admin_api_api_edit" type="warning" @click="showEdit(scope.row)" icon="el-icon-edit-outline"
+                        <el-button v-if="uiAuth._admin_api_api_edit" type="warning" @click="showEdit(scope.row)"
+                                   icon="el-icon-edit-outline"
                                    size="mini"></el-button>
                         <span class="interval-span"></span>
                         <Poptip
@@ -62,40 +63,41 @@
                 <el-input style="width:220px;" type="text" v-model="params.title" placeholder="请输入"/>
             </div>
             <div class="input-div">
-                <span  class="title-name">接口：</span>
+                <span class="title-name">接口：</span>
                 <el-input style="width:220px;" type="text" v-model="params.router" placeholder="请输入"/>
             </div>
             <div class="input-div">
-                <span  class="title-name">名称：</span>
-                <el-input style="width:220px;" type="text" @focus="routerFocus" v-model="params.name" placeholder="请输入"/>
+                <span class="title-name">名称：</span>
+                <el-input style="width:220px;" type="text" @focus="routerFocus" v-model="params.name"
+                          placeholder="请输入"/>
             </div>
             <div class="input-div">
-                <span  class="title-name">是否签名：</span>
+                <span class="title-name">是否签名：</span>
                 <el-radio v-model="params.sign" :label="0">否</el-radio>
                 <el-radio v-model="params.sign" :label="1">是</el-radio>
             </div>
             <div class="input-div">
-                <span  class="title-name">访问类型：</span>
+                <span class="title-name">访问类型：</span>
                 <el-radio v-model="params.visit" :label="0">公开</el-radio>
                 <el-radio v-model="params.visit" :label="1">登录</el-radio>
                 <el-radio v-model="params.visit" :label="2">权限</el-radio>
                 <el-radio v-model="params.visit" :label="3">系统管理员</el-radio>
             </div>
             <div class="input-div">
-                <span  class="title-name">是否显示：</span>
+                <span class="title-name">是否显示：</span>
                 <el-radio v-model="params.is_show" :label="0">隐藏</el-radio>
                 <el-radio v-model="params.is_show" :label="1">显示</el-radio>
             </div>
             <div class="input-div">
-                 <span  class="title-name">结构体：</span>
+                <span class="title-name">结构体：</span>
                 <el-input style="width:220px;" type="text" v-model="params.struct" placeholder="请输入"/>
             </div>
             <div class="input-div">
-                 <span  class="title-name">方法：</span>
+                <span class="title-name">方法：</span>
                 <el-input style="width:220px;" type="text" v-model="params.mapping_methods" placeholder="请输入"/>
             </div>
             <div class="input-div">
-                   <el-button-group>
+                <el-button-group>
                     <el-button type="info" size="mini" @click="setMappingMethods('Get')">post:Get</el-button>
                     <el-button type="success" size="mini" @click="setMappingMethods('PageList')">post:PageList
                     </el-button>
@@ -103,6 +105,7 @@
                     <el-button type="warning" size="mini" @click="setMappingMethods('Edit')">post:Edit</el-button>
                     <el-button type="danger" size="mini" @click="setMappingMethods('Del')">post:Del</el-button>
                     <el-button type="primary" size="mini" @click="setMappingMethods('Add')">post:Add</el-button>
+                    <el-button size="mini" @click="setMappingMethods('')">手动</el-button>
                 </el-button-group>
             </div>
         </Dialog>
@@ -113,14 +116,15 @@
     import http from "../../lib/http";
     import utils from "../../lib/utils";
     import {mapState} from "vuex";
+
     export default {
         name: "Api",
         data() {
             return {
-                paginate:{
-                    page:1,
-                    page_size:14,
-                    total_count:0
+                paginate: {
+                    page: 1,
+                    page_size: 14,
+                    total_count: 0
                 },
                 loading: false,
                 isEdit: false,
@@ -130,7 +134,7 @@
                 params: {}
             }
         },
-        computed:{...mapState(["uiAuth"])},
+        computed: {...mapState(["uiAuth"])},
         mounted() {
             this.getDataList();
         },
@@ -143,43 +147,43 @@
                     this.loading = false;
                 }).catch(err => this.loading = false)
             },
-            showAdd(){
-                this.params= {
-                    "title":"",
-                    "sign":1,
-                    "visit":0,
-                    "is_show":1,
-                    "name":"admin_api_",
-                    "router":"/admin/api/",
-                    "struct":"",
-                    "mapping_methods":"post:"
+            showAdd() {
+                this.params = {
+                    "title": "",
+                    "sign": 1,
+                    "visit": 0,
+                    "is_show": 1,
+                    "name": "admin_api_",
+                    "router": "/admin/api/",
+                    "struct": "",
+                    "mapping_methods": "post:"
                 };
-                this.opened= true;
+                this.opened = true;
             },
             showEdit(row) {
-                this.isEdit=true;
-                this.params= {
-                    "id":row.id,
-                    "title":row.title,
-                    "name":row.name,
-                    "sign":row.sign,
-                    "visit":row.visit,
-                    "is_show":row.is_show,
-                    "router":row.router,
-                    "struct":row.struct,
-                    "mapping_methods":row.mapping_methods,
+                this.isEdit = true;
+                this.params = {
+                    "id": row.id,
+                    "title": row.title,
+                    "name": row.name,
+                    "sign": row.sign,
+                    "visit": row.visit,
+                    "is_show": row.is_show,
+                    "router": row.router,
+                    "struct": row.struct,
+                    "mapping_methods": row.mapping_methods,
                 };
-                this.opened= true;
+                this.opened = true;
             },
             close() {
                 this.loading = false;
-               this.isEdit=false;
-               this.opened= false;
-               this.params= {};
+                this.isEdit = false;
+                this.opened = false;
+                this.params = {};
             },
             add() {
                 this.loading = true;
-                http.post("api/add",this.params).then(data => {
+                http.post("api/add", this.params).then(data => {
                     this.dataList.unshift(data);
                     //this.close();
                     this.loading = false;
@@ -187,70 +191,77 @@
             },
             edit() {
                 this.loading = true;
-                http.post("api/edit",this.params).then(data => {
-                    let index=this.dataList.findIndex(item=>item.id===data.id);
-                    index>=0 && this.dataList.splice(index,1,data);
+                http.post("api/edit", this.params).then(data => {
+                    let index = this.dataList.findIndex(item => item.id === data.id);
+                    index >= 0 && this.dataList.splice(index, 1, data);
                     this.close();
                 }).catch(err => this.loading = false)
             },
             del(row) {
                 this.loading = true;
-                http.post("api/del",{"id":row.id}).then(data => {
-                    let index=this.dataList.findIndex(item=>item.id===row.id);
-                    index>=0 && this.dataList.splice(index,1);
+                http.post("api/del", {"id": row.id}).then(data => {
+                    let index = this.dataList.findIndex(item => item.id === row.id);
+                    index >= 0 && this.dataList.splice(index, 1);
                     this.loading = false
                 }).catch(err => this.loading = false)
             },
-            routerFocus(){
-                if(!utils.empty(this.params.router)){
-                    let r=this.params.router;
-                    r=r.replace(/\/:page_size\/:page/g,"_paginate");
-                    r=r.replace(/\//g,"_");
-                    this.params.name=r;
+            routerFocus() {
+                if (!utils.empty(this.params.router)) {
+                    let r = this.params.router;
+                    r = r.replace(/\/:page_size\/:page/g, "_paginate");
+                    r = r.replace(/\//g, "_");
+                    this.params.name = r;
                 }
             },
             setMappingMethods(val) {
-                this.params.mapping_methods = `post:${val}`;
-                let structArr=this.params.struct.split(".");
-                let titleArr=this.params.title.split("—");
-                let struct="";
-                if(structArr.length>1){
-                    struct=utils.toLine(structArr[structArr.length-1]);
+                if(!utils.empty(val)){
+                    this.params.mapping_methods = `post:${val}`;
                 }
-                if(titleArr.length>1){
-                    titleArr.splice(1,1);
+                let structArr = this.params.struct.split(".");
+                let titleArr = this.params.title.split("—");
+                let struct = "";
+                let methodArr = this.params.mapping_methods.split(":");
+                let method="";
+                if (structArr.length > 1) {
+                    struct = utils.toLine(structArr[structArr.length - 1]);
                 }
-                // "name": "admin_api_",
-                // "router": "/admin/api/",
-                // stock.Unit
-                console.log(struct,this.params.struct);
+                if (methodArr.length > 1) {
+                    method =utils.toLine(methodArr[methodArr.length - 1]);
+                }
+                if (titleArr.length > 1) {
+                    titleArr.splice(1, 1);
+                }
                 switch (val) {
                     case "Add":
-                        this.params.router=`/admin/api/${struct}/add`;
+                        this.params.router = `/admin/api/${struct}/add`;
                         titleArr.push("添加");
                         break;
                     case "Del":
-                        this.params.router=`/admin/api/${struct}/del`;
+                        this.params.router = `/admin/api/${struct}/del`;
                         titleArr.push("删除");
                         break;
                     case "Edit":
-                        this.params.router=`/admin/api/${struct}/edit`;
+                        this.params.router = `/admin/api/${struct}/edit`;
                         titleArr.push("修改");
                         break;
                     case "List":
-                        this.params.router=`/admin/api/${struct}/list`;
+                        this.params.router = `/admin/api/${struct}/list`;
                         titleArr.push("查询列表");
                         break;
                     case "PageList":
-                        this.params.router=`/admin/api/${struct}/list/:page_size/:page`;
+                        this.params.router = `/admin/api/${struct}/list/:page_size/:page`;
                         titleArr.push("查询列表（分页）");
                         break;
                     case "Get":
-                        this.params.router=`/admin/api/${struct}/get`;
+                        this.params.router = `/admin/api/${struct}/get`;
                         titleArr.push("查询");
                         break;
+                    default:
+                        this.params.router = `/admin/api/${struct}/${method}`;
+                        titleArr.push("");
+                        break;
                 }
-                this.params.title=titleArr.join("—");
+                this.params.title = titleArr.join("—");
                 this.routerFocus();
             }
         }
