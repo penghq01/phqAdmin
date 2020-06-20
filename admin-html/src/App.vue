@@ -3,9 +3,7 @@
     <router-view></router-view>
   </div>
 </template>
-<style scoped lang="scss">
 
-</style>
 <script>
   import {mapActions} from "vuex";
   export default {
@@ -13,20 +11,17 @@
     methods:{...mapActions(["updateBodyHeight"])},
     mounted(){
       let that=this;
-      console.log();
       let minHeight=240;
-      let func=(()=> {
-        let height = document.body.offsetHeight;
-        let res = height - 110;
-        if (res < minHeight) {
-          res = minHeight;
+      let func=function(){
+        let winHeight =document.body.clientHeight || document.documentElement.clientHeight;
+        let height = winHeight - 110;
+        if (height < minHeight) {
+          height = minHeight;
         }
-        that.updateBodyHeight(res);
-      });
+        that.updateBodyHeight(height);
+      };
       func();
-      window.onresize = () => {
-        return func();
-      }
+      window.onresize = func;
     }
   }
 </script>
