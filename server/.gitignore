@@ -3,5 +3,6 @@
 server.exe
 server.exe~
 phqAdminServer.exe
+go_build_main_go.exe
 *.log
 

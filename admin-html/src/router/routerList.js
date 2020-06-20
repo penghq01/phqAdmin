@@ -52,5 +52,12 @@ export default [
         name: 'sql',
         nickname: "数据备份恢复",
         component: () => import('../views/system/Database.vue')
-    }
+    },
+    //基本资料
+    {
+        path: '/region',
+        name: 'Region',
+        nickname: "区域管理",
+        component: () => import('../views/basicData/Region.vue')
+    },
 ]
