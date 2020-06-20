@@ -12,7 +12,7 @@
     </el-submenu>
 
     <el-menu-item  v-else :index="params.key">
-        <i :class="params.icon" class="phq-menu-icon"></i>
+       <i :class="params.icon" class="phq-menu-icon"></i>
         <span slot="title">
             <span>
                  {{params.title}}
