@@ -16,5 +16,9 @@ const mutations={
      UPDATE_ROUTER_TREE_LIST(state,val){
           state.menuTreeList=val;
      },
+     //更新内容区域高度
+     UPDATE_BODY_HEIGHT(state,val){
+          state.bodyHeight=val;
+     },
 };
 export default mutations

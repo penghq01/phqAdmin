@@ -31,5 +31,9 @@ const actions={
              commit("UPDATE_ROUTER_TREE_LIST",treeList);
          }).catch(err => {});
      },
+    //更新登陆用户信息
+    updateBodyHeight({commit},height){
+        commit("UPDATE_BODY_HEIGHT",height);
+    },
 };
 export default actions
