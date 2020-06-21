@@ -1,23 +1,18 @@
 <template>
-    <div class="Region">
-
+    <div class="region">
+       <RegionTree :body-height="bodyHeight"></RegionTree>
     </div>
 </template>
 
 <script>
     import {mapState} from "vuex";
-
+    import RegionTree from "../../components/region/RegionTree";
+    // loadData
     export default {
         name: "Region",
-        computed: {...mapState(["uiAuth", "bodyHeight"])},
-        data() {
-            return {}
-        },
-        mounted() {
-        },
-        methods: {}
+        components: {RegionTree},
+        computed: {...mapState(["bodyHeight"])}
     }
 </script>
 <style scoped lang="scss">
-
 </style>

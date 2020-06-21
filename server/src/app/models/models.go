@@ -7,7 +7,6 @@ import (
 
 type Models struct {
 	BaseVaild `xorm:"-"`
-	Id            int64    `json:"id" xorm:"bigint pk notnull unique autoincr"` //ID
 }
 
 //获取表名
@@ -26,16 +25,16 @@ func (this *Models) Delete() error {
 func (this *Models) Edit() error {
 	return nil
 }
-//获取一条数据
-func (this *Models) Get() error {
-	return nil
-}
 //查询列表
 func (this *Models) List(list *interface{}) error {
 	return nil
 }
 //查询分页列表
 func (this *Models) PageList(pageData *common.PaginateData) error {
+	return nil
+}
+//获取一条数据
+func (this *Models) Get() error {
 	return nil
 }
 

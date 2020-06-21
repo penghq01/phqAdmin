@@ -1,0 +1,62 @@
+@import 'vxe-table/styles/variable.scss';
+/*color*/
+$vxe-primary-color: $primary-color;
+$vxe-success-color: $success-color;
+$vxe-info-color: #909399;
+$vxe-warning-color: $warning-color;
+$vxe-danger-color: $danger-color;
+$vxe-disabled-color: #BFBFBF;
+$vxe-primary-disabled-color: #c0c4cc;
+
+/*table*/
+$vxe-table-font-color: $vxe-font-color;
+$vxe-table-border-radius: $vxe-border-radius;
+
+/*table color*/
+$vxe-table-header-background-color: #f8f8f9;
+$vxe-table-border-color: #e8eaec;
+$vxe-table-resizable-color: #D9DDDF;
+$vxe-table-background-color: #ffffff;
+
+/*table row*/
+$vxe-table-row-height-default: 48px;
+$vxe-table-row-height-medium: 44px;
+$vxe-table-row-height-small: 40px;
+$vxe-table-row-height-mini: 36px;
+$vxe-table-row-line-height: 24px;
+$vxe-table-row-hover-background-color: #f5f7fa;
+$vxe-table-row-striped-background-color: #fafafa;
+$vxe-table-row-hover-striped-background-color: #f5f7fa;
+$vxe-table-row-radio-background-color: #fff3e0;
+$vxe-table-row-hover-radio-background-color: #ffebbc;
+$vxe-table-row-cheched-background-color: #fff3e0;
+$vxe-table-row-hover-cheched-background-color: #ffebbc;
+$vxe-table-row-current-background-color: #e6f7ff;
+$vxe-table-row-hover-current-background-color: #d7effb;
+
+/*table column*/
+$vxe-table-column-hover-background-color: #d7effb;
+$vxe-table-column-current-background-color: #e6f7ff;
+$vxe-table-column-icon-border-color: #c0c4cc;
+$vxe-table-column-icon-border-hover-color: #515A6E;
+
+/*table cell*/
+$vxe-table-cell-padding-left: 10px;
+$vxe-table-cell-padding-right: 10px;
+$vxe-table-cell-input-height-default: $vxe-table-row-height-default - 6;
+$vxe-table-cell-input-height-medium: $vxe-table-row-height-medium - 6;
+$vxe-table-cell-input-height-small: $vxe-table-row-height-small - 6;
+$vxe-table-cell-input-height-mini: $vxe-table-row-height-mini - 6;
+$vxe-table-cell-dirty-width: 5px;
+$vxe-table-cell-dirty-color: #f56c6c;
+
+/*table checkbox*/
+$vxe-table-checkbox-range-border-color: #006af1;
+$vxe-table-checkbox-range-background-color: rgba(50, 128, 252, 0.2);
+
+/*table tree*/
+$vxe-table-tree-node-line-color:#909399;
+
+@import 'vxe-table/styles/table.scss';
+//@import 'vxe-table/styles/footer.scss';
+@import 'vxe-table/styles/menu.scss';

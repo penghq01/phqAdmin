@@ -19,14 +19,16 @@ type Api struct {
 	Struct         string `json:"struct" xorm:"varchar(128)"`                   //结构体名称
 	MappingMethods string `json:"mapping_methods" xorm:"varchar(55)"`           //映射的方法
 	IsShow         int8   `json:"is_show" xorm:"tinyint(1) notnull default(1)"` //是否显示
+	Sort           int    `json:"sort" xorm:"int notnull default(0)"`           //排序
 }
 
 func (Api) TableName() string {
 	return "api"
 }
-func(Api)GetSlice()interface{}{
+func (Api) GetSlice() interface{} {
 	return new([]Api)
 }
+
 type ApiValid struct {
 	Id             bool
 	Title          bool
@@ -108,20 +110,20 @@ func (this *Api) Delete() error {
 		Id: true,
 	}
 	if ok, msg := this.Valid(vd); !ok {
-		return  errors.New(msg)
+		return errors.New(msg)
 	}
 	return models.Remove(this, func(db *xorm.Session) {
 		db.Where("id=?", this.Id)
 	})
 }
 func (this *Api) List(data *interface{}) error {
-	return models.Find(this,data, func(db *xorm.Session){
-		db.Desc("id")
+	return models.Find(this, data, func(db *xorm.Session) {
+		db.Desc("sort").Desc("id")
 		db.Where("visit = 2 AND is_show = 1")
 	})
 }
 func (this *Api) PageList(pageData *common.PaginateData) error {
 	return models.PageFind(this, pageData, func(db *xorm.Session) {
-		db.Desc("id")
-	}, func(db *xorm.Session){})
+		db.Desc("sort").Desc("id")
+	}, func(db *xorm.Session) {})
 }

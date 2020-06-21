@@ -10,7 +10,7 @@ import (
 //图标管理
 type Icon struct {
 	models.Models `xorm:"extends"`
-	//Id            int    `json:"id" xorm:"int(11) pk notnull unique autoincr"` //图标id
+	Id            int    `json:"id" xorm:"bigint pk notnull unique autoincr"` //图标id
 	Title         string `json:"title" xorm:"varchar(60)"`                     //图标名称
 	Icon          string `json:"icon" xorm:"varchar(100)"`                     //图标
 }

@@ -26,6 +26,7 @@ var registerControllers []beego.ControllerInterface = []beego.ControllerInterfac
 	new(adminApi.FileClass),
 	new(adminApi.Icon),
 	new(adminApi.Login),
+	new(adminApi.Region),
 }
 
 //控制器map

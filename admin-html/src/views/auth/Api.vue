@@ -30,6 +30,7 @@
                 <el-table-column label="接口" prop="router" width="380"></el-table-column>
                 <el-table-column label="结构体" prop="struct" width="200"></el-table-column>
                 <el-table-column label="方法" prop="mapping_methods" width="180"></el-table-column>
+                <el-table-column label="排序" prop="sort" width="60"></el-table-column>
                 <el-table-column fixed="right" label="操作" width="120">
                     <template slot-scope="scope">
                         <el-button v-if="uiAuth._admin_api_api_edit" type="warning" @click="showEdit(scope.row)"
@@ -95,6 +96,10 @@
             <div class="input-div">
                 <span class="title-name">方法：</span>
                 <el-input style="width:220px;" type="text" v-model="params.mapping_methods" placeholder="请输入"/>
+            </div>
+            <div class="input-div">
+                <span class="title-name">排序：</span>
+                <el-input style="width:220px;" type="text" v-model="params.sort" placeholder="请输入"/>
             </div>
             <div class="input-div">
                 <el-button-group>
@@ -172,6 +177,7 @@
                     "router": row.router,
                     "struct": row.struct,
                     "mapping_methods": row.mapping_methods,
+                    "sort":row.sort
                 };
                 this.opened = true;
             },
@@ -183,6 +189,7 @@
             },
             add() {
                 this.loading = true;
+                this.params.sort=parseInt(this.params.sort);
                 http.post("api/add", this.params).then(data => {
                     this.dataList.unshift(data);
                     //this.close();
@@ -191,6 +198,7 @@
             },
             edit() {
                 this.loading = true;
+                this.params.sort=parseInt(this.params.sort);
                 http.post("api/edit", this.params).then(data => {
                     let index = this.dataList.findIndex(item => item.id === data.id);
                     index >= 0 && this.dataList.splice(index, 1, data);

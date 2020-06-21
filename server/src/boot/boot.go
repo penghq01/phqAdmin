@@ -138,7 +138,7 @@ func ServerInit() {
 	}
 
 	common.Logs.Info("▶ 同步数据库……")
-	err = common.DbEngine.Sync2(new(region.Province),new(region.City),new(region.Area),new(region.Street),new(region.Village),new(mDefault.Admin), new(mDefault.Auth), new(mDefault.FilesClass), new(mDefault.Files), new(mDefault.Icon), new(mDefault.Role), new(mDefault.Users), new(mDefault.Api))
+	err = common.DbEngine.Sync2(new(region.Region),new(mDefault.Admin), new(mDefault.Auth), new(mDefault.FilesClass), new(mDefault.Files), new(mDefault.Icon), new(mDefault.Role), new(mDefault.Users), new(mDefault.Api))
 	if err != nil {
 		common.Logs.Error("✖ 同步数据库失败，%v", err)
 	} else {
