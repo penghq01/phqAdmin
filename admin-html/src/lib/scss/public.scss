@@ -543,8 +543,8 @@ div.cell {
     background-color: #FEE3B8;//vxe 表格选中行颜色
     & td{
       //vxe 表格选中行边框
-      border-top:1px #F89800 dashed;
-      border-bottom:1px #F89800 dashed;
+      border-top:1px #FC5205 dashed;
+      border-bottom:1px #FC5205 dashed;
     }
   }
   & .vxe-cell {
@@ -664,13 +664,16 @@ div.cell {
     align-items: center;
     justify-content: space-between;
     flex-wrap: wrap;
-    padding-bottom: 10px;
-
+    padding-bottom: 5px;
     & > div {
       display: flex;
       align-items: center;
-      margin-right: 10px;
-      margin-bottom: 10px;
+      &>div{
+        display: flex;
+        align-items: center;
+        margin-right: 5px;
+        margin-bottom: 5px;
+      }
     }
 
     & .el-input__inner, & .el-input__inner, & .el-input__icon {

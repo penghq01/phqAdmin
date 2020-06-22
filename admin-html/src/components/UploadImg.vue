@@ -43,7 +43,7 @@
                     </span>
                 </el-tree>
             </div>
-            <div class="file-list" v-if="uiAuth._admin_api_files_list_paginate">
+            <div class="upload-img-list" v-if="uiAuth._admin_api_files_list_paginate">
                 <transition-group name="list-animate" tag="div">
                     <div class="img-list" v-for="(img,index) in imgList" :key="img.id">
                         <div v-if="isSelect" class="img-action img-action-see" @click="selectImg(img)">选择图片</div>
@@ -103,7 +103,6 @@
             }
         },
         mounted() {
-            message.loading.show();
             this.imgHost=config.imgHost;
             this.getImageList();
             this.getFileClassList();
@@ -127,9 +126,6 @@
             },
             //获取分类列表
             getFileClassList() {
-                if(!this.uiAuth._admin_api_files_list_class){
-                    return;
-                }
                 message.loading.show("加载数据");
                 http.post("files/list/class").then(data => {
                     this.$set(this.classList[0], "children", this.classListToTree(0, data));
@@ -138,11 +134,12 @@
             },
             //获取图片列表
             getImageList() {
-                if(!this.uiAuth._admin_api_files_list_paginate){
-                    return;
-                }
                 http.post(`files/list/${this.pageData.page_size}/${this.pageData.page}`, {"class_id": this.selectFileClassId}).then(list => {
-                    this.imgList=list.data;
+                    if(utils.empty(list.data)){
+                        this.imgList=[];
+                    }else{
+                        this.imgList=list.data;
+                    }
                     this.pageData = list.paginate;
                 }).catch(err => {
                     this.imgList=[];
@@ -317,103 +314,104 @@
 </script>
 
 <style scoped lang="scss">
-    .upload-demo {
-        width: 100%;
-    }
-    .upload-btn {
-        width: 100%;
-        color: #FFFFFF;
-        position: relative;
-
-        &-jd {
-            height: 40px;
+    .upload-img{
+        & .upload-demo {
+            width: 100%;
         }
-
-        &-title {
-            position: absolute;
-            top: 2px;
-            color:$text-primary-color;
-            left: calc(50% - 50px);
-        }
-    }
-
-    .files {
-        display: flex;
-        padding-top: 10px;
-    }
-
-    .click-node {
-        color: $primary-color;
-    }
-
-    .tree-add {
-        display: flex;
-        align-items: center;
-
-        & > input {
-            border-radius: 5px;
-            border: 1px $border-color1 solid;
-            box-shadow: 0 0 5px $box-gray1-color;
-            font-size: 14px;
-            padding: 0 5px;
-            width: 120px;
-        }
-
-        & > i {
-            font-size: 22px;
-
-            &:last-child {
-                margin-left: 5px;
-                color: $primary-color;
-
-                &:active {
-                    color: $primary-color-active;
-                }
+        & .upload-btn {
+            width: 100%;
+            color: #FFFFFF;
+            position: relative;
+            &-jd {
+                height: 40px;
             }
 
-            &:first-child {
-                margin-right: 5px;
-                color: $text-gray-color;
-
-                &:active {
-                    color: $text-primary-color;
-                }
+            &-title {
+                line-height:normal;
+                position: absolute;
+                top: 2px;
+                color:$text-primary-color;
+                left: calc(50% - 50px);
             }
         }
-    }
 
-    .files-class {
-        width: 240px;
-        margin-right: 10px;
-        padding: 10px;
-        box-shadow: 0 0 5px $box-gray2-color;
-    }
+        & .files {
+            display: flex;
+            padding-top: 10px;
+        }
 
-    .custom-tree-node {
-        padding: 10px 5px;
-    }
-
-    .tree-title {
-        display: inline-block;
-        padding-right: 5px;
-    }
-
-    .tree-action {
-        & .el-dropdown-link {
+        & .click-node {
             color: $primary-color;
         }
-    }
 
-    .file-list {
-        width: calc(100% - 250px);
-        padding: 10px;
-        box-shadow: 0 0 5px $box-gray2-color;
-
-        & > div {
+        & .tree-add {
             display: flex;
-            flex-wrap: wrap;
-            position:relative;
+            align-items: center;
+
+            & > input {
+                border-radius: 5px;
+                border: 1px $border-color1 solid;
+                box-shadow: 0 0 5px $box-gray1-color;
+                font-size: 14px;
+                padding: 0 5px;
+                width: 120px;
+            }
+
+            & > i {
+                font-size: 22px;
+
+                &:last-child {
+                    margin-left: 5px;
+                    color: $primary-color;
+
+                    &:active {
+                        color: $primary-color-active;
+                    }
+                }
+
+                &:first-child {
+                    margin-right: 5px;
+                    color: $text-gray-color;
+
+                    &:active {
+                        color: $text-primary-color;
+                    }
+                }
+            }
+        }
+
+        & .files-class {
+            width: 240px;
+            margin-right: 10px;
+            padding: 10px;
+            box-shadow: 0 0 5px $box-gray2-color;
+        }
+
+        & .custom-tree-node {
+            padding: 10px 5px;
+        }
+
+        & .tree-title {
+            display: inline-block;
+            padding-right: 5px;
+        }
+
+        & .tree-action {
+            & .el-dropdown-link {
+                color: $primary-color;
+            }
+        }
+
+        &-list {
+            width: calc(100% - 250px);
+            padding: 10px;
+            box-shadow: 0 0 5px $box-gray2-color;
+
             & > div {
+                display: flex;
+                flex-wrap: wrap;
+                position:relative;
+                & > div {
                     width: 122px;
                     height: 122px;
                     display: flex;
@@ -425,45 +423,46 @@
                     background-color: $background-color;
                     overflow: hidden;
                     position:relative;
-                & > img {
-                    max-width: 120px;
-                    max-height: 120px;
-                    transition: all 1S ease-out;
+                    & > img {
+                        max-width: 120px;
+                        max-height: 120px;
+                        transition: all 1S ease-out;
+                    }
+                    & .img-action{
+                        line-height:20px;
+                        position:absolute;
+                        width:100%;
+                        text-align:center;
+                        padding:3px 0;
+                        color:#ffffff;
+                        transition:all 0.5s ease-out;
+                        cursor:pointer;
+                    }
+                    .img-action-see{
+                        transform:translateY(-50px);
+                        top:0;
+                        background-color:rgba(51,153,225,0.5);
+                    }
+                    .img-action-del{
+                        transform:translateY(50px);
+                        bottom:0;
+                        background-color:rgba(213,8,8,0.5);
+                    }
                 }
-                & .img-action{
-                    position:absolute;
-                    width:100%;
-                    text-align:center;
-                    padding:3px 0;
-                    color:#ffffff;
-                    transition:all 0.5s ease-out;
-                    cursor:pointer;
+                & > .list-animate-leave-active{
+                    position: absolute;
                 }
-                .img-action-see{
-                    transform:translateY(-30px);
-                    top:0;
-                    background-color:rgba(51,153,225,0.5);
-                }
-                .img-action-del{
-                    transform:translateY(30px);
-                    bottom:0;
-                    background-color:rgba(213,8,8,0.5);
-                }
-            }
-            & > .list-animate-leave-active{
-                position: absolute;
-            }
-            &>div:hover{
-                & > img{
-                    max-width: 260px;
-                    max-height: 260px;
-                }
-                & .img-action{
-                    transform:translateY(0);
+                &>div:hover{
+                    & > img{
+                        max-width: 260px;
+                        max-height: 260px;
+                    }
+                    & .img-action{
+                        transform:translateY(0);
+                    }
                 }
             }
         }
+
     }
-
-
 </style>
