@@ -138,9 +138,9 @@
                     }).catch(err => {
                         row.hasChild = false;
                         resolve([]);
-                        if (this.select) {
+                        /*if (this.select) {
                             this.$emit("change", this.selectTableRow);
-                        }
+                        }*/
                     })
                 })
             },
@@ -149,11 +149,12 @@
                 this.selectTableRow = row;
                 let xTreeRegion = this.$refs.xTreeRegion
                 xTreeRegion.setRadioRow(row);
-                xTreeRegion.toggleTreeExpand(row);
+               // xTreeRegion.toggleTreeExpand(row);
                 if (this.select) {
-                    if (!row.hasChild) {
+                    /*if (!row.hasChild) {
                         this.$emit("change", this.selectTableRow);
-                    }
+                    }*/
+                    this.$emit("change", this.selectTableRow);
                 }
             },
             //双击事件
@@ -162,10 +163,11 @@
                 let xTreeRegion = this.$refs.xTreeRegion
                 xTreeRegion.setRadioRow(row);
                 if (this.select) {
-                    xTreeRegion.toggleTreeExpand(row);
+                    /*xTreeRegion.toggleTreeExpand(row);
                     if (!row.hasChild) {
                         this.$emit("change", this.selectTableRow);
-                    }
+                    }*/
+                    this.$emit("change", this.selectTableRow);
                 }
             },
             //取消选择
