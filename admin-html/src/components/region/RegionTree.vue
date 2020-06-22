@@ -22,7 +22,7 @@
                     ref="xTreeRegion"
                     :data="dataList"
                     :tree-config="treeConfig">
-                <vxe-table-column type="radio" tree-node>
+                <vxe-table-column tree-node>
                     <template #header>
                         <div>
                             <el-button type="text" @click="clearRadioRowEevnt" :disabled="!selectTableRow">取消选择
@@ -74,7 +74,8 @@
     import utils from "../../lib/utils";
     import message from "../../lib/message";
 
-    const defaultParams = {code: "", name: "", parent_code: "0", sort: 0};
+    const defaultParams = {code: "", name: "", parent_code: defaultCode, sort: 0};
+    const defaultCode="530326";
     // loadData
     export default {
         name: "RegionTree",
@@ -122,7 +123,7 @@
         },
         methods: {
             //获取数据
-            getDataList(parent_code = "0") {
+            getDataList(parent_code = defaultCode) {
                 http.post("region/list", {"parent_code": parent_code}).then(data => {
                     data.forEach(item => item.hasChild = true);
                     this.dataList = data;
@@ -192,6 +193,7 @@
             showDrawer(isEdit = false) {
                 this.isEdit = isEdit;
                 this.drawerShow = true;
+                this.params.parent_code = defaultCode;
                 if (this.selectTableRow != null) {
                     this.params.parent_code = this.selectTableRow.code;
                 }
@@ -298,7 +300,7 @@
     .region-tree {
         &-name {
             display: inline-block;
-            padding-left: 5px;
+            padding-left: 0;
         }
     }
 </style>

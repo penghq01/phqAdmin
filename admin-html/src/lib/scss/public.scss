@@ -470,29 +470,35 @@ div.cell {
 .el-table thead th {
   background-color: $text-gray4-color;
 }
+
 //抽屉样式覆盖
-.el-drawer{
+.el-drawer {
   outline: none;
-  & *{
+
+  & * {
     outline: none;
   }
+
   & .el-drawer__header {
-    padding:10px 20px;
-    margin-bottom:0;
+    padding: 10px 20px;
+    margin-bottom: 0;
     background-color: $text-gray2-color;
   }
-  & .el-drawer__body{
-    padding:10px;
+
+  & .el-drawer__body {
+    padding: 10px;
   }
-  & .el-drawer__close-btn{
-    &:hover{
-      &>i{
-        color:$primary-color;
-        font-weight:bold;
+
+  & .el-drawer__close-btn {
+    &:hover {
+      & > i {
+        color: $primary-color;
+        font-weight: bold;
       }
     }
   }
 }
+
 .el-form {
   & .el-form-item {
     display: flex;
@@ -531,8 +537,16 @@ div.cell {
     }
   }
 }
-
 .vxe-table {
+
+  & .vxe-body--row.row--radio{
+    background-color: #FEE3B8;//vxe 表格选中行颜色
+    & td{
+      //vxe 表格选中行边框
+      border-top:1px #F89800 dashed;
+      border-bottom:1px #F89800 dashed;
+    }
+  }
   & .vxe-cell {
     white-space: normal;
   }
@@ -562,7 +576,7 @@ div.cell {
   & .vxe-body--column.col--ellipsis,
   & .vxe-footer--column.col--ellipsis,
   & .vxe-editable .vxe-body--column {
-     height:38px;
+    height: 38px;
   }
 }
 
