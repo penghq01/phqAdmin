@@ -537,6 +537,13 @@ div.cell {
     }
   }
 }
+.el-table__body tr.current-row > td {
+  background-color: #FEE3B8;//el table 表格选中行颜色
+  //el table 表格选中行边框
+  border-top:1px #FC5205 dashed;
+  border-bottom:1px #FC5205 dashed;
+}
+
 .vxe-table {
 
   & .vxe-body--row.row--radio{
