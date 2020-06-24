@@ -537,23 +537,27 @@ div.cell {
     }
   }
 }
-.el-table__body tr.current-row > td {
-  background-color: #FEE3B8;//el table 表格选中行颜色
-  //el table 表格选中行边框
-  border-top:1px #FC5205 dashed;
-  border-bottom:1px #FC5205 dashed;
+
+//-----------表格行选中颜色-------------------------------------------------
+.el-table__body tr.current-row,.el-table__body tr.current-row:hover{
+   &>td{
+     background-color: #FEE3B8;//el table 表格选中行颜色
+     //el table 表格选中行边框
+     border-top:1px #FC5205 dashed;
+     border-bottom:1px #FC5205 dashed;
+   }
 }
+.vxe-table .vxe-body--row.row--radio,.vxe-table .vxe-body--row.row--radio:hover{
+  background-color: #FEE3B8;//vxe 表格选中行颜色
+  & td{
+    //vxe 表格选中行边框
+    border-top:1px #FC5205 dashed;
+    border-bottom:1px #FC5205 dashed;
+  }
+}
+//----------------------------------------------------------------------------
 
 .vxe-table {
-
-  & .vxe-body--row.row--radio{
-    background-color: #FEE3B8;//vxe 表格选中行颜色
-    & td{
-      //vxe 表格选中行边框
-      border-top:1px #FC5205 dashed;
-      border-bottom:1px #FC5205 dashed;
-    }
-  }
   & .vxe-cell {
     white-space: normal;
   }
