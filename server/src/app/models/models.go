@@ -5,6 +5,12 @@ import (
 	"server/src/common"
 )
 
+const(
+	INNER="INNER"
+	LEFT_OUTER="LEFT OUTER"
+	CROSS="CROSS"
+)
+
 type Models struct {
 	BaseVaild `xorm:"-"`
 }
