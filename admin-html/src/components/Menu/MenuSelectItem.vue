@@ -1,5 +1,5 @@
 <template>
-    <el-submenu :class="isCollapse?'el-menu-children0':`el-menu-children${children}`" v-if="isChildren" :index="params.key" :popper-append-to-body="false">
+    <el-submenu :class="isCollapse?'el-menu-children0':`el-menu-children${children}`" v-if="isChildren" :index="params.key">
         <template slot="title">
             <i :class="params.icon" class="phq-menu-icon"></i>
             <span slot="title">
@@ -11,7 +11,7 @@
         <MenuSelectItem v-for="(item,index) in params.children" :key="index" :params="item" :children="children+1" :is-collapse="isCollapse"/>
     </el-submenu>
 
-    <el-menu-item  v-else :index="params.key" :popper-append-to-body="false">
+    <el-menu-item  v-else :index="params.key">
         <i :class="params.icon" class="phq-menu-icon"></i>
         <span slot="title">
             <span>
