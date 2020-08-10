@@ -157,6 +157,12 @@
                     });
                 });
                 this.postData = utils.NewObject(row);
+				if(utils.empty(this.postData.auth_data)){
+                    this.postData.auth_data=[];
+                }
+                if(utils.empty(this.postData.auth_list)){
+                    this.postData.auth_list=[];
+                }
                 this.opened = true;
                 this.isEdit = true;
                 this.titleName = `修改角色【 ${row.role_name} 】`;
