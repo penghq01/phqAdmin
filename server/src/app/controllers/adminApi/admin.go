@@ -14,6 +14,7 @@ import (
 	"server/src/app/models"
 	"server/src/app/models/mDefault"
 	"server/src/common"
+	"server/src/global"
 	"time"
 )
 
@@ -33,7 +34,7 @@ func (this *Admin) Del() {
 	if model.AdminId == 1 {
 		this.ServeError("您没有权限删除该管理员", "")
 	}
-	if model.AdminId==2{
+	if model.AdminId == 2 {
 		this.ServeError("您没有权限删除该管理员", "")
 	}
 	if model.AdminId == this.LoginUser.AdminId {
@@ -41,8 +42,12 @@ func (this *Admin) Del() {
 	}
 	err := model.Delete()
 	if err == nil {
+		_, ok := global.LoginAdminMap[model.AdminId]
+		if ok {
+			delete(global.LoginAdminMap, model.AdminId)
+		}
 		this.ServeSuccess("删除成功", "")
-	}else{
+	} else {
 		this.ServeError("删除失败，"+err.Error(), "")
 	}
 
@@ -55,7 +60,7 @@ func (this *Admin) Edit() {
 	if model.AdminId == 1 {
 		this.ServeError("您没有权限修改该管理员", "")
 	}
-	if model.AdminId == 2 && this.LoginUser.AdminId>1{
+	if model.AdminId == 2 && this.LoginUser.AdminId > 1 {
 		this.ServeError("您没有权限修改该管理员", "")
 	}
 	if model.AdminId == this.LoginUser.AdminId {
@@ -63,8 +68,12 @@ func (this *Admin) Edit() {
 	}
 	err := model.Edit()
 	if err == nil {
+		_, ok := global.LoginAdminMap[model.AdminId]
+		if ok {
+			global.LoginAdminMap[model.AdminId] = *model
+		}
 		this.ServeSuccess("修改成功", model)
-	}else{
+	} else {
 		this.ServeError("修改失败，"+err.Error(), "")
 	}
 
@@ -73,7 +82,7 @@ func (this *Admin) Edit() {
 //列表
 func (this *Admin) List() {
 	var list interface{}
-	err:=models.Find(new(mDefault.Admin),&list,func(db *xorm.Session){
+	err := models.Find(new(mDefault.Admin), &list, func(db *xorm.Session) {
 		db.Where("admin_id <> ?", this.LoginUser.AdminId)
 		if this.LoginUser.AdminId == 1 {
 			db.Where("admin_id > 1")
@@ -84,7 +93,7 @@ func (this *Admin) List() {
 	})
 	if err == nil {
 		this.ServeSuccess("", list)
-	}else{
+	} else {
 		this.ServeError("获取数据失败，"+err.Error(), "")
 	}
 
@@ -110,6 +119,7 @@ func (this *Admin) EditPass() {
 	}
 	this.ServeError("密码修改失败", "")
 }
+
 //获取前端导航列表
 func (this *Admin) AuthList() {
 	this.ServeSuccess("", auth.GetLoginAdminRoute(this.LoginUser))

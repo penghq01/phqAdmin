@@ -6,6 +6,7 @@ import (
 	"server/src/app/models/mDefault"
 	"server/src/auth"
 	"server/src/common"
+	"server/src/global"
 )
 
 type AdminBase struct {
@@ -55,13 +56,17 @@ func (this *AdminBase) CheckAuthToken() {
 		this.isUserLogin = false
 	} else {
 		ok, _ := common.CheckToken(this.AuthToken, func(id int, username string) {
-			user := new(mDefault.Admin)
-			ok := user.IdUserNameGet(id, username)
+			user, ok := global.LoginAdminMap[id]
 			if !ok {
-				this.isUserLogin = false
+				user = mDefault.Admin{}
+				ok = user.IdUserNameGet(id, username)
+				if !ok {
+					this.isUserLogin = false
+				}
+				global.LoginAdminMap[user.AdminId] = user
 			}
 			this.isUserLogin = true
-			this.LoginUser = user
+			this.LoginUser = &user
 		})
 		if !ok {
 			this.isUserLogin = false
@@ -85,27 +90,30 @@ func (this *AdminBase) Add() {
 		this.ServeError("添加失败，"+err.Error(), "")
 	}
 }
+
 //删除
 func (this *AdminBase) Del() {
 	this.AnalyseJson(this.ActionModel)
 	err := this.ActionModel.Delete()
 	if err == nil {
 		this.ServeSuccess("删除成功", "")
-	}else{
+	} else {
 		this.ServeError("删除失败，"+err.Error(), "")
 	}
 }
+
 //修改
 func (this *AdminBase) Edit() {
 	this.AnalyseJson(this.ActionModel)
 	err := this.ActionModel.Edit()
 	if err == nil {
-		this.ServeSuccess("修改成功" ,this.ActionModel)
-	}else{
+		this.ServeSuccess("修改成功", this.ActionModel)
+	} else {
 		this.ServeError("修改失败，"+err.Error(), "")
 	}
 
 }
+
 //获取单条
 func (this *AdminBase) Get() {
 	this.AnalyseJson(this.ActionModel)
@@ -116,17 +124,19 @@ func (this *AdminBase) Get() {
 		this.ServeError("获取数据失败，"+err.Error(), "")
 	}
 }
+
 //获取列表
 func (this *AdminBase) List() {
 	this.AnalyseJson(this.ActionModel)
 	var list interface{}
-	err:= this.ActionModel.List(&list)
+	err := this.ActionModel.List(&list)
 	if err == nil {
 		this.ServeSuccess("", list)
 	} else {
 		this.ServeError("获取数据失败，"+err.Error(), "")
 	}
 }
+
 //获取带分页的列表
 func (this *AdminBase) PageList() {
 	this.AnalyseJson(this.ActionModel)
@@ -142,4 +152,3 @@ func (this *AdminBase) PageList() {
 		this.ServeError("获取数据失败，"+err.Error(), "")
 	}
 }
-
