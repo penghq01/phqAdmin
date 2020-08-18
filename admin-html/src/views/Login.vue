@@ -1,15 +1,19 @@
 <template>
     <div class="login-body">
         <div class="login">
-            <el-card class="box-card">
-                <div slot="header" class="clearfix">
-                    <span>管理员登录</span>
+            <div class="login-app-name">{{appName}}</div>
+            <el-card class="login-box-card">
+                <div slot="header">
+                    <span>登录</span>
                     <el-button style="float: right; padding: 3px 0" type="text">没有账号？请联系管理员</el-button>
                 </div>
                 <div class="login-info">
                    <div> <el-input v-model="postData.username"  placeholder="请输入登录账号"></el-input></div>
                     <div> <el-input type="password" v-model="postData.password" placeholder="请输入密码"></el-input></div>
                     <div> <el-button type="primary" @click.keyup.enter="login">登录</el-button></div>
+                </div>
+                <div class="login-auto">
+                    <el-checkbox v-model="autoLogin">自动登录</el-checkbox>
                 </div>
             </el-card>
         </div>
@@ -27,6 +31,8 @@
         name: 'login',
         data() {
             return {
+                appName:config.sysName,
+                autoLogin:false,
                 postData: {}
             }
         },
@@ -44,7 +50,7 @@
                 message.loading.show("登录中");
                 param.password=md5(param.password);
                 http.post('login', param).then(data => {
-                    storage.token.set(data.token);
+                    storage.token.set(data.token,this.autoLogin);
                     publicPath.splice(0);
                     data.public_router.forEach(item=>{
                         if(item.visit===0){
@@ -53,7 +59,6 @@
                     });
                     this.$router.push({path:config.homePage})
                 }).catch(()=> {});
-
             }
         }
     }
@@ -68,10 +73,23 @@
     }
 
     .login {
-        width: 300px;
+        height: 100%;
+        width: 100%;
         position: fixed;
-        right: 5%;
-        top: calc(50% - 200px);
+        display:flex;
+        justify-content: center;
+        align-items: center;
+        flex-direction: column;
+    }
+    .login-box-card{
+        width:300px;
+    }
+    .login-app-name{
+        padding:10px 0;
+        font-size:28px;
+        font-weight:bold;
+        color:#FFFFFF;
+        text-shadow:0 0 5px #FFFFFF,0 0 20px #383838,0 0 20px #383838;
     }
     .login-info >div{
         padding:8px 0;

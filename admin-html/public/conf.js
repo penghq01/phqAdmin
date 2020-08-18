@@ -1,4 +1,5 @@
 const CONFIG = {
+	appName:"PHQ管理后台",
     //服务器地址
     host: "",
     //图片服务器地址
