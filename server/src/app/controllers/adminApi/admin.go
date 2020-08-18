@@ -13,6 +13,7 @@ import (
 	"server/src/app/models/mDefault"
 	"server/src/auth"
 	"server/src/common"
+	"server/src/global"
 	"time"
 	"xorm.io/xorm"
 )
@@ -41,6 +42,10 @@ func (this *Admin) Del() {
 	}
 	err := model.Delete()
 	if err == nil {
+		_, ok := global.LoginAdminMap[model.AdminId]
+		if ok {
+			delete(global.LoginAdminMap, model.AdminId)
+		}
 		this.ServeSuccess("删除成功", "")
 	} else {
 		this.ServeError("删除失败，"+err.Error(), "")
@@ -63,6 +68,10 @@ func (this *Admin) Edit() {
 	}
 	err := model.Edit()
 	if err == nil {
+		_, ok := global.LoginAdminMap[model.AdminId]
+		if ok {
+			global.LoginAdminMap[model.AdminId] = *model
+		}
 		this.ServeSuccess("修改成功", model)
 	} else {
 		this.ServeError("修改失败，"+err.Error(), "")

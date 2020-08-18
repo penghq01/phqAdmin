@@ -6,6 +6,7 @@ import (
 	"server/src/app/models/mDefault"
 	"server/src/auth"
 	"server/src/common"
+	"server/src/global"
 )
 
 type AdminBase struct {
@@ -55,13 +56,17 @@ func (this *AdminBase) CheckAuthToken() {
 		this.isUserLogin = false
 	} else {
 		ok, _ := common.CheckToken(this.AuthToken, func(id int, username string) {
-			user := new(mDefault.Admin)
-			ok := user.IdUserNameGet(id, username)
+			user, ok := global.LoginAdminMap[id]
 			if !ok {
-				this.isUserLogin = false
+				user = mDefault.Admin{}
+				ok = user.IdUserNameGet(id, username)
+				if !ok {
+					this.isUserLogin = false
+				}
+				global.LoginAdminMap[user.AdminId] = user
 			}
 			this.isUserLogin = true
-			this.LoginUser = user
+			this.LoginUser = &user
 		})
 		if !ok {
 			this.isUserLogin = false
