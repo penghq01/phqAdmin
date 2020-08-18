@@ -1,8 +1,8 @@
 package adminApi
 
 import (
-	"server/src/auth"
 	"server/src/app/models/mDefault"
+	"server/src/auth"
 )
 
 type Api struct {
@@ -34,7 +34,7 @@ func (this *Api) Del() {
 	if err == nil {
 		delete(auth.DateAPIList, model.Id)
 		this.ServeSuccess("删除成功", "")
-	}else{
+	} else {
 		this.ServeError("删除失败，"+err.Error(), "")
 	}
 
@@ -48,7 +48,7 @@ func (this *Api) Edit() {
 	if err == nil {
 		auth.DateAPIList[model.Id] = *model
 		this.ServeSuccess("修改成功", model)
-	}else{
+	} else {
 		this.ServeError("修改失败，"+err.Error(), "")
 	}
 }

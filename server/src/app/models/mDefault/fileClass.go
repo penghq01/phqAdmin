@@ -2,9 +2,9 @@ package mDefault
 
 import (
 	"errors"
-	"github.com/go-xorm/xorm"
 	"server/src/app/models"
 	"server/src/common"
+	"xorm.io/xorm"
 )
 
 //文件分类
@@ -18,9 +18,10 @@ type FilesClass struct {
 func (FilesClass) TableName() string {
 	return "files_class"
 }
-func(FilesClass)GetSlice()interface{}{
+func (FilesClass) GetSlice() interface{} {
 	return new([]FilesClass)
 }
+
 type FilesClassVaild struct {
 	models.BaseVaild
 	Id    bool
@@ -45,7 +46,7 @@ func (this *FilesClassVaild) Valid(obj *FilesClass) (bool, string) {
 }
 
 func (this *FilesClass) List(data *interface{}) error {
-	return models.Find(this,data,func(db *xorm.Session){})
+	return models.Find(this, data, func(db *xorm.Session) {})
 }
 func (this *FilesClass) Add() error {
 	vd := FilesClassVaild{
@@ -62,7 +63,7 @@ func (this *FilesClass) Edit() error {
 		Label: true,
 	}
 	if ok, msg := vd.Valid(this); !ok {
-		return  errors.New(msg)
+		return errors.New(msg)
 	}
 	return models.Update(this, func(db *xorm.Session) {
 		db.Where("id=?", this.Id).Cols("pid,label")

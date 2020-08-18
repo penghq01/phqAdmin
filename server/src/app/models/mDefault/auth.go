@@ -2,9 +2,9 @@ package mDefault
 
 import (
 	"errors"
-	"github.com/go-xorm/xorm"
 	"server/src/app/models"
 	"server/src/common"
+	"xorm.io/xorm"
 )
 
 //权限表
@@ -25,9 +25,10 @@ type Auth struct {
 func (Auth) TableName() string {
 	return "auth"
 }
-func(Auth)GetSlice()interface{}{
+func (Auth) GetSlice() interface{} {
 	return new([]Auth)
 }
+
 type AuthValid struct {
 	models.BaseVaild
 	Id       bool //id
@@ -129,7 +130,7 @@ func (this *Auth) Delete() error {
 }
 
 func (this *Auth) List(data *interface{}) error {
-	return models.Find(this,data,func(db *xorm.Session){
+	return models.Find(this, data, func(db *xorm.Session) {
 		db.Asc("sort").Asc("id")
 
 	})

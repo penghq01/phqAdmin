@@ -1,11 +1,11 @@
 package adminApi
 
 import (
-	"github.com/go-xorm/xorm"
-	"server/src/auth"
 	"server/src/app/models"
 	"server/src/app/models/mDefault"
+	"server/src/auth"
 	"server/src/common"
+	"xorm.io/xorm"
 )
 
 type Role struct {
@@ -50,7 +50,7 @@ func (this *Role) Del() {
 	if err == nil {
 		delete(auth.RoleList, model.Id)
 		this.ServeSuccess("删除成功", "")
-	}else{
+	} else {
 		this.ServeError("删除失败，"+err.Error(), "")
 	}
 }
@@ -59,29 +59,29 @@ func (this *Role) Del() {
 func (this *Role) Edit() {
 	model := new(mDefault.Role)
 	this.AnalyseJson(model)
-	if model.Id == 1  && this.LoginUser.AdminId>1{
+	if model.Id == 1 && this.LoginUser.AdminId > 1 {
 		this.ServeError("您没有权限修改该角色", "")
 	}
 	err := model.Edit()
 	if err == nil {
 		auth.RoleList[model.Id] = *model
 		this.ServeSuccess("修改成功", model)
-	}else{
+	} else {
 		this.ServeError("修改失败，"+err.Error(), "")
 	}
 }
 
 //列表
 func (this *Role) List() {
-	 var list interface{}
-	err := models.Find(new(mDefault.Role),&list, func(db *xorm.Session){
+	var list interface{}
+	err := models.Find(new(mDefault.Role), &list, func(db *xorm.Session) {
 		if this.LoginUser.AdminId > 1 {
 			db.Where("id>1")
 		}
 	})
 	if err == nil {
 		this.ServeSuccess("", list)
-	}else{
+	} else {
 		this.ServeError("获取数据失败，"+err.Error(), "")
 	}
 }

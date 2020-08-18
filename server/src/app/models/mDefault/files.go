@@ -2,11 +2,11 @@ package mDefault
 
 import (
 	"errors"
-	"github.com/go-xorm/xorm"
 	"os"
 	"path/filepath"
 	"server/src/app/models"
 	"server/src/common"
+	"xorm.io/xorm"
 )
 
 //文件
@@ -23,9 +23,10 @@ type Files struct {
 func (Files) TableName() string {
 	return "files"
 }
-func(Files)GetSlice()interface{}{
+func (Files) GetSlice() interface{} {
 	return new([]Files)
 }
+
 type FilesVaild struct {
 	models.BaseVaild
 	Id    bool
@@ -57,13 +58,13 @@ func (this *FilesVaild) Valid(obj *Files) (bool, string) {
 func (this *Files) Add() error {
 	return models.Insert(this)
 }
-func (this *Files) PageList(pageData *common.PaginateData)error {
+func (this *Files) PageList(pageData *common.PaginateData) error {
 	return models.PageFind(this, pageData, func(db *xorm.Session) {
 		db.Desc("add_time")
 		if this.ClassId > 0 {
 			db.Where("class_id=?", this.ClassId)
 		}
-	}, func(db *xorm.Session){})
+	}, func(db *xorm.Session) {})
 }
 func (this *Files) Delete() error {
 	session := common.DbEngine.NewSession()

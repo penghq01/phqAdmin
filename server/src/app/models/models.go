@@ -1,14 +1,14 @@
 package models
 
 import (
-	"github.com/go-xorm/xorm"
 	"server/src/common"
+	"xorm.io/xorm"
 )
 
-const(
-	INNER="INNER"
-	LEFT_OUTER="LEFT OUTER"
-	CROSS="CROSS"
+const (
+	INNER      = "INNER"
+	LEFT_OUTER = "LEFT OUTER"
+	CROSS      = "CROSS"
 )
 
 type Models struct {
@@ -19,31 +19,36 @@ type Models struct {
 func (this *Models) TableName() string {
 	return ""
 }
+
 //添加
 func (this *Models) Add() error {
 	return nil
 }
+
 //删除
 func (this *Models) Delete() error {
 	return nil
 }
+
 //修改
 func (this *Models) Edit() error {
 	return nil
 }
+
 //查询列表
 func (this *Models) List(list *interface{}) error {
 	return nil
 }
+
 //查询分页列表
 func (this *Models) PageList(pageData *common.PaginateData) error {
 	return nil
 }
+
 //获取一条数据
 func (this *Models) Get() error {
 	return nil
 }
-
 
 func First(model IModels, where func(db *xorm.Session)) error {
 	db := common.DbEngine.Table(model.TableName())
@@ -84,13 +89,13 @@ func Update(model IModels, where func(db *xorm.Session)) error {
 		return err
 	}
 }
-func Find(model IModels,data *interface{},find func(db *xorm.Session)) error {
+func Find(model IModels, data *interface{}, find func(db *xorm.Session)) error {
 	db := common.DbEngine.Table(model.TableName())
 	find(db)
-	list:=model.GetSlice()
-	err:=db.Find(list)
+	list := model.GetSlice()
+	err := db.Find(list)
 	if err == nil {
-		*data=list
+		*data = list
 		return nil
 	} else {
 		common.Logs.Error("✖ 查询列表数据失败，%v", err)
@@ -110,10 +115,10 @@ func PageFind(model IModels, pageData *common.PaginateData, where func(db *xorm.
 	pageData.Paginate.CalcPaginate(rows)
 	db.Limit(pageData.Paginate.Limit, pageData.Paginate.Start)
 	find(db)
-	list:=model.GetSlice()
-	err=db.Find(list)
+	list := model.GetSlice()
+	err = db.Find(list)
 	if err == nil {
-		pageData.Data=list
+		pageData.Data = list
 		return nil
 	} else {
 		common.Logs.Error("✖ 查询(分页)数据失败，%v", err)

@@ -2,25 +2,26 @@ package mDefault
 
 import (
 	"errors"
-	"github.com/go-xorm/xorm"
 	"server/src/app/models"
 	"server/src/common"
+	"xorm.io/xorm"
 )
 
 //图标管理
 type Icon struct {
 	models.Models `xorm:"extends"`
 	Id            int    `json:"id" xorm:"bigint pk notnull unique autoincr"` //图标id
-	Title         string `json:"title" xorm:"varchar(60)"`                     //图标名称
-	Icon          string `json:"icon" xorm:"varchar(100)"`                     //图标
+	Title         string `json:"title" xorm:"varchar(60)"`                    //图标名称
+	Icon          string `json:"icon" xorm:"varchar(100)"`                    //图标
 }
 
 func (Icon) TableName() string {
 	return "icon"
 }
-func(Icon)GetSlice()interface{}{
+func (Icon) GetSlice() interface{} {
 	return new([]Icon)
 }
+
 //图标数据校验
 type IconValid struct {
 	models.BaseVaild
@@ -43,7 +44,6 @@ func (this *IconValid) Valid(obj *Icon) (bool, string) {
 	}
 	return true, ""
 }
-
 
 func (this *Icon) Add() error {
 	vd := IconValid{
@@ -68,5 +68,5 @@ func (this *Icon) Delete() error {
 func (this *Icon) PageList(pageData *common.PaginateData) error {
 	return models.PageFind(this, pageData, func(db *xorm.Session) {
 		db.Desc("id")
-	}, func(db *xorm.Session){})
+	}, func(db *xorm.Session) {})
 }

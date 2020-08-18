@@ -26,27 +26,30 @@ func (this *ApiBase) Add() {
 		this.ServeError("添加失败，"+err.Error(), "")
 	}
 }
+
 //删除
 func (this *ApiBase) Del() {
 	this.AnalyseJson(this.ActionModel)
 	err := this.ActionModel.Delete()
 	if err == nil {
 		this.ServeSuccess("删除成功", "")
-	}else{
+	} else {
 		this.ServeError("删除失败，"+err.Error(), "")
 	}
 }
+
 //修改
 func (this *ApiBase) Edit() {
 	this.AnalyseJson(this.ActionModel)
 	err := this.ActionModel.Edit()
 	if err == nil {
-		this.ServeSuccess("修改成功" ,this.ActionModel)
-	}else{
+		this.ServeSuccess("修改成功", this.ActionModel)
+	} else {
 		this.ServeError("修改失败，"+err.Error(), "")
 	}
 
 }
+
 //获取单条
 func (this *ApiBase) Get() {
 	this.AnalyseJson(this.ActionModel)
@@ -57,17 +60,19 @@ func (this *ApiBase) Get() {
 		this.ServeError("获取数据失败，"+err.Error(), "")
 	}
 }
+
 //获取列表
 func (this *ApiBase) List() {
 	this.AnalyseJson(this.ActionModel)
 	var list interface{}
-	err:= this.ActionModel.List(&list)
+	err := this.ActionModel.List(&list)
 	if err == nil {
 		this.ServeSuccess("", list)
 	} else {
 		this.ServeError("获取数据失败，"+err.Error(), "")
 	}
 }
+
 //获取带分页的列表
 func (this *ApiBase) PageList() {
 	this.AnalyseJson(this.ActionModel)

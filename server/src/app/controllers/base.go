@@ -10,8 +10,8 @@ import (
 	"os"
 	"path"
 	"path/filepath"
-	"server/src/auth"
 	"server/src/app/models/mDefault"
+	"server/src/auth"
 	"server/src/common"
 	"strconv"
 	"strings"
@@ -192,36 +192,35 @@ func (this *Base) UploadFile(saveDateBases bool, fileType string, key string, al
 	}
 }
 
-
 func (this *Base) jsonReturn(code int, msg interface{}, data interface{}) {
-	Data:=map[string]interface{}{"code": code, "msg": msg, "data": data}
+	Data := map[string]interface{}{"code": code, "msg": msg, "data": data}
 	this.ResultJson(Data)
 }
-func (this *Base) ServeSuccess(msg string, data interface{},args ...interface{}) {
-	this.jsonReturn(common.HTTP_SUCCESS, fmt.Sprintf(msg,args...), data)
+func (this *Base) ServeSuccess(msg string, data interface{}, args ...interface{}) {
+	this.jsonReturn(common.HTTP_SUCCESS, fmt.Sprintf(msg, args...), data)
 }
-func (this *Base) ServeError(msg string, data interface{},args ...interface{}) {
-	this.jsonReturn(common.HTTP_ERROR,fmt.Sprintf(msg,args...), data)
+func (this *Base) ServeError(msg string, data interface{}, args ...interface{}) {
+	this.jsonReturn(common.HTTP_ERROR, fmt.Sprintf(msg, args...), data)
 }
-func (this *Base) ServeLOGIN(msg string, data interface{},args ...interface{}) {
-	this.jsonReturn(common.HTTP_LOGIN, fmt.Sprintf(msg,args...), data)
-}
-
-func (this *Base) ServeRELOGIN(msg string, data interface{},args ...interface{}) {
-	this.jsonReturn(common.HTTP_RELOGIN, fmt.Sprintf(msg,args...), data)
+func (this *Base) ServeLOGIN(msg string, data interface{}, args ...interface{}) {
+	this.jsonReturn(common.HTTP_LOGIN, fmt.Sprintf(msg, args...), data)
 }
 
-func (this *Base) ServeNOAUTH(msg string, data interface{},args ...interface{}) {
-	this.jsonReturn(common.HTTP_NOAUTH, fmt.Sprintf(msg,args...), data)
+func (this *Base) ServeRELOGIN(msg string, data interface{}, args ...interface{}) {
+	this.jsonReturn(common.HTTP_RELOGIN, fmt.Sprintf(msg, args...), data)
 }
 
-func  (this *Base)ResultJson(data interface{}){
+func (this *Base) ServeNOAUTH(msg string, data interface{}, args ...interface{}) {
+	this.jsonReturn(common.HTTP_NOAUTH, fmt.Sprintf(msg, args...), data)
+}
+
+func (this *Base) ResultJson(data interface{}) {
 	this.Data["json"] = data
 	this.ServeJSON(true)
 	this.StopRun()
 }
 
-func  (this *Base)ResultXml(data interface{}){
+func (this *Base) ResultXml(data interface{}) {
 	this.Data["xml"] = data
 	this.ServeXML()
 	this.StopRun()

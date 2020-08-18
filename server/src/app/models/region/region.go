@@ -2,9 +2,9 @@ package region
 
 import (
 	"errors"
-	"github.com/go-xorm/xorm"
 	"server/src/app/models"
 	"server/src/common"
+	"xorm.io/xorm"
 )
 
 //村委会、社区
@@ -43,11 +43,11 @@ func (this *Region) Add() error {
 	if err != nil {
 		return err
 	}
-	ok,err:=common.DbEngine.Exist(&Region{Code:this.Code})
-	if err!=nil{
+	ok, err := common.DbEngine.Exist(&Region{Code: this.Code})
+	if err != nil {
 		return err
 	}
-	if ok{
+	if ok {
 		return errors.New("行政区划代码已经存在")
 	}
 	return models.Insert(this)
@@ -58,11 +58,11 @@ func (this *Region) Delete() error {
 	if this.Code == "" {
 		return errors.New("行政区划代码不能为空")
 	}
-	ok,err:=common.DbEngine.Exist(&Region{ParentCode:this.Code})
-	if err!=nil{
+	ok, err := common.DbEngine.Exist(&Region{ParentCode: this.Code})
+	if err != nil {
 		return err
 	}
-	if ok{
+	if ok {
 		return errors.New("行政区划存在下级行政区划，不能删除")
 	}
 	return models.Remove(this, func(db *xorm.Session) {
@@ -90,7 +90,7 @@ func (this *Region) List(list *interface{}) error {
 		}
 		if this.ParentCode != "" {
 			db.Where("parent_code = ?", this.ParentCode)
-		}else{
+		} else {
 			db.Where("parent_code = 0")
 		}
 	})
@@ -105,7 +105,7 @@ func (this *Region) PageList(pageData *common.PaginateData) error {
 		}
 		if this.ParentCode != "" {
 			db.Where("parent_code = ?", this.ParentCode)
-		}else{
+		} else {
 			db.Where("parent_code = 0")
 		}
 	}, func(db *xorm.Session) {})

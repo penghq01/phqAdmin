@@ -3,9 +3,9 @@ package mDefault
 import (
 	"errors"
 	"fmt"
-	"github.com/go-xorm/xorm"
 	"server/src/app/models"
 	"server/src/common"
+	"xorm.io/xorm"
 )
 
 //后台管理员表
@@ -22,9 +22,10 @@ type Admin struct {
 func (Admin) TableName() string {
 	return "admin"
 }
-func(Admin)GetSlice() interface{}{
+func (Admin) GetSlice() interface{} {
 	return new([]Admin)
 }
+
 //管理员数据校验
 type AdminValid struct {
 	models.BaseVaild
@@ -51,6 +52,7 @@ func (this *AdminValid) Valid(obj *Admin) (bool, string) {
 	}
 	return true, ""
 }
+
 //通过用户名查找管理员
 func (this *Admin) UserNameGet(username string) bool {
 	ok, err := common.DbEngine.Where("username=?", username).Get(this)
@@ -61,6 +63,7 @@ func (this *Admin) UserNameGet(username string) bool {
 		return true
 	}
 }
+
 //通过id查找管理员
 func (this *Admin) IdNameGet(id int) bool {
 	ok, err := common.DbEngine.Where("admin_id=?", id).Get(this)
@@ -71,6 +74,7 @@ func (this *Admin) IdNameGet(id int) bool {
 		return true
 	}
 }
+
 //通过ID和用户名查找管理员
 func (this *Admin) IdUserNameGet(id int, username string) bool {
 	ok, err := common.DbEngine.Where("admin_id=? AND username=?", id, username).Get(this)
@@ -119,7 +123,7 @@ func (this *Admin) Delete() error {
 	}
 	ok, msg := va.Valid(this)
 	if !ok {
-		return  errors.New(msg)
+		return errors.New(msg)
 	}
 	if this.AdminId == 1 {
 		return errors.New("您没有权限删除该账号")
@@ -148,7 +152,7 @@ func (this *Admin) Edit() error {
 	})
 }
 func (this *Admin) List(data *interface{}) error {
-	return models.Find(this, data,func(db *xorm.Session) {
+	return models.Find(this, data, func(db *xorm.Session) {
 		db.Where("admin_id>?", 1).Omit("password")
 	})
 }

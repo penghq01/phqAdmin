@@ -28,6 +28,6 @@ type Users struct {
 func (Users) TableName() string {
 	return "users"
 }
-func(Users)GetSlice()interface{}{
+func (Users) GetSlice() interface{} {
 	return new([]Users)
 }

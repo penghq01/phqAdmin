@@ -6,18 +6,19 @@ import (
 	"github.com/astaxie/beego/config"
 	"github.com/astaxie/beego/logs"
 	_ "github.com/go-sql-driver/mysql"
-	"github.com/go-xorm/xorm"
 	_ "github.com/mattn/go-sqlite3"
 	"io/ioutil"
 	"math/rand"
 	"os"
 	"path/filepath"
+	"server/src/app/models/mDefault"
 	"server/src/app/models/region"
 	"server/src/auth"
-	"server/src/app/models/mDefault"
 	"server/src/common"
 	"time"
-	"xorm.io/core"
+	"xorm.io/xorm"
+	"xorm.io/xorm/log"
+	"xorm.io/xorm/names"
 )
 
 /*
@@ -84,18 +85,22 @@ func ServerInit() {
 	common.ConfigIni, err = config.NewConfig("ini", "conf/config.conf")
 	if err != nil {
 		common.Logs.Error("✖ 读取[config.conf]配置文件失败，%v", err)
+		os.Exit(2)
 	}
 	common.DbIni, err = config.NewConfig("ini", "conf/db.conf")
 	if err != nil {
 		common.Logs.Error("✖ 读取[db.conf]配置文件失败，%v", err)
+		os.Exit(2)
 	}
 	common.EncryptionString = common.ConfigIni.String("EncryptionStr") //获取密码加密字串
 	if common.EncryptionString == "" {
 		common.Logs.Error("✖ 获取密码加密字串失败")
+		os.Exit(2)
 	}
 	common.TokenKeyString = common.ConfigIni.String("TokenKey") //获取Token加密字串
 	if common.TokenKeyString == "" {
 		common.Logs.Error("✖ 获取Token加密字串失败")
+		os.Exit(2)
 	}
 	common.TokenExpiresAt = 60 * 60 * 24 * 7
 	tokenEx, err := common.ConfigIni.Int64("TokenExp") //获取Token过期时间
@@ -103,6 +108,7 @@ func ServerInit() {
 		common.TokenExpiresAt = tokenEx
 	} else {
 		common.Logs.Error("✖ Token过期时间读取失败，%v", err)
+		os.Exit(2)
 	}
 	common.SqlBakPathDir = filepath.Join(common.AppRunDir, common.DbIni.String("back_dir"))
 	common.DbMode = common.DbIni.String("db_mode")
@@ -113,6 +119,7 @@ func ServerInit() {
 		common.DbEngine, err = xorm.NewEngine("mysql", fmt.Sprintf("%v:%v@(%v:%v)/%v?charset=%v", common.DbIni.String("user"), common.DbIni.String("pass"), common.DbIni.String("host"), common.DbIni.String("port"), common.DbIni.String("db"), common.DbIni.String("charset")))
 		if err != nil {
 			common.Logs.Error("✖ 连接MySql数据库失败，%v", err)
+			os.Exit(2)
 		}
 		sqlPath = filepath.Join(common.AppRunDir, "/conf/mysql")
 	}
@@ -126,6 +133,7 @@ func ServerInit() {
 			err = os.MkdirAll(common.DbDir, 0666)
 			if err != nil {
 				common.Logs.Error("创建数据目录失败,%v", err)
+				os.Exit(2)
 			}
 		}
 		dbPath := filepath.Join(common.DbDir, common.DbIni.String("db_file_name")) + ".sqlite"
@@ -133,14 +141,20 @@ func ServerInit() {
 		common.DbEngine, err = xorm.NewEngine("sqlite3", dbPath)
 		if err != nil {
 			common.Logs.Error("✖ 连接SQLite3数据库失败，%v", err)
+			os.Exit(2)
 		}
 		sqlPath = filepath.Join(common.AppRunDir, "/conf/sqlite")
 	}
-
+	// 数据表 前缀映射
+	/*
+	tbMapper := names.NewPrefixMapper(names.SnakeMapper{}, "phq_")
+	common.DbEngine.SetTableMapper(tbMapper)
+	*/
 	common.Logs.Info("▶ 同步数据库……")
-	err = common.DbEngine.Sync2(new(region.Region),new(mDefault.Admin), new(mDefault.Auth), new(mDefault.FilesClass), new(mDefault.Files), new(mDefault.Icon), new(mDefault.Role), new(mDefault.Users), new(mDefault.Api))
+	err = common.DbEngine.Sync2(new(region.Region), new(mDefault.Admin), new(mDefault.Auth), new(mDefault.FilesClass), new(mDefault.Files), new(mDefault.Icon), new(mDefault.Role), new(mDefault.Users), new(mDefault.Api))
 	if err != nil {
 		common.Logs.Error("✖ 同步数据库失败，%v", err)
+		os.Exit(2)
 	} else {
 		common.Logs.Info("✔ 同步数据库完成")
 	}
@@ -164,20 +178,23 @@ func ServerInit() {
 							common.Logs.Info("✔ 表[%v]初始化完成", tableName)
 						} else {
 							common.Logs.Error("✖ 表[%v]初始化失败，%v", tableName, err)
+							os.Exit(2)
 						}
 					}
 				} else {
 					common.Logs.Error("✖ 判断表[%v]是否为空，错误：%v", tableName, err)
+					os.Exit(2)
 				}
 			}
 		}
 	} else {
 		common.Logs.Error("✖ 获取初始化数据表列表失败，%v", err)
+		os.Exit(2)
 	}
 	if common.RunModeDev {
 		common.Logs.Info("▶ 当前运行模式为：开发模式")
 		common.DbEngine.ShowSQL(true)                     //则会在控制台打印出生成的SQL语句；
-		common.DbEngine.Logger().SetLevel(core.LOG_DEBUG) //则会在控制台打印调试及以上的信息
+		common.DbEngine.Logger().SetLevel(log.LOG_DEBUG) //则会在控制台打印调试及以上的信息
 		common.Logs.Info("✔ 启用SQL语句输出")
 	}
 	if common.RunModeProd {

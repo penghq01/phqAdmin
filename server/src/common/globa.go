@@ -3,7 +3,7 @@ package common
 import (
 	"github.com/astaxie/beego/config"
 	"github.com/astaxie/beego/logs"
-	"github.com/go-xorm/xorm"
+	"xorm.io/xorm"
 )
 
 var (

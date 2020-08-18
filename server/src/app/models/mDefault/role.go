@@ -2,8 +2,8 @@ package mDefault
 
 import (
 	"errors"
-	"github.com/go-xorm/xorm"
 	"server/src/app/models"
+	"xorm.io/xorm"
 )
 
 //后台管理员角色表
@@ -19,9 +19,10 @@ type Role struct {
 func (Role) TableName() string {
 	return "role"
 }
-func(Role)GetSlice()interface{}{
+func (Role) GetSlice() interface{} {
 	return new([]Role)
 }
+
 type RoleValid struct {
 	models.BaseVaild
 	Id       bool
@@ -74,7 +75,7 @@ func (this *Role) Delete() error {
 	})
 }
 
-func (this *Role) Edit()error {
+func (this *Role) Edit() error {
 	v := RoleValid{
 		Id:       true,
 		RoleName: true,
@@ -89,5 +90,5 @@ func (this *Role) Edit()error {
 }
 
 func (this *Role) List(data *interface{}) error {
-	return models.Find(this,data,func(db *xorm.Session){})
+	return models.Find(this, data, func(db *xorm.Session) {})
 }

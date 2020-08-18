@@ -8,6 +8,7 @@ import (
 type Region struct {
 	AdminBase
 }
+
 func (this *Region) Prepare() {
 	this.ActionModel = new(region.Region)
 	this.AdminBase.Prepare()
