@@ -4,7 +4,6 @@ import (
 	"server/src/app/models/mDefault"
 	"server/src/auth"
 	"server/src/common"
-	"server/src/global"
 	"strconv"
 	"time"
 )
@@ -37,7 +36,6 @@ func (this *Login) Login() {
 	}
 	updateAdmin.IdUpdate(user.AdminId)
 	this.LoginUser = user
-	global.LoginAdminMap[user.AdminId] = *user
 	this.ServeSuccess("登录成功", map[string]interface{}{
 		"token":         token,
 		"public_router": auth.GetNoLoginAdminRoute(),
