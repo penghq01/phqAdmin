@@ -702,3 +702,16 @@ div.cell {
   }
 
 }
+
+// 设置导航菜单折叠的时候隐藏文字和箭头
+.el-menu--collapse > div > .el-submenu > .el-submenu__title span {
+  height: 0;
+  width: 0;
+  overflow: hidden;
+  visibility: hidden;
+  display: inline-block;
+}
+.el-menu--collapse > div > .el-submenu > .el-submenu__title .el-submenu__icon-arrow {
+  display: none;
+}
+//-------------------------------

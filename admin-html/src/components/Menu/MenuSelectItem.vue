@@ -1,4 +1,5 @@
 <template>
+<div>
     <el-submenu :class="isCollapse?'el-menu-children0':`el-menu-children${children}`" v-if="isChildren" :index="params.key">
         <template slot="title">
             <i :class="params.icon" class="phq-menu-icon"></i>
@@ -19,6 +20,7 @@
             </span>
         </span>
     </el-menu-item>
+	</div>
 </template>
 
 <script>
