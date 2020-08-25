@@ -75,7 +75,7 @@
     import message from "../../lib/message";
 
     const defaultParams = {code: "", name: "", parent_code: defaultCode, sort: 0};
-    const defaultCode="530326";
+    const defaultCode="5303";
     // loadData
     export default {
         name: "RegionTree",
