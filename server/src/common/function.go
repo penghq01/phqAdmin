@@ -98,16 +98,28 @@ func CheckToken(tokenStr string, callback func(id int, username string)) (bool, 
 	})
 	if err != nil {
 		Logs.Error("Token验证错误：%v", err)
-		return false, "Token验证失败"
+		return false, "您的令牌无效，请重新登录"
 	}
 	claim, ok := token.Claims.(jwt.MapClaims)
 	if !ok {
-		return false, "Token解析失败"
+		Logs.Error("Token解析失败")
+		return false, "您的令牌无效，请重新登录"
 	}
 	//验证token，如果token被修改过则为false
 	if !token.Valid {
-		return false, "Token错误"
+		return false, "您的令牌无效，请重新登录"
 	}
+	//到期时间
+	expStr := ToString(claim["exp"])
+	var exp int64
+	exp, err = strconv.ParseInt(expStr,10,64)
+	if err != nil {
+		exp = 0
+	}
+	if exp < time.Now().Unix(){
+		return false, "您的令牌已经过期，请重新登录"
+	}
+	//id
 	idstr := claim["jti"].(string)
 	var id int
 	id, err = strconv.Atoi(idstr)

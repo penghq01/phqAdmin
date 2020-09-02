@@ -61,17 +61,17 @@ func InitDateApi() {
 }
 
 //获取当前登录管理员的前端菜单
-func GetLoginAdminRoute(admin *mDefault.Admin) []mDefault.Auth {
-	auth := make([]mDefault.Auth, 0)
+func GetLoginAdminRoute(admin *models.Admin) []models.Auth {
+	authMap := make(map[int]models.Auth, 0)
 	if admin.AdminId == 1 {
 		for _, a := range RouterList {
-			auth = append(auth, a)
+			authMap[a.Id] = a
 		}
 	} else {
 		//登录可访问，和公开的
 		for _, a := range RouterList {
 			if a.Visit < 2 {
-				auth = append(auth, a)
+				authMap[a.Id] = a
 			}
 		}
 		//指定权限
@@ -80,10 +80,14 @@ func GetLoginAdminRoute(admin *mDefault.Admin) []mDefault.Auth {
 				//list[rid] = RouterList[rid]
 				r := RouterList[rid]
 				if r.Visit < 3 {
-					auth = append(auth, r)
+					authMap[r.Id] = r
 				}
 			}
 		}
+	}
+	auth := make([]models.Auth, 0)
+	for _, v := range authMap {
+		auth = append(auth, v)
 	}
 	//排序
 	for i := 0; i < len(auth); i++ {
@@ -183,4 +187,18 @@ func UriGetDateAPIName(uri string) string {
 		}
 	}
 	return name
+}
+
+//通过URI获取数据接口
+func UriGetDateAPI(uri string) (bool, *models.Api) {
+	api := models.Api{}
+	resOk := false
+	for _, v := range DateAPIList {
+		if v.Router == uri {
+			api = v
+			resOk = true
+			break
+		}
+	}
+	return resOk, &api
 }

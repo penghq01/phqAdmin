@@ -19,13 +19,21 @@ type AdminBase struct {
 func (this *AdminBase) Prepare() {
 	this.Base.Prepare()
 
-	this.CheckAuthToken() //根据Token判断是否登录
-
-	//判断是否有权限访问数据接口
-	if this.isUserLogin {
-		this.CheckDateApiAuth(auth.GetLoginAdminDataApi(this.LoginUser))
-	} else {
-		this.CheckDateApiAuth(auth.GetNoLoginAdminDataApi())
+	ok, api := auth.UriGetDateAPI(this.Uri)
+	if !ok {
+		ok, api = auth.UriGetDateAPI(this.UriReplacePage(this.Uri))
+	}
+	if !ok {
+		this.ServeError("数据不存在", "")
+	}
+	if api.Visit > 0 {
+		this.CheckAuthToken() //根据Token判断是否登录
+		//判断是否有权限访问数据接口
+		if this.isUserLogin {
+			this.CheckDateApiAuth(auth.GetLoginAdminDataApi(&this.LoginUser))
+		} else {
+			this.CheckDateApiAuth(auth.GetNoLoginAdminDataApi())
+		}
 	}
 }
 
@@ -52,7 +60,7 @@ func (this *AdminBase) CheckDateApiAuth(dataApi map[string]string) {
 //根据Token判断是否登录
 func (this *AdminBase) CheckAuthToken() {
 	if this.AuthToken == "" {
-		this.isUserLogin = false
+		this.ServeRELOGIN("您的令牌无效，请重新登录", "")
 	} else {
 		ok, _ := common.CheckToken(this.AuthToken, func(id int, username string) {
 			user := new(mDefault.Admin)
@@ -64,7 +72,7 @@ func (this *AdminBase) CheckAuthToken() {
 			this.LoginUser = user
 		})
 		if !ok {
-			this.isUserLogin = false
+			this.ServeRELOGIN(errMsg, "")
 		}
 	}
 
