@@ -41,7 +41,7 @@ export default {
     *formatArr：field数组
     **/
     excelHandle(url, formatArr = [], {params = {}, fileName = "WEB导出Excel数据", showIndex = false, indexName = "序号",pageSize=10,page=1}={}) {
-        MessageBox.prompt(`您要导出几页数据（每页${pageSize}条，从当前页开始导出），？请输入页数`, '提示', {
+        MessageBox.prompt(`您要导出几页数据（每页${pageSize}条，从当前页开始导出）？请输入页数`, '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
         }).then(({value}) => {
