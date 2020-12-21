@@ -30,7 +30,7 @@ func (this *AdminBase) Prepare() {
 		this.CheckAuthToken() //根据Token判断是否登录
 		//判断是否有权限访问数据接口
 		if this.isUserLogin {
-			this.CheckDateApiAuth(auth.GetLoginAdminDataApi(&this.LoginUser))
+			this.CheckDateApiAuth(auth.GetLoginAdminDataApi(this.LoginUser))
 		} else {
 			this.CheckDateApiAuth(auth.GetNoLoginAdminDataApi())
 		}
@@ -62,7 +62,7 @@ func (this *AdminBase) CheckAuthToken() {
 	if this.AuthToken == "" {
 		this.ServeRELOGIN("您的令牌无效，请重新登录", "")
 	} else {
-		ok, _ := common.CheckToken(this.AuthToken, func(id int, username string) {
+		ok, errMsg := common.CheckToken(this.AuthToken, func(id int, username string) {
 			user := new(mDefault.Admin)
 			ok := user.IdUserNameGet(id, username)
 			if !ok {

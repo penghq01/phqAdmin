@@ -1,13 +1,16 @@
 <template>
   <div id="app">
+    <WinTitle />
     <router-view></router-view>
   </div>
 </template>
 
 <script>
   import {mapActions} from "vuex";
+  import WinTitle from "./components/WinTitle/WinTitle";
   export default {
     name: 'App',
+    components: {WinTitle},
     methods:{...mapActions(["updateBodyHeight"])},
     mounted(){
       let that=this;

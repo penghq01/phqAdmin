@@ -1,6 +1,6 @@
 <template>
-    <div class="home" :style="`padding-left:${isCollapse?64:240}px;`">
-        <div class="home-left" :style="`width:${isCollapse?64:240}px;`">
+    <div class="home" :style="`padding-left:${isCollapse?64:240}px;${homePaddingTop}`">
+        <div class="home-left" :style="`width:${isCollapse?64:240}px;${leftAndHeaderTop}`">
             <div class="home-left-sysname">
                 <span v-show="!isCollapse"> {{sysName}}</span>
                 <el-tooltip effect="dark" content="收起展开菜单" placement="right">
@@ -11,7 +11,7 @@
               <MyMenu :is-collapse="isCollapse" :list="menuTreeList" :active-menu="activeMenu" @select="triggerSelect"/>
             </div>
         </div>
-        <div class="home-header" :style="`left:${isCollapse?64:240}px;width:calc(100% - ${isCollapse?64:240}px);`">
+        <div class="home-header" :style="`left:${isCollapse?64:240}px;width:calc(100% - ${isCollapse?64:240}px);${leftAndHeaderTop}`">
             <div class="home-header-info">
                 <div class="user">
                     <i class="fa fa-user" aria-hidden="true"></i> 欢迎：{{userInfo.username}}
@@ -83,6 +83,20 @@
         },
         computed:{
             ...mapState(["uiAuth","userInfo","routerList","menuTreeList"]),
+            leftAndHeaderTop(){
+                if(this.platform.isWeb){
+                    return "top:0";
+                }else if(this.platform.isPC){
+                    return "top:40px";
+                }
+            },
+            homePaddingTop(){
+                if(this.platform.isWeb){
+                    return "padding-top:90px";
+                }else if(this.platform.isPC){
+                    return "padding-top:130px";
+                }
+            }
         },
         watch:{
             routerList(){

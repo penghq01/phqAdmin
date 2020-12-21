@@ -61,8 +61,8 @@ func InitDateApi() {
 }
 
 //获取当前登录管理员的前端菜单
-func GetLoginAdminRoute(admin *models.Admin) []models.Auth {
-	authMap := make(map[int]models.Auth, 0)
+func GetLoginAdminRoute(admin *mDefault.Admin) []mDefault.Auth {
+	authMap := make(map[int]mDefault.Auth, 0)
 	if admin.AdminId == 1 {
 		for _, a := range RouterList {
 			authMap[a.Id] = a
@@ -85,7 +85,7 @@ func GetLoginAdminRoute(admin *models.Admin) []models.Auth {
 			}
 		}
 	}
-	auth := make([]models.Auth, 0)
+	auth := make([]mDefault.Auth, 0)
 	for _, v := range authMap {
 		auth = append(auth, v)
 	}
@@ -190,8 +190,8 @@ func UriGetDateAPIName(uri string) string {
 }
 
 //通过URI获取数据接口
-func UriGetDateAPI(uri string) (bool, *models.Api) {
-	api := models.Api{}
+func UriGetDateAPI(uri string) (bool, *mDefault.Api) {
+	api := mDefault.Api{}
 	resOk := false
 	for _, v := range DateAPIList {
 		if v.Router == uri {

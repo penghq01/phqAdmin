@@ -18,7 +18,6 @@ import (
 	"time"
 	"xorm.io/xorm"
 	"xorm.io/xorm/log"
-	"xorm.io/xorm/names"
 )
 
 /*

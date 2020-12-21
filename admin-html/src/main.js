@@ -5,7 +5,7 @@ import store from './store'
 import routerList from "./router/routerList";
 import ElementUI from 'element-ui'
 import 'xe-utils'
-import {Table,Column,Header,Footer,Menu} from 'vxe-table';
+import VXETable from 'vxe-table';
 import "./lib/scss/vxe-table-variable.scss";
 import "./assets/font-awesome/css/font-awesome.min.css"
 import "./lib/scss/element-variables.scss"
@@ -24,12 +24,7 @@ import  "./lib/filter"
 //Vue.use(filter);
 Vue.use(ElementUI, { size: 'medium'});
 // 先安装依赖模块
-Vue.use(Column);
-Vue.use(Header);
-Vue.use(Footer);
-Vue.use(Menu)
-// 再安装核心库
-Vue.use(Table);
+Vue.use(VXETable);
 
 
 Vue.component("Popconfirm",Popconfirm);
