@@ -25,6 +25,10 @@
       };
       func();
       window.onresize = func;
+      this.$nextTick(()=>{
+        let splash = document.getElementById('splash');
+        splash.style.display = 'none';
+      });
     }
   }
 </script>

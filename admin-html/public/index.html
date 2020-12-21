@@ -20,7 +20,191 @@
 
     <link rel="stylesheet" href="https://unpkg.com/font-awesome@4.7.0/css/font-awesome.min.css"/>-->
   </head>
+  <style>
+    html,body{
+      padding:0;
+      margin:0;
+    }
+    #splash{
+      position:fixed;
+      width:100%;
+      height:100%;
+      z-index:-1;
+      text-align:center;
+      background-repeat: no-repeat;
+      background-size:100% 100%;
+    }
+    .splash{
+      position:absolute;
+      width:300px;
+      height:200px;
+      left:calc(50% - 150px);
+      top:calc(50% - 100px);
+    }
+    .splash>div{
+      position:absolute;
+    }
+    .splash>div:nth-child(1){
+      width:100px;
+      height:100px;
+      left:100px;
+      top:50px;
+      border-radius:50%;
+      border:2px #9B9B9B solid;
+    }
+    .splash>div:nth-child(2){
+      border-radius:50%;
+      width:20px;
+      height:20px;
+      left:140px;
+      top:40px;
+      background-color:#FF6CF3a0;
+      transform-origin:10px 60px;
+      animation: loading1 2s linear infinite;
+    }
+    .splash > div:nth-child(3){
+      border-radius:50%;
+      width:20px;
+      height:20px;
+      left:140px;
+      top:40px;
+      background-color:#FA6558A0;
+      transform-origin:10px 60px;
+      animation: loading1 3s linear infinite;
+    }
+    .splash > div:nth-child(4){
+      border-radius:50%;
+      width:20px;
+      height:20px;
+      left:140px;
+      top:40px;
+      background-color:#FCE73BA0;
+      transform-origin:10px 60px;
+      animation: loading1 4s linear infinite;
+    }
+
+    .splash > div:nth-child(5){
+      border-radius:50%;
+      width:20px;
+      height:20px;
+      left:140px;
+      top:40px;
+      background-color:#7BFC3BA0;
+      transform-origin:10px 60px;
+      animation: loading1 5s linear infinite;
+    }
+    .splash > div:nth-child(6){
+      border-radius:50%;
+      width:20px;
+      height:20px;
+      left:140px;
+      top:40px;
+      background-color:#3BF6FCA0;
+      transform-origin:10px 60px;
+      animation: loading1 6s linear infinite;
+    }
+    .splash > div:nth-child(7){
+      border-radius:50%;
+      width:20px;
+      height:20px;
+      left:140px;
+      top:40px;
+      background-color:#3B82FCA0;
+      transform-origin:10px 60px;
+      animation: loading 7s linear infinite;
+    }
+    .splash > div:nth-child(8){
+      border-radius:50%;
+      width:20px;
+      height:20px;
+      left:140px;
+      top:40px;
+      background-color:#953BFCA0;
+      transform-origin:10px 60px;
+      animation: loading 6s linear infinite;
+    }
+    .splash > div:nth-child(9){
+      border-radius:50%;
+      width:20px;
+      height:20px;
+      left:140px;
+      top:40px;
+      background-color:#FD61FEA0;
+      transform-origin:10px 60px;
+      animation: loading 5s linear infinite;
+    }
+    .splash > div:nth-child(10){
+      border-radius:50%;
+      width:20px;
+      height:20px;
+      left:140px;
+      top:40px;
+      background-color:#FF4EABA0;
+      transform-origin:10px 60px;
+      animation: loading 4s linear infinite;
+    }
+    .splash > div:nth-child(11){
+      border-radius:50%;
+      width:20px;
+      height:20px;
+      left:140px;
+      top:40px;
+      background-color:#C8FF08A0;
+      transform-origin:10px 60px;
+      animation: loading 3s linear infinite;
+    }
+    .splash>div:last-child{
+      border-radius:0;
+      width:100%;
+      text-align: center;
+      bottom:10px;
+      animation: loadText 0.5s linear infinite alternate;
+      transform-origin:11px 50px;
+    }
+
+    @keyframes loadText {
+      0%{
+        opacity:1;
+      }
+      100%{
+        opacity:0;
+      }
+    }
+    @keyframes loading {
+      0%{
+        transform: rotateZ(0);
+      }
+      100%{
+        transform: rotateZ(360deg);
+      }
+    }
+    @keyframes loading1 {
+      0%{
+        transform: rotateZ(0);
+      }
+      100%{
+        transform: rotateZ(-360deg);
+      }
+    }
+  </style>
   <body>
+  <!-- 核心 -->
+  <div id="splash">
+    <div class="splash">
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div></div>
+      <div>系统加载中，请稍后……</div>
+    </div>
+  </div>
     <div id="app"></div>
   </body>
 </html>
