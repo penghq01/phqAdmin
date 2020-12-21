@@ -56,9 +56,9 @@
 0. 服务器带宽低，打开有点慢，请见谅
 1. 演示地址：<a href="http://www.cgrj.top/admin" target="_blank">http://www.cgrj.top/admin</a> 
 2. PC客户端演示版下载  
-    * 解压缩版（.rar）：<a href="http://www.cgrj.top/admin-img/phq_admin_pc.rar" target="_blank">下载</a> 
+    * 解压缩版（.rar）：<a href="http://www.cgrj.top/admin-img/admin-html.rar" target="_blank">下载</a> 
       
-    * 安装包版（.exe）：<a href="http://www.cgrj.top/admin-img/phq_admin_pc.exe" target="_blank">下载</a> 
+    * 安装包版（.exe）：<a href="http://www.cgrj.top/admin-img/admin-html.exe" target="_blank">下载</a> 
 3. 账号密码：admin  123456  该账号为测试账号只有部分功能  
 
 ####图片预览
