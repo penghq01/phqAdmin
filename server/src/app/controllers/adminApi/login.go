@@ -31,7 +31,7 @@ func (this *Login) Login() {
 		this.ServeError("登录失败", "")
 	}
 	updateAdmin := mDefault.Admin{
-		LoginIp:   this.Ctx.Request.Host,
+		LoginIp:   this.GetProxyClientIp(),
 		LoginTime: time.Now().Unix(),
 	}
 	updateAdmin.IdUpdate(user.AdminId)

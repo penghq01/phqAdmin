@@ -7,6 +7,7 @@ import (
 	"fmt"
 	"github.com/astaxie/beego"
 	"math/rand"
+	"net"
 	"os"
 	"path"
 	"path/filepath"
@@ -224,4 +225,21 @@ func (this *Base) ResultXml(data interface{}) {
 	this.Data["xml"] = data
 	this.ServeXML()
 	this.StopRun()
+}
+
+// 获取反向代理 访问客户端 IP
+func (this *Base) GetProxyClientIp()string{
+	xForwardedFor := this.Ctx.Request.Header.Get("X-Forwarded-For")
+	ip := strings.TrimSpace(strings.Split(xForwardedFor, ",")[0])
+	if ip != "" {
+		return ip
+	}
+	ip = strings.TrimSpace(this.Ctx.Request.Header.Get("X-Real-Ip"))
+	if ip != "" {
+		return ip
+	}
+	if ip, _, err := net.SplitHostPort(strings.TrimSpace(this.Ctx.Request.RemoteAddr)); err == nil {
+		return ip
+	}
+	return ""
 }
